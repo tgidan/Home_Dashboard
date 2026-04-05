@@ -1,6 +1,6 @@
-# CyberDash
+# Vinci Dash
 
-A self-contained cyberpunk-themed dashboard displaying live cybersecurity news and weather. Works as a **Wallpaper Engine** background and in any mobile browser.
+A self-contained dashboard displaying live cybersecurity news and weather. Works as a **Wallpaper Engine** background and in any mobile browser.
 
 ## Features
 
