@@ -1,0 +1,84 @@
+/* ═══════════════════════════════════════════════════════════════
+   WEATHER — weather panel widget
+   ═══════════════════════════════════════════════════════════════ */
+
+#weather-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+#weather-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ─── Main row: icon + temp ─────────────────────────────────── */
+.weather-main {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.weather-icon {
+  font-size: clamp(2.8rem, 4vw, 3.8rem);
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.4));
+}
+
+.weather-temp {
+  font-family: var(--font-mono);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 700;
+  color: var(--cyan);
+  text-shadow: var(--cyan-glow);
+  line-height: 1;
+}
+
+.weather-desc {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.weather-location {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
+/* ─── Stats row ─────────────────────────────────────────────── */
+.weather-stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  flex: 1;
+  min-width: 80px;
+  background: var(--bg-item);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 9px 12px;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 0.62rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 3px;
+}

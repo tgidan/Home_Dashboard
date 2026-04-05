@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vinci Dash</title>
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/clock.css">
+  <link rel="stylesheet" href="css/weather.css">
+  <link rel="stylesheet" href="css/news.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ── Header: clock + weather ── -->
+  <div id="header">
+
+    <!-- Clock widget -->
+    <div class="panel" id="clock-panel">
+      <div class="label">System Clock</div>
+      <div id="clock">00:00:00</div>
+      <div id="date-str">Loading…</div>
+      <div class="live-indicator">
+        <span class="dot"></span>
+        <span id="refresh-status">Online</span>
+      </div>
+    </div>
+
+    <!-- Weather widget -->
+    <div class="panel" id="weather-panel">
+      <div class="label">Weather Report</div>
+      <div id="weather-body">
+        <div class="state-msg">
+          <div class="spinner"></div>
+          <span>Fetching conditions…</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Cybersecurity news feeds ── -->
+  <div class="panel" id="feeds-section">
+    <div class="label">Cybersecurity Feed</div>
+    <div id="feeds-grid">
+
+      <div class="feed-col" id="col-thn">
+        <div class="feed-header">
+          <span class="feed-source-name">The Hacker News</span>
+          <span class="feed-count" id="cnt-thn">—</span>
+        </div>
+        <ul class="article-list" id="list-thn">
+          <li class="state-msg"><div class="spinner"></div><span>Loading…</span></li>
+        </ul>
+      </div>
+
+      <div class="feed-col" id="col-bc">
+        <div class="feed-header">
+          <span class="feed-source-name">Bleeping Computer</span>
+          <span class="feed-count" id="cnt-bc">—</span>
+        </div>
+        <ul class="article-list" id="list-bc">
+          <li class="state-msg"><div class="spinner"></div><span>Loading…</span></li>
+        </ul>
+      </div>
+
+      <div class="feed-col" id="col-krebs">
+        <div class="feed-header">
+          <span class="feed-source-name">Krebs on Security</span>
+          <span class="feed-count" id="cnt-krebs">—</span>
+        </div>
+        <ul class="article-list" id="list-krebs">
+          <li class="state-msg"><div class="spinner"></div><span>Loading…</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Footer ── -->
+  <div id="footer">
+    <span class="dot" style="width:5px;height:5px;animation-duration:3.5s"></span>
+    <span id="last-updated">Initializing…</span>
+  </div>
+
+</div>
+
+<!-- JS loaded in dependency order; all share the global scope -->
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/clock.js"></script>
+<script src="js/weather.js"></script>
+<script src="js/news.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

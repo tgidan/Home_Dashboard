@@ -1,0 +1,111 @@
+/* ═══════════════════════════════════════════════════════════════
+   BASE — design tokens, reset, body chrome, shared components
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Design tokens ─────────────────────────────────────────── */
+:root {
+  --bg:          #08090f;
+  --bg-panel:    #0c0d18;
+  --bg-item:     #10121f;
+  --cyan:        #00e5ff;
+  --cyan-dim:    rgba(0, 229, 255, 0.18);
+  --cyan-glow:   0 0 8px rgba(0, 229, 255, 0.6), 0 0 22px rgba(0, 229, 255, 0.25);
+  --green:       #00ff88;
+  --green-dim:   rgba(0, 255, 136, 0.12);
+  --red:         #ff3b5c;
+  --orange:      #ff8c42;
+  --text:        #dce8ff;
+  --muted:       #3d4a6a;
+  --border:      rgba(0, 229, 255, 0.18);
+  --font-mono:   'Courier New', Consolas, monospace;
+  --font-ui:     -apple-system, 'Segoe UI', system-ui, sans-serif;
+  --radius:      10px;
+}
+
+/* ─── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+a   { color: inherit; text-decoration: none; }
+ul  { list-style: none; }
+
+/* ─── Base ──────────────────────────────────────────────────── */
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Grid background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+  background-size: 44px 44px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Scanline overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.08) 3px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Animations ────────────────────────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.25; }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Shared: loading spinner ───────────────────────────────── */
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* ─── Shared: empty / error state ──────────────────────────── */
+.state-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 20px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+  flex: 1;
+}
+
+/* ─── Shared: live indicator dot ────────────────────────────── */
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  flex-shrink: 0;
+  animation: blink 2.4s ease-in-out infinite;
+}

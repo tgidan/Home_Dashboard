@@ -1,0 +1,12 @@
+{
+  "description": "Home dashboard with live cybersecurity news, weather, and clock",
+  "file": "index.html",
+  "preview": "preview.jpg",
+  "title": "Vinci Dash",
+  "type": "web",
+  "visibility": "private",
+  "general": {
+    "supportsaudioprocessing": false,
+    "properties": {}
+  }
+}

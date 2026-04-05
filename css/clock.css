@@ -1,0 +1,47 @@
+/* ═══════════════════════════════════════════════════════════════
+   CLOCK — clock panel widget
+   ═══════════════════════════════════════════════════════════════ */
+
+#clock-panel {
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#clock {
+  font-family: var(--font-mono);
+  font-size: clamp(2.8rem, 5vw, 4.4rem);
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--cyan);
+  text-shadow: var(--cyan-glow);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+#date-str {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-top: 8px;
+  text-transform: uppercase;
+}
+
+.live-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ─── Responsive ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  #clock-panel { min-width: unset; }
+  #clock       { font-size: clamp(2.4rem, 12vw, 3.6rem); }
+}
