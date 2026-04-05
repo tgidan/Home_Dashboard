@@ -25,7 +25,7 @@
 .weather-icon {
   font-size: clamp(2.8rem, 4vw, 3.8rem);
   line-height: 1;
-  filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.4));
+  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.25));
 }
 
 .weather-temp {
@@ -38,17 +38,16 @@
 }
 
 .weather-desc {
-  font-size: 0.82rem;
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
   color: var(--muted);
   margin-top: 5px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
 .weather-location {
-  font-size: 0.72rem;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
   color: var(--muted);
-  letter-spacing: 1px;
 }
 
 /* ─── Stats row ─────────────────────────────────────────────── */
@@ -61,17 +60,16 @@
 .stat {
   flex: 1;
   min-width: 80px;
-  background: var(--bg-item);
-  border: 1px solid var(--border);
-  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
   padding: 9px 12px;
   text-align: center;
 }
 
 .stat-label {
-  font-size: 0.62rem;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
   color: var(--muted);
 }
 

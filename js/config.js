@@ -18,7 +18,7 @@ const CONFIG = {
       { id: 'bc',    name: 'Bleeping Computer', url: 'https://www.bleepingcomputer.com/feed/' },
       { id: 'krebs', name: 'Krebs on Security', url: 'https://krebsonsecurity.com/feed/' },
     ],
-    itemsPerFeed: 10
+    itemsPerFeed: 30
   },
   refresh: {
     weatherMins: 30,

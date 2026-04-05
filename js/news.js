@@ -1,11 +1,114 @@
 "use strict";
 
 /* ═══════════════════════════════════════════════════════════════
-   NEWS — fetches and renders cybersecurity RSS feeds
-   Depends on: config.js (CONFIG), utils.js ($, cache, timeAgo)
+   NEWS — single merged feed with source dropdown + day filter
+   Depends on: config.js (CONFIG), utils.js ($, cache, timeAgo, MONTHS)
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── Severity classification ────────────────────────────────── */
+/* ─── State ──────────────────────────────────────────────────── */
+let dayOffset    = 0;     // 0 = current window, +N = N days back
+let activeSource = null;  // null = all, or a feed.id string
+
+/* ═══════════════════════════════════════════════════════════════
+   DAY WINDOW
+   ═══════════════════════════════════════════════════════════════ */
+
+function getWindow(offset) {
+  const end = new Date();
+  end.setHours(6, 0, 0, 0);
+  end.setDate(end.getDate() - offset);
+  const start = new Date(end.getTime() - 24 * 60 * 60 * 1000);
+  return { start, end };
+}
+
+function formatWindowLabel({ start, end }) {
+  // On narrow screens drop the time component to save space
+  const narrow = window.innerWidth <= 600;
+  const fmt = narrow
+    ? d => `${MONTHS[d.getMonth()].slice(0, 3)} ${d.getDate()}`
+    : d => `${MONTHS[d.getMonth()].slice(0, 3)} ${d.getDate()}, ${String(d.getHours()).padStart(2, '0')}:00`;
+  return `${fmt(start)} \u2192 ${fmt(end)}`;
+}
+
+function filterByWindow(items, { start, end }) {
+  return items.filter(item => {
+    if (!item.pubDate) return false;
+    const t = new Date(item.pubDate).getTime();
+    return t >= start.getTime() && t < end.getTime();
+  });
+}
+
+function navigateDay(delta) {
+  const next = dayOffset + delta;
+  if (next < 0) return;
+  dayOffset = next;
+  applyFilters();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SOURCE DROPDOWN
+   ═══════════════════════════════════════════════════════════════ */
+
+function setActiveSource(sourceId) {
+  activeSource = sourceId === 'all' ? null : sourceId;
+
+  // Update toggle label
+  const label = activeSource === null
+    ? 'All Sources'
+    : CONFIG.news.feeds.find(f => f.id === activeSource)?.name ?? 'Unknown';
+  $('source-toggle-label').textContent = label;
+
+  // Sync option active states
+  document.querySelectorAll('.source-option').forEach(opt => {
+    opt.classList.toggle('active', opt.dataset.source === (sourceId));
+  });
+
+  closeDropdown();
+  applyFilters();
+}
+
+function openDropdown() {
+  $('source-menu').hidden = false;
+  $('source-toggle').classList.add('open');
+}
+
+function closeDropdown() {
+  $('source-menu').hidden = true;
+  $('source-toggle').classList.remove('open');
+}
+
+function initSourceDropdown() {
+  const menu = $('source-menu');
+
+  const addOption = (label, sourceId) => {
+    const btn = document.createElement('button');
+    btn.className      = 'source-option' + (sourceId === 'all' ? ' active' : '');
+    btn.dataset.source = sourceId;
+    btn.textContent    = label;
+    btn.addEventListener('click', () => setActiveSource(sourceId));
+    menu.appendChild(btn);
+  };
+
+  addOption('All Sources', 'all');
+  CONFIG.news.feeds.forEach(f => addOption(f.name, f.id));
+
+  // Toggle on button click
+  $('source-toggle').addEventListener('click', e => {
+    e.stopPropagation();
+    $('source-menu').hidden ? openDropdown() : closeDropdown();
+  });
+
+  // Close when clicking outside
+  document.addEventListener('click', () => closeDropdown());
+
+  // Prevent clicks inside the menu from bubbling up and immediately closing it
+  menu.addEventListener('click', e => e.stopPropagation());
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SEVERITY
+   ═══════════════════════════════════════════════════════════════ */
+
 const HIGH_KEYWORDS   = /ransomware|zero.?day|0.?day|exploit|cve-|critical|breach|backdoor|rce|remote code|data leak|nation.state|apt\b/i;
 const MEDIUM_KEYWORDS = /phishing|malware|trojan|spyware|adware|ddos|botnet|vulnerability|patch|update|attack|threat|hacker|compromise|spoof|bypass/i;
 
@@ -15,21 +118,23 @@ function severity(title) {
   return ['INFO', 'badge-green'];
 }
 
-/* ─── Render ─────────────────────────────────────────────────── */
-function renderFeed(feedCfg, items) {
-  const list = $(`list-${feedCfg.id}`);
-  const cnt  = $(`cnt-${feedCfg.id}`);
+/* ═══════════════════════════════════════════════════════════════
+   RENDER
+   ═══════════════════════════════════════════════════════════════ */
+
+function renderMergedFeed(items) {
+  const list = $('feed-merged');
 
   if (!items || items.length === 0) {
-    list.innerHTML = `<li class="state-msg">No articles found</li>`;
-    cnt.textContent = '0';
+    list.innerHTML = `
+      <li class="state-msg-wrapper">
+        <div class="state-msg">No articles in this period</div>
+      </li>`;
     return;
   }
 
-  cnt.textContent = items.length;
-  list.innerHTML  = items.map(item => {
+  list.innerHTML = items.map(item => {
     const [sev, cls] = severity(item.title || '');
-    // Sanitise the title to prevent XSS from feed content
     const title = item.title
       ? item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')
       : '(no title)';
@@ -37,7 +142,10 @@ function renderFeed(feedCfg, items) {
       <li>
         <a class="article-item" href="${item.link || '#'}" target="_blank" rel="noopener noreferrer">
           <div class="article-meta">
-            <span class="article-badge ${cls}">${sev}</span>
+            <div class="article-meta-left">
+              <span class="article-badge ${cls}">${sev}</span>
+              <span class="article-source">${item._sourceName}</span>
+            </div>
             <span class="article-time">${timeAgo(item.pubDate)}</span>
           </div>
           <div class="article-title">${title}</div>
@@ -47,7 +155,44 @@ function renderFeed(feedCfg, items) {
   }).join('');
 }
 
-/* ─── Fetch single feed ──────────────────────────────────────── */
+/* ─── Collect, filter, sort, render ─────────────────────────── */
+function applyFilters() {
+  const win = getWindow(dayOffset);
+
+  $('day-label').textContent = formatWindowLabel(win);
+  $('nav-next').disabled     = dayOffset <= 0;
+
+  // Merge all cached items and tag each with its source
+  let items = [];
+  CONFIG.news.feeds.forEach(f => {
+    const cached = cache(`feed_${f.id}`);
+    if (cached) {
+      cached.forEach(item => items.push({
+        ...item,
+        _sourceId:   f.id,
+        _sourceName: f.name,
+      }));
+    }
+  });
+
+  // Apply day window
+  items = filterByWindow(items, win);
+
+  // Apply source filter
+  if (activeSource !== null) {
+    items = items.filter(item => item._sourceId === activeSource);
+  }
+
+  // Newest first
+  items.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+
+  renderMergedFeed(items);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FETCH
+   ═══════════════════════════════════════════════════════════════ */
+
 async function fetchFeed(feedCfg) {
   const key = `feed_${feedCfg.id}`;
   try {
@@ -59,31 +204,30 @@ async function fetchFeed(feedCfg) {
     const data = await res.json();
     if (data.status !== 'ok') throw new Error('Feed error: ' + data.message);
     cache(key, data.items);
-    renderFeed(feedCfg, data.items);
   } catch (e) {
-    const cached = cache(key);
-    if (cached) {
-      renderFeed(feedCfg, cached);
-    } else {
-      $(`list-${feedCfg.id}`).innerHTML = `<li class="state-msg">⚠️ Failed to load</li>`;
-    }
     console.warn(`Feed "${feedCfg.name}" failed:`, e.message);
   }
 }
 
-/* ─── Refresh all feeds in parallel ─────────────────────────── */
 async function refreshAllFeeds() {
   await Promise.all(CONFIG.news.feeds.map(fetchFeed));
+  applyFilters();
 }
 
-/* ─── Init ───────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════════ */
+
 async function initFeeds() {
-  // Render any cached content immediately so columns aren't blank
-  CONFIG.news.feeds.forEach(f => {
-    const cached = cache(`feed_${f.id}`);
-    if (cached) renderFeed(f, cached);
-  });
+  initSourceDropdown();
+
+  $('nav-prev').addEventListener('click', () => navigateDay(+1));
+  $('nav-next').addEventListener('click', () => navigateDay(-1));
+
+  // Render from cache immediately so the list isn't blank on load
+  applyFilters();
 
   await refreshAllFeeds();
+
   setInterval(refreshAllFeeds, CONFIG.refresh.newsMins * 60 * 1000);
 }

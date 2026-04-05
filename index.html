@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vinci Dash</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/clock.css">
@@ -41,42 +44,35 @@
 
   </div>
 
-  <!-- ── Cybersecurity news feeds ── -->
+  <!-- ── Cybersecurity news feed ── -->
   <div class="panel" id="feeds-section">
-    <div class="label">Cybersecurity Feed</div>
-    <div id="feeds-grid">
+    <div id="feeds-header">
+      <div class="label">Cybersecurity Feed</div>
+      <div id="feed-controls">
 
-      <div class="feed-col" id="col-thn">
-        <div class="feed-header">
-          <span class="feed-source-name">The Hacker News</span>
-          <span class="feed-count" id="cnt-thn">—</span>
+        <!-- Source filter dropdown -->
+        <div id="source-dropdown">
+          <button id="source-toggle">
+            <span id="source-toggle-label">All Sources</span>
+            <span id="source-toggle-chevron">&#9662;</span>
+          </button>
+          <div id="source-menu" hidden><!-- populated by news.js --></div>
         </div>
-        <ul class="article-list" id="list-thn">
-          <li class="state-msg"><div class="spinner"></div><span>Loading…</span></li>
-        </ul>
-      </div>
 
-      <div class="feed-col" id="col-bc">
-        <div class="feed-header">
-          <span class="feed-source-name">Bleeping Computer</span>
-          <span class="feed-count" id="cnt-bc">—</span>
+        <!-- Day navigation -->
+        <div id="day-nav">
+          <button class="day-nav-btn" id="nav-prev" title="Previous day">&#8249;</button>
+          <span id="day-label"></span>
+          <button class="day-nav-btn" id="nav-next" title="Next day" disabled>&#8250;</button>
         </div>
-        <ul class="article-list" id="list-bc">
-          <li class="state-msg"><div class="spinner"></div><span>Loading…</span></li>
-        </ul>
-      </div>
 
-      <div class="feed-col" id="col-krebs">
-        <div class="feed-header">
-          <span class="feed-source-name">Krebs on Security</span>
-          <span class="feed-count" id="cnt-krebs">—</span>
-        </div>
-        <ul class="article-list" id="list-krebs">
-          <li class="state-msg"><div class="spinner"></div><span>Loading…</span></li>
-        </ul>
       </div>
-
     </div>
+
+    <!-- Single merged article list -->
+    <ul id="feed-merged">
+      <li class="state-msg"><div class="spinner"></div><span>Loading…</span></li>
+    </ul>
   </div>
 
   <!-- ── Footer ── -->

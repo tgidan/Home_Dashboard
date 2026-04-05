@@ -12,17 +12,17 @@ function startRefreshTicker() {
   const tick = () => {
     const diff   = Math.floor((Date.now() - lastUpdate) / 60000);
     const status = diff < 1 ? 'Updated just now' : `Updated ${diff}m ago`;
-    $('last-updated').textContent    = status;
-    $('refresh-status').textContent  = 'Online';
+    $('last-updated').textContent   = status;
+    $('refresh-status').textContent = 'Online';
   };
 
   tick();
   setInterval(tick, 60 * 1000);
 
-  // Wrap refreshAllFeeds so the timestamp resets after each refresh
-  const _orig = refreshAllFeeds;
+  // Reset the timestamp whenever feeds refresh
+  const _origRefresh = refreshAllFeeds;
   window.refreshAllFeeds = async () => {
-    await _orig();
+    await _origRefresh();
     lastUpdate = new Date();
     tick();
   };

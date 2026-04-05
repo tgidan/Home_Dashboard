@@ -4,22 +4,25 @@
 
 /* ─── Design tokens ─────────────────────────────────────────── */
 :root {
-  --bg:          #08090f;
-  --bg-panel:    #0c0d18;
-  --bg-item:     #10121f;
-  --cyan:        #00e5ff;
-  --cyan-dim:    rgba(0, 229, 255, 0.18);
-  --cyan-glow:   0 0 8px rgba(0, 229, 255, 0.6), 0 0 22px rgba(0, 229, 255, 0.25);
-  --green:       #00ff88;
-  --green-dim:   rgba(0, 255, 136, 0.12);
-  --red:         #ff3b5c;
-  --orange:      #ff8c42;
-  --text:        #dce8ff;
-  --muted:       #3d4a6a;
-  --border:      rgba(0, 229, 255, 0.18);
-  --font-mono:   'Courier New', Consolas, monospace;
-  --font-ui:     -apple-system, 'Segoe UI', system-ui, sans-serif;
-  --radius:      10px;
+  --bg:          #0a0e1a;
+  --bg-panel:    #1a1f35;
+  --bg-item:     rgba(26, 31, 53, 0.6);
+  --cyan:        #22d3ee;
+  --cyan-dim:    rgba(34, 211, 238, 0.12);
+  --cyan-glow:   0 0 12px rgba(34, 211, 238, 0.35), 0 0 40px rgba(34, 211, 238, 0.12);
+  --purple:      #c084fc;
+  --purple-dim:  rgba(192, 132, 252, 0.12);
+  --green:       #4ade80;
+  --green-dim:   rgba(74, 222, 128, 0.12);
+  --red:         #f87171;
+  --orange:      #fb923c;
+  --text:        #f3f4f6;
+  --muted:       #6b7280;
+  --border:      rgba(255, 255, 255, 0.07);
+  --font-mono:    'JetBrains Mono', 'Courier New', Consolas, monospace;
+  --font-ui:      'Space Grotesk', -apple-system, 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --radius:      12px;
 }
 
 /* ─── Reset ─────────────────────────────────────────────────── */
@@ -38,31 +41,14 @@ html, body {
   overflow-x: hidden;
 }
 
-/* Grid background */
+/* Ambient glow orbs */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
-  background-size: 44px 44px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Scanline overlay */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 3px,
-    rgba(0, 0, 0, 0.08) 3px,
-    rgba(0, 0, 0, 0.08) 4px
-  );
+  background:
+    radial-gradient(ellipse 70% 70% at -5% 5%,  rgba(34, 211, 238, 0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 60% at 105% 95%, rgba(192, 132, 252, 0.07) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
 }
