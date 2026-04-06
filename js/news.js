@@ -135,16 +135,15 @@ function renderMergedFeed(items) {
 
   list.innerHTML = items.map(item => {
     const [sev, cls] = severity(item.title || '');
-    const title = item.title
-      ? item.title.replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      : '(no title)';
+    const title = escapeHtml(item.title || '(no title)');
+    const href  = /^https?:\/\//i.test(item.link) ? item.link : '#';
     return `
       <li>
-        <a class="article-item" href="${item.link || '#'}" target="_blank" rel="noopener noreferrer">
+        <a class="article-item" href="${href}" target="_blank" rel="noopener noreferrer">
           <div class="article-meta">
             <div class="article-meta-left">
               <span class="article-badge ${cls}">${sev}</span>
-              <span class="article-source">${item._sourceName}</span>
+              <span class="article-source">${escapeHtml(item._sourceName)}</span>
             </div>
             <span class="article-time">${timeAgo(item.pubDate)}</span>
           </div>

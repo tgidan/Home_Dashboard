@@ -51,7 +51,7 @@ function renderWeather(data, cityName) {
       <div class="weather-temp-block">
         <div class="weather-temp">${toDisplay(c.temperature_2m)}${suffix}</div>
         <div class="weather-desc">${desc}</div>
-        <div class="weather-location">${cityName}</div>
+        <div class="weather-location">${escapeHtml(cityName)}</div>
       </div>
     </div>
     <div class="weather-stats">

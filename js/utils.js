@@ -7,6 +7,16 @@
 /** Shorthand for document.getElementById */
 function $(id) { return document.getElementById(id); }
 
+/** Escapes HTML special characters to prevent XSS when inserting into innerHTML */
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 /**
  * Persistent localStorage cache.
  * cache(key, value)  → stores value as JSON

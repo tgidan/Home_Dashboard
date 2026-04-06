@@ -1,0 +1,22 @@
+# ── Force HTTPS ──────────────────────────────────────────────────────────────
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# ── Security headers ──────────────────────────────────────────────────────────
+<IfModule mod_headers.c>
+  # Tell browsers to only ever use HTTPS for this domain (1 year)
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" "expr=%{HTTPS}=='on'"
+
+  # Prevent MIME-type sniffing
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Disallow embedding in iframes (clickjacking protection)
+  Header always set X-Frame-Options "DENY"
+
+  # Only send the origin as referrer when crossing to a different site
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Restrict browser features to only what the dashboard actually uses
+  Header always set Permissions-Policy "geolocation=(self), camera=(), microphone=(), payment=(), usb=()"
+</IfModule>
