@@ -193,8 +193,25 @@ function applyFilters() {
    FETCH
    ═══════════════════════════════════════════════════════════════ */
 
+/** Returns the most recent 6 AM (today if past 6, yesterday if before 6) */
+function getLastSixAm() {
+  const d = new Date();
+  d.setHours(6, 0, 0, 0);
+  if (d > new Date()) d.setDate(d.getDate() - 1);
+  return d;
+}
+
 async function fetchFeed(feedCfg) {
-  const key = `feed_${feedCfg.id}`;
+  const key      = `feed_${feedCfg.id}`;
+  const tsKey    = `feed_${feedCfg.id}_fetchedAt`;
+  const cached   = cache(key);
+  const fetchedAt = cache(tsKey);
+
+  // Use cached data if it was fetched after the last 6 AM
+  if (cached && fetchedAt && new Date(fetchedAt) >= getLastSixAm()) {
+    return; // already fresh, skip API call
+  }
+  
   try {
     const encoded = encodeURIComponent(feedCfg.url);
     const res     = await fetch(
@@ -204,8 +221,10 @@ async function fetchFeed(feedCfg) {
     const data = await res.json();
     if (data.status !== 'ok') throw new Error('Feed error: ' + data.message);
     cache(key, data.items);
+    cache(tsKey, new Date().toISOString());
   } catch (e) {
     console.warn(`Feed "${feedCfg.name}" failed:`, e.message);
+    // stale cache (if any) is still in localStorage — applyFilters will use it
   }
 }
 
