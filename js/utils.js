@@ -8,15 +8,15 @@
 function $(id) { return document.getElementById(id); }
 
 /**
- * Tiny sessionStorage cache.
+ * Persistent localStorage cache.
  * cache(key, value)  → stores value as JSON
  * cache(key)         → returns parsed value, or null on miss/error
  */
 function cache(key, val) {
   if (val !== undefined) {
-    try { sessionStorage.setItem(key, JSON.stringify(val)); } catch {}
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
   } else {
-    try { return JSON.parse(sessionStorage.getItem(key)); } catch { return null; }
+    try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
   }
 }
 
