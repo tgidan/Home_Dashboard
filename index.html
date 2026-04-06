@@ -10,12 +10,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
   <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/background.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/clock.css">
   <link rel="stylesheet" href="css/weather.css">
   <link rel="stylesheet" href="css/news.css">
 </head>
 <body>
+<div id="bg"><canvas id="city-canvas"></canvas></div>
 <div id="app">
 
   <!-- ── Header: clock + weather ── -->
@@ -85,6 +87,7 @@
 </div>
 
 <!-- JS loaded in dependency order; all share the global scope -->
+<script src="js/background.js"></script>
 <script src="js/config.js"></script>
 <script src="js/utils.js"></script>
 <script src="js/clock.js"></script>

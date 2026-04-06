@@ -6,7 +6,7 @@
 /* ─── App shell ─────────────────────────────────────────────── */
 #app {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -18,8 +18,10 @@
 
 /* ─── Panel ─────────────────────────────────────────────────── */
 .panel {
-  background: var(--bg-panel);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(26, 31, 53, 0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: var(--radius);
   padding: 20px 24px;
   position: relative;
