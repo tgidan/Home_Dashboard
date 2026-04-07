@@ -200,6 +200,27 @@ function getLastSixAm() {
   return d;
 }
 
+function parseRssItems(xml) {
+  // RSS 2.0
+  const rssItems = xml.querySelectorAll('item');
+  if (rssItems.length > 0) {
+    return Array.from(rssItems).map(item => ({
+      title:   item.getElementsByTagName('title')[0]?.textContent   || '',
+      link:    item.getElementsByTagName('link')[0]?.textContent    || '',
+      pubDate: item.getElementsByTagName('pubDate')[0]?.textContent || '',
+    }));
+  }
+  // Atom
+  const entries = xml.querySelectorAll('entry');
+  return Array.from(entries).map(entry => ({
+    title:   entry.getElementsByTagName('title')[0]?.textContent || '',
+    link:    entry.querySelector('link[rel="alternate"]')?.getAttribute('href')
+          || entry.querySelector('link')?.getAttribute('href')   || '',
+    pubDate: entry.getElementsByTagName('published')[0]?.textContent
+          || entry.getElementsByTagName('updated')[0]?.textContent || '',
+  }));
+}
+
 async function fetchFeed(feedCfg) {
   const key      = `feed_${feedCfg.id}`;
   const tsKey    = `feed_${feedCfg.id}_fetchedAt`;
@@ -210,16 +231,19 @@ async function fetchFeed(feedCfg) {
   if (cached && fetchedAt && new Date(fetchedAt) >= getLastSixAm()) {
     return; // already fresh, skip API call
   }
-  
+
   try {
-    const encoded = encodeURIComponent(feedCfg.url);
-    const res     = await fetch(
-      `https://api.rss2json.com/v1/api.json?rss_url=${encoded}&count=${CONFIG.news.itemsPerFeed}`
-    );
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(feedCfg.url)}`;
+    const res      = await fetch(proxyUrl);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    if (data.status !== 'ok') throw new Error('Feed error: ' + data.message);
-    cache(key, data.items);
+    const json = await res.json();
+    if (!json.contents) throw new Error('Empty response from proxy');
+
+    const xml = new DOMParser().parseFromString(json.contents, 'text/xml');
+    if (xml.querySelector('parsererror')) throw new Error('XML parse error');
+
+    const items = parseRssItems(xml).slice(0, CONFIG.news.itemsPerFeed);
+    cache(key, items);
     cache(tsKey, new Date().toISOString());
   } catch (e) {
     console.warn(`Feed "${feedCfg.name}" failed:`, e.message);
