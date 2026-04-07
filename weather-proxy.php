@@ -15,29 +15,35 @@ if ($qs === '') {
 // Only ever contact this one endpoint — no user-supplied base URL
 $url = 'https://api.open-meteo.com/v1/forecast?' . $qs;
 
-$ch = curl_init($url);
-curl_setopt_array($ch, [
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_TIMEOUT        => 10,
-    CURLOPT_USERAGENT      => 'Mozilla/5.0 (compatible; HomeDashboard/1.0)',
-    CURLOPT_HTTPHEADER     => ['Accept: application/json'],
-    CURLOPT_SSL_VERIFYPEER => true,
-    CURLOPT_SSL_VERIFYHOST => 2,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_MAXREDIRS      => 3,
+$ctx = stream_context_create([
+    'http' => [
+        'timeout'        => 10,
+        'user_agent'     => 'Mozilla/5.0 (compatible; HomeDashboard/1.0)',
+        'header'         => "Accept: application/json\r\n",
+        'ignore_errors'  => true,   // return body even on 4xx/5xx instead of false
+    ],
+    'ssl' => [
+        'verify_peer'      => true,
+        'verify_peer_name' => true,
+    ],
 ]);
 
-$content    = curl_exec($ch);
-$httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-$curlError  = curl_error($ch);
-curl_close($ch);
+$content = @file_get_contents($url, false, $ctx);
 
-if ($content === false || $curlError !== '') {
+if ($content === false) {
     http_response_code(502);
-    exit('Failed to reach weather API: ' . $curlError);
+    exit('Failed to reach weather API');
+}
+
+// Forward the upstream HTTP status code
+$httpStatus = 200;
+foreach ((array)($http_response_header ?? []) as $h) {
+    if (preg_match('#^HTTP/\S+\s+(\d+)#', $h, $m)) {
+        $httpStatus = (int)$m[1];
+    }
 }
 
 http_response_code($httpStatus);
 header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: max-age=300'); // 5-minute browser cache
+header('Cache-Control: max-age=300');
 echo $content;
