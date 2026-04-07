@@ -85,12 +85,7 @@ async function fetchWeather(lat, lon, city) {
     '&wind_speed_unit=kmh&timezone=auto',
   ].join('');
 
-  let res = await fetch(url);
-  // Retry once on 5xx — open-meteo occasionally returns transient 502s
-  if (res.status >= 500) {
-    await new Promise(r => setTimeout(r, 3000));
-    res = await fetch(url);
-  }
+  const res = await fetch(url);
   if (!res.ok) throw new Error(`Weather HTTP ${res.status}`);
   const data = await res.json();
   cache('weather_data', data);

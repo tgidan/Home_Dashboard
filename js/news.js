@@ -233,13 +233,12 @@ async function fetchFeed(feedCfg) {
   }
 
   try {
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(feedCfg.url)}`;
+    const proxyUrl = `/rss-proxy.php?url=${encodeURIComponent(feedCfg.url)}`;
     const res      = await fetch(proxyUrl);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    if (!json.contents) throw new Error('Empty response from proxy');
+    const text = await res.text();
 
-    const xml = new DOMParser().parseFromString(json.contents, 'text/xml');
+    const xml = new DOMParser().parseFromString(text, 'text/xml');
     if (xml.querySelector('parsererror')) throw new Error('XML parse error');
 
     const items = parseRssItems(xml).slice(0, CONFIG.news.itemsPerFeed);
