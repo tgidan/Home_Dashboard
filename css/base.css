@@ -85,6 +85,34 @@ body::before {
   flex: 1;
 }
 
+/* ─── Shared: refresh button ────────────────────────────────── */
+.refresh-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--cyan);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 4px 9px;
+  transition: background 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background: var(--cyan-dim);
+  border-color: rgba(34, 211, 238, 0.4);
+}
+
+.refresh-btn:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.refresh-btn.spinning {
+  animation: spin 0.7s linear infinite;
+}
+
 /* ─── Shared: live indicator dot ────────────────────────────── */
 .dot {
   width: 7px;

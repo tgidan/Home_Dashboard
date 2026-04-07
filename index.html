@@ -36,7 +36,10 @@
 
     <!-- Weather widget -->
     <div class="panel" id="weather-panel">
-      <div class="label">Weather Report</div>
+      <div class="panel-header-row">
+        <div class="label">Weather Report</div>
+        <button id="weather-refresh-btn" class="refresh-btn" title="Refresh weather">↻</button>
+      </div>
       <div id="weather-body">
         <div class="state-msg">
           <div class="spinner"></div>
@@ -68,6 +71,9 @@
           <span id="day-label"></span>
           <button class="day-nav-btn" id="nav-next" title="Next day" disabled>&#8250;</button>
         </div>
+
+        <!-- Manual refresh -->
+        <button id="news-refresh-btn" class="refresh-btn" title="Refresh feed">↻</button>
 
       </div>
     </div>

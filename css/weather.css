@@ -7,6 +7,17 @@
   flex-direction: column;
 }
 
+.panel-header-row {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 16px;
+}
+
+.panel-header-row .label {
+  flex: 1;
+  margin-bottom: 0;
+}
+
 #weather-body {
   flex: 1;
   display: flex;

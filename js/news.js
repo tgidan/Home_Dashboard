@@ -255,6 +255,21 @@ async function refreshAllFeeds() {
   applyFilters();
 }
 
+/* ─── Manual refresh (bypasses cache TTL) ───────────────────── */
+async function forceRefreshAllFeeds() {
+  const btn = $('news-refresh-btn');
+  if (btn) { btn.disabled = true; btn.classList.add('spinning'); }
+  // Invalidate all per-feed timestamps so fetchFeed skips the TTL guard
+  CONFIG.news.feeds.forEach(f => cache(`feed_${f.id}_fetchedAt`, null));
+  try {
+    await refreshAllFeeds();
+  } catch (e) {
+    console.warn('Feed refresh failed:', e);
+  } finally {
+    if (btn) { btn.disabled = false; btn.classList.remove('spinning'); }
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════
    INIT
    ═══════════════════════════════════════════════════════════════ */
@@ -264,6 +279,7 @@ async function initFeeds() {
 
   $('nav-prev').addEventListener('click', () => navigateDay(+1));
   $('nav-next').addEventListener('click', () => navigateDay(-1));
+  $('news-refresh-btn').addEventListener('click', forceRefreshAllFeeds);
 
   // Render from cache immediately so the list isn't blank on load
   applyFilters();

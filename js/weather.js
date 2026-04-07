@@ -101,47 +101,64 @@ async function fetchWeather(lat, lon, city) {
   renderWeather(data, city);
 }
 
+/* ─── Load (module-level so refreshWeather can call it) ─────── */
+async function _weatherLoad() {
+  let lat  = CONFIG.location.latitude;
+  let lon  = CONFIG.location.longitude;
+  let city = `${CONFIG.location.city}, ${CONFIG.location.country}`;
+
+  if (CONFIG.location.useGeolocation && navigator.geolocation) {
+    try {
+      const pos = await new Promise((resolve, reject) =>
+        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 6000 })
+      );
+      lat = pos.coords.latitude;
+      lon = pos.coords.longitude;
+
+      // Reverse-geocode to get a human-readable city name
+      try {
+        const geoRes  = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
+        );
+        const geoData = await geoRes.json();
+        city = geoData.address?.city
+            || geoData.address?.town
+            || geoData.address?.village
+            || geoData.address?.county
+            || city;
+        if (geoData.address?.country_code)
+          city += `, ${geoData.address.country_code.toUpperCase()}`;
+      } catch {}
+    } catch {}
+  }
+
+  await fetchWeather(lat, lon, city);
+}
+
+/* ─── Manual refresh (bypasses cache TTL) ───────────────────── */
+async function refreshWeather() {
+  const btn = $('weather-refresh-btn');
+  if (btn) { btn.disabled = true; btn.classList.add('spinning'); }
+  cache('weather_fetchedAt', null); // invalidate so fetchWeather skips the TTL guard
+  try {
+    await _weatherLoad();
+  } catch (e) {
+    console.warn('Weather refresh failed:', e);
+  } finally {
+    if (btn) { btn.disabled = false; btn.classList.remove('spinning'); }
+  }
+}
+
 /* ─── Init ───────────────────────────────────────────────────── */
 async function initWeather() {
   // Show cached data immediately so the panel isn't blank on load
   const cached = cache('weather_data');
   if (cached) renderWeather(cached, cache('weather_city') || CONFIG.location.city);
 
-  const load = async () => {
-    let lat  = CONFIG.location.latitude;
-    let lon  = CONFIG.location.longitude;
-    let city = `${CONFIG.location.city}, ${CONFIG.location.country}`;
-
-    if (CONFIG.location.useGeolocation && navigator.geolocation) {
-      try {
-        const pos = await new Promise((resolve, reject) =>
-          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 6000 })
-        );
-        lat = pos.coords.latitude;
-        lon = pos.coords.longitude;
-
-        // Reverse-geocode to get a human-readable city name
-        try {
-          const geoRes  = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
-          );
-          const geoData = await geoRes.json();
-          city = geoData.address?.city
-              || geoData.address?.town
-              || geoData.address?.village
-              || geoData.address?.county
-              || city;
-          if (geoData.address?.country_code)
-            city += `, ${geoData.address.country_code.toUpperCase()}`;
-        } catch {}
-      } catch {}
-    }
-
-    await fetchWeather(lat, lon, city);
-  };
+  $('weather-refresh-btn').addEventListener('click', refreshWeather);
 
   try {
-    await load();
+    await _weatherLoad();
   } catch (e) {
     if (!cached)
       $('weather-body').innerHTML = `<div class="state-msg">⚠️ Weather unavailable</div>`;
@@ -149,6 +166,6 @@ async function initWeather() {
   }
 
   setInterval(async () => {
-    try { await load(); } catch {}
+    try { await _weatherLoad(); } catch {}
   }, CONFIG.refresh.weatherMins * 60 * 1000);
 }
