@@ -91,3 +91,42 @@
   color: var(--text);
   margin-top: 3px;
 }
+
+/* ─── 7-day forecast strip ──────────────────────────────────── */
+.weather-forecast {
+  display: flex;
+  gap: 6px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.forecast-day {
+  flex: 1;
+  min-width: 52px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 8px 6px;
+  text-align: center;
+}
+
+.forecast-label {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.forecast-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+  margin: 4px 0;
+}
+
+.forecast-max {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--cyan);
+}

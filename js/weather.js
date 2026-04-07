@@ -39,11 +39,29 @@ function wmo(code) {
 
 /* ─── Render ─────────────────────────────────────────────────── */
 function renderWeather(data, cityName) {
-  const c          = data.current;
+  const c            = data.current;
+  const d            = data.daily;
   const [desc, icon] = wmo(c.weather_code);
-  const isCelsius  = CONFIG.location.units === 'celsius';
-  const suffix     = isCelsius ? '°C' : '°F';
-  const toDisplay  = t => isCelsius ? Math.round(t) : Math.round(t * 9 / 5 + 32);
+  const isCelsius    = CONFIG.location.units === 'celsius';
+  const suffix       = isCelsius ? '°C' : '°F';
+  const toDisplay    = t => isCelsius ? Math.round(t) : Math.round(t * 9 / 5 + 32);
+
+  const todayMax = d ? toDisplay(d.temperature_2m_max[0]) : null;
+
+  const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const forecastHtml = d ? `
+    <div class="weather-forecast">
+      ${d.time.map((dateStr, i) => {
+        const [yr, mo, dy] = dateStr.split('-').map(Number);
+        const label = i === 0 ? 'Today' : DAY_NAMES[new Date(yr, mo - 1, dy).getDay()];
+        const [, fIcon] = wmo(d.weather_code[i]);
+        return `<div class="forecast-day">
+          <div class="forecast-label">${label}</div>
+          <div class="forecast-icon">${fIcon}</div>
+          <div class="forecast-max">${toDisplay(d.temperature_2m_max[i])}${suffix}</div>
+        </div>`;
+      }).join('')}
+    </div>` : '';
 
   $('weather-body').innerHTML = `
     <div class="weather-main">
@@ -59,6 +77,10 @@ function renderWeather(data, cityName) {
         <div class="stat-label">Feels Like</div>
         <div class="stat-value">${toDisplay(c.apparent_temperature)}${suffix}</div>
       </div>
+      ${todayMax !== null ? `<div class="stat">
+        <div class="stat-label">Max Today</div>
+        <div class="stat-value">${todayMax}${suffix}</div>
+      </div>` : ''}
       <div class="stat">
         <div class="stat-label">Humidity</div>
         <div class="stat-value">${c.relative_humidity_2m}%</div>
@@ -72,6 +94,7 @@ function renderWeather(data, cityName) {
         <div class="stat-value">${c.precipitation ?? 0} mm</div>
       </div>
     </div>
+    ${forecastHtml}
   `;
 }
 
@@ -89,6 +112,8 @@ async function fetchWeather(lat, lon, city) {
     `?latitude=${lat}&longitude=${lon}`,
     '&current=temperature_2m,apparent_temperature,weather_code',
     ',wind_speed_10m,wind_direction_10m,relative_humidity_2m,precipitation',
+    '&daily=temperature_2m_max,weather_code',
+    '&forecast_days=7',
     '&wind_speed_unit=kmh&timezone=auto',
   ].join('');
 
