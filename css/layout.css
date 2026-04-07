@@ -70,6 +70,13 @@
   padding: 0 4px;
 }
 
+/* ─── Footer dot ────────────────────────────────────────────── */
+#footer .footer-dot {
+  width: 5px;
+  height: 5px;
+  animation-duration: 3.5s;
+}
+
 /* ─── Responsive ────────────────────────────────────────────── */
 @media (max-width: 900px) {
   #app    { padding: 12px; gap: 12px; }
