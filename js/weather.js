@@ -77,6 +77,13 @@ function renderWeather(data, cityName) {
 
 /* ─── Fetch ──────────────────────────────────────────────────── */
 async function fetchWeather(lat, lon, city) {
+  // Skip if cached data is still within the refresh window
+  const fetchedAt = cache('weather_fetchedAt');
+  if (fetchedAt) {
+    const ageMs = Date.now() - new Date(fetchedAt).getTime();
+    if (ageMs < CONFIG.refresh.weatherMins * 60 * 1000) return;
+  }
+
   const url = [
     'https://api.open-meteo.com/v1/forecast',
     `?latitude=${lat}&longitude=${lon}`,
@@ -90,6 +97,7 @@ async function fetchWeather(lat, lon, city) {
   const data = await res.json();
   cache('weather_data', data);
   cache('weather_city', city);
+  cache('weather_fetchedAt', new Date().toISOString());
   renderWeather(data, city);
 }
 
