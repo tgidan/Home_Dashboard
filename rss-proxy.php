@@ -9,6 +9,7 @@ $ALLOWED = [
     'https://thehackernews.com/feeds/posts/default',
     'https://www.bleepingcomputer.com/feed/',
     'https://krebsonsecurity.com/feed/',
+    'https://embracethered.com/blog/index.xml',
 ];
 
 $url = $_GET['url'] ?? '';

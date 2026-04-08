@@ -17,6 +17,7 @@ const CONFIG = {
       { id: 'thn',   name: 'The Hacker News',  url: 'https://thehackernews.com/feeds/posts/default' },
       { id: 'bc',    name: 'Bleeping Computer', url: 'https://www.bleepingcomputer.com/feed/' },
       { id: 'krebs', name: 'Krebs on Security', url: 'https://krebsonsecurity.com/feed/' },
+      { id: 'etr',   name: 'Embrace The Red',   url: 'https://embracethered.com/blog/index.xml' },
     ],
     itemsPerFeed: 30
   },
