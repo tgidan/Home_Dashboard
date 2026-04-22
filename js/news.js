@@ -164,9 +164,10 @@ function applyFilters() {
   // Merge all cached items and tag each with its source
   let items = [];
   CONFIG.news.feeds.forEach(f => {
-    const cached = cache(`feed_${f.id}`);
-    if (cached) {
-      cached.forEach(item => items.push({
+    const testData = typeof TEST_FEEDS !== 'undefined' ? TEST_FEEDS[f.id] : null;
+    const source   = cache(`feed_${f.id}`) ?? testData;
+    if (source) {
+      source.forEach(item => items.push({
         ...item,
         _sourceId:   f.id,
         _sourceName: f.name,
@@ -246,7 +247,6 @@ async function fetchFeed(feedCfg) {
     cache(tsKey, new Date().toISOString());
   } catch (e) {
     console.warn(`Feed "${feedCfg.name}" failed:`, e.message);
-    // stale cache (if any) is still in localStorage — applyFilters will use it
   }
 }
 
@@ -275,6 +275,13 @@ async function forceRefreshAllFeeds() {
    ═══════════════════════════════════════════════════════════════ */
 
 async function initFeeds() {
+  // Clear any previously cached test data (identifiable by link === '#')
+  CONFIG.news.feeds.forEach(f => {
+    const key    = `feed_${f.id}`;
+    const cached = cache(key);
+    if (cached && cached.every(item => item.link === '#')) cache(key, null);
+  });
+
   initSourceDropdown();
 
   $('nav-prev').addEventListener('click', () => navigateDay(+1));

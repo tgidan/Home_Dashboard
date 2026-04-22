@@ -4,6 +4,7 @@
 
 #feeds-section {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
 }
@@ -159,13 +160,12 @@
 /* ─── Merged article list ───────────────────────────────────── */
 #feed-merged {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 6px;
   align-content: start;
-  max-height: calc(100vh - 310px);
-  min-height: 280px;
 }
 
 #feed-merged::-webkit-scrollbar       { width: 4px; }
@@ -258,7 +258,6 @@
 @media (max-width: 900px) {
   #feed-merged {
     grid-template-columns: 1fr;
-    max-height: 60vh;
   }
 }
 
