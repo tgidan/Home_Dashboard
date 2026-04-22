@@ -33,4 +33,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initClock();
   initWeather();
   initFeeds().then(startRefreshTicker);
+  initOsint();
 });

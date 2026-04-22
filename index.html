@@ -15,73 +15,131 @@
   <link rel="stylesheet" href="css/clock.css">
   <link rel="stylesheet" href="css/weather.css">
   <link rel="stylesheet" href="css/news.css">
+  <link rel="stylesheet" href="css/osint.css">
 </head>
 <body>
 <div id="bg"><canvas id="city-canvas"></canvas></div>
 <div id="app">
 
-  <!-- ── Header: clock + weather ── -->
-  <div id="header">
+  <!-- ── Dashboard navigation ── -->
+  <nav id="dash-nav">
+    <button class="dash-nav-btn active" data-dash="dash-main">Main Dashboard</button>
+    <button class="dash-nav-btn" data-dash="dash-osint">OSINT Tools</button>
+  </nav>
 
-    <!-- Clock widget -->
-    <div class="panel" id="clock-panel">
-      <div class="label">System Clock</div>
-      <div id="clock">00:00:00</div>
-      <div id="date-str">Loading…</div>
-      <div class="live-indicator">
-        <span class="dot"></span>
-        <span id="refresh-status">Online</span>
-      </div>
-    </div>
+  <!-- ══════════════════════════════════════════════════════════
+       MAIN DASHBOARD
+       ══════════════════════════════════════════════════════════ -->
+  <div id="dash-main" class="dashboard-view active">
 
-    <!-- Weather widget -->
-    <div class="panel" id="weather-panel">
-      <div class="panel-header-row">
-        <div class="label">Weather Report</div>
-        <button id="weather-refresh-btn" class="refresh-btn" title="Refresh weather">↻</button>
-      </div>
-      <div id="weather-body">
-        <div class="state-msg">
-          <div class="spinner"></div>
-          <span>Fetching conditions…</span>
+    <!-- ── Header: clock + weather ── -->
+    <div id="header">
+
+      <!-- Clock widget -->
+      <div class="panel" id="clock-panel">
+        <div class="label">System Clock</div>
+        <div id="clock">00:00:00</div>
+        <div id="date-str">Loading…</div>
+        <div class="live-indicator">
+          <span class="dot"></span>
+          <span id="refresh-status">Online</span>
         </div>
       </div>
+
+      <!-- Weather widget -->
+      <div class="panel" id="weather-panel">
+        <div class="panel-header-row">
+          <div class="label">Weather Report</div>
+          <button id="weather-refresh-btn" class="refresh-btn" title="Refresh weather">↻</button>
+        </div>
+        <div id="weather-body">
+          <div class="state-msg">
+            <div class="spinner"></div>
+            <span>Fetching conditions…</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Cybersecurity news feed ── -->
+    <div class="panel" id="feeds-section">
+      <div id="feeds-header">
+        <div class="label">Cybersecurity Feed</div>
+        <div id="feed-controls">
+
+          <!-- Source filter dropdown -->
+          <div id="source-dropdown">
+            <button id="source-toggle">
+              <span id="source-toggle-label">All Sources</span>
+              <span id="source-toggle-chevron">&#9662;</span>
+            </button>
+            <div id="source-menu" hidden><!-- populated by news.js --></div>
+          </div>
+
+          <!-- Day navigation -->
+          <div id="day-nav">
+            <button class="day-nav-btn" id="nav-prev" title="Previous day">&#8249;</button>
+            <span id="day-label"></span>
+            <button class="day-nav-btn" id="nav-next" title="Next day" disabled>&#8250;</button>
+          </div>
+
+          <!-- Manual refresh -->
+          <button id="news-refresh-btn" class="refresh-btn" title="Refresh feed">↻</button>
+
+        </div>
+      </div>
+
+      <!-- Single merged article list -->
+      <ul id="feed-merged">
+        <li class="state-msg"><div class="spinner"></div><span>Loading…</span></li>
+      </ul>
     </div>
 
   </div>
 
-  <!-- ── Cybersecurity news feed ── -->
-  <div class="panel" id="feeds-section">
-    <div id="feeds-header">
-      <div class="label">Cybersecurity Feed</div>
-      <div id="feed-controls">
+  <!-- ══════════════════════════════════════════════════════════
+       OSINT TOOL DASHBOARD
+       ══════════════════════════════════════════════════════════ -->
+  <div id="dash-osint" class="dashboard-view">
 
-        <!-- Source filter dropdown -->
-        <div id="source-dropdown">
-          <button id="source-toggle">
-            <span id="source-toggle-label">All Sources</span>
-            <span id="source-toggle-chevron">&#9662;</span>
-          </button>
-          <div id="source-menu" hidden><!-- populated by news.js --></div>
+    <div class="panel" id="osint-section">
+
+      <div id="osint-header">
+        <div class="label">OSINT Tools</div>
+        <div id="osint-filters">
+
+          <!-- Search bar -->
+          <input id="osint-search" class="osint-search" type="search" placeholder="Search tools…" autocomplete="off" spellcheck="false">
+
+          <!-- Importance filter -->
+          <div id="importance-group"><!-- populated by osint.js --></div>
+
+          <!-- Goal filter -->
+          <select id="osint-goal-select" class="osint-select" title="Filter by goal">
+            <option value="all">All Goals</option>
+          </select>
+
+          <!-- Application / tag filter -->
+          <select id="osint-tag-select" class="osint-select" title="Filter by application">
+            <option value="all">All Applications</option>
+          </select>
+
+          <!-- Result count -->
+          <span id="osint-count"></span>
+
         </div>
-
-        <!-- Day navigation -->
-        <div id="day-nav">
-          <button class="day-nav-btn" id="nav-prev" title="Previous day">&#8249;</button>
-          <span id="day-label"></span>
-          <button class="day-nav-btn" id="nav-next" title="Next day" disabled>&#8250;</button>
-        </div>
-
-        <!-- Manual refresh -->
-        <button id="news-refresh-btn" class="refresh-btn" title="Refresh feed">↻</button>
-
       </div>
+
+      <!-- Tool grid -->
+      <ul id="osint-grid">
+        <li class="state-msg-wrapper">
+          <div class="state-msg"><div class="spinner"></div><span>Loading tools…</span></div>
+        </li>
+      </ul>
+
     </div>
 
-    <!-- Single merged article list -->
-    <ul id="feed-merged">
-      <li class="state-msg"><div class="spinner"></div><span>Loading…</span></li>
-    </ul>
   </div>
 
   <!-- ── Footer ── -->
@@ -92,6 +150,45 @@
 
 </div>
 
+<!-- ── OSINT tool subview overlay ── -->
+<div id="osint-subview" hidden>
+  <div id="osint-subview-backdrop"></div>
+  <div id="osint-subview-panel" class="panel">
+
+    <div id="osint-sv-header">
+      <div id="osint-sv-title-row">
+        <span id="osint-sv-name"></span>
+        <span id="osint-sv-imp"></span>
+      </div>
+      <button id="osint-subview-close" title="Close">&#x2715;</button>
+    </div>
+
+    <div id="osint-sv-body">
+
+      <section class="osint-sv-section">
+        <div class="osint-sv-label">Goals</div>
+        <div id="osint-sv-goals" class="osint-goals"></div>
+      </section>
+
+      <section class="osint-sv-section">
+        <div class="osint-sv-label">Applications</div>
+        <div id="osint-sv-tags" class="osint-tags"></div>
+      </section>
+
+      <section class="osint-sv-section" id="osint-sv-comment-section">
+        <div class="osint-sv-label">Notes</div>
+        <div id="osint-sv-comment"></div>
+      </section>
+
+    </div>
+
+    <div id="osint-sv-footer">
+      <button id="osint-sv-visit" class="osint-sv-visit-btn">&#x2197; Visit Tool</button>
+    </div>
+
+  </div>
+</div>
+
 <!-- JS loaded in dependency order; all share the global scope -->
 <script src="js/background.js"></script>
 <script src="js/config.js"></script>
@@ -100,6 +197,8 @@
 <script src="js/weather.js"></script>
 <script src="js/test-data.js"></script>
 <script src="js/news.js"></script>
+<script src="js/osint-data.js"></script>
+<script src="js/osint.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

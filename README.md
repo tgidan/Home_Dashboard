@@ -1,8 +1,29 @@
 # Vinci Dash
 
-A self-contained cyberpunk-themed dashboard showing live cybersecurity news and weather. Works as a **Wallpaper Engine** background and in any browser.
+A self-contained cyberpunk-themed dashboard showing live cybersecurity news, weather, and a curated OSINT tool reference. Works as a **Wallpaper Engine** background and in any browser.
 
 ## Features
+
+### OSINT Tool Dashboard
+
+- **Second dashboard** accessible via the nav bar — completely separate from the main dashboard (no clock, weather, or news)
+- Curated collection of OSINT tools organized across six investigative goals:
+  - IP Addresses, Domains & URLs, File Hashes, Attack Descriptions, TTPs & Attacker Profiling, Miscellaneous
+- **Color-coded importance** — each card has a colored left border and badge:
+  - Red = Critical, Orange = Relevant, Yellow = Occasional, Default = Standard
+- Tools appearing in multiple goals are **deduplicated** — goals, tags, and notes are merged; highest importance wins
+- **Filter bar** with four combinable filters:
+  - Search box (searches tool names, tags, goals, and notes)
+  - Importance toggle buttons
+  - Goal dropdown
+  - Application/tag dropdown (scoped to the selected goal)
+- **Result count** shown live as filters change
+- Clicking a card opens a **subview panel** (modal overlay) showing:
+  - All goals the tool belongs to
+  - Full application/tag list
+  - Per-goal notes (with goal heading when multiple goals have notes)
+  - "Visit Tool" button that opens the tool's website in a new tab
+- Subview can be closed via the ✕ button, clicking outside, or pressing Escape
 
 ### Weather
 
@@ -58,6 +79,7 @@ Home_Dashboard/
 │   ├── layout.css      # Grid layout
 │   ├── clock.css       # Clock and date styles
 │   ├── news.css        # News feed, badges, source dropdown, nav
+│   ├── osint.css       # OSINT dashboard: nav, cards, filters, subview overlay
 │   └── background.css  # Canvas positioning
 └── js/
     ├── config.js       # All user-editable settings (location, feeds, refresh)
@@ -65,6 +87,8 @@ Home_Dashboard/
     ├── clock.js        # Clock and date rendering
     ├── weather.js      # Weather fetch, WMO code map, forecast render
     ├── news.js         # Feed fetch, severity tagging, filtering, render
+    ├── osint-data.js   # Static OSINT tool data: tables, URLs, deduplication logic
+    ├── osint.js        # OSINT dashboard: filter UI, grid render, subview logic
     ├── background.js   # Cityscape canvas animation
     └── main.js         # Boot sequence and refresh status ticker
 ```
@@ -88,6 +112,7 @@ const CONFIG = {
       { id: 'thn',   name: 'The Hacker News',  url: 'https://thehackernews.com/feeds/posts/default' },
       { id: 'bc',    name: 'Bleeping Computer', url: 'https://www.bleepingcomputer.com/feed/' },
       { id: 'krebs', name: 'Krebs on Security', url: 'https://krebsonsecurity.com/feed/' },
+      { id: 'etr', name: 'Embrace the Red', url: 'https://embracethered.com/blog/index.xml' },
     ],
     itemsPerFeed: 30           // max articles stored per feed
   },
