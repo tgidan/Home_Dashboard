@@ -161,6 +161,6 @@ OR (How I do it)
 Wallpaper Engine has its own cache for loading in URLs (option 2) which is nice, but comes with the downside of some updates to the website won't load in. This is because Wallpaper Engine cached the files from the website. **Perform the following steps** to fix this:
 1. Close Wallpaper Engine (Windows taskbar → show hidden icons → Right click Wallpaper Engine → Left click 'Quit')
 2. Perform the following two commandos in PowerShell
- - `"${Drive}:\${Steam path to Wallpaper Engine}\bin\edgewallpaper32.exe.WebView2\EBWebView\Default\Cache\*"` 
- - `"${Drive}\${Steam path to Wallpaper Engine}\bin\edgewallpaper32.exe.WebView2\EBWebView\*" -Exclude "*.json","*.log"`
+ - `Remove-Item -Recurse -Force "${Drive}:\${Steam path to Wallpaper Engine}\bin\edgewallpaper32.exe.WebView2\EBWebView\Default\Cache\*"` 
+ - `Remove-Item -Recurse -Force "${Drive}\${Steam path to Wallpaper Engine}\bin\edgewallpaper32.exe.WebView2\EBWebView\*" -Exclude "*.json","*.log"`
  3. Open Wallpaper Engine again and everything should work.
