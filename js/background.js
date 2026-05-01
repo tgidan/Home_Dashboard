@@ -1,5 +1,12 @@
 'use strict';
 
+/**
+ * `background.js` creates a new cyberpunk theme background of a city where it is always raining.
+ * a few objects are 
+ * 
+ */
+
+
 (function () {
   const canvas = document.getElementById('city-canvas');
   const ctx    = canvas.getContext('2d');

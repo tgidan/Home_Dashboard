@@ -257,6 +257,29 @@
 .badge-imp-yellow  { background: rgba(250,204,21,0.12);  color: #facc15;  border: 1px solid rgba(250,204,21,0.3); }
 .badge-imp-default { background: rgba(255,255,255,0.04); color: var(--muted); border: 1px solid rgba(255,255,255,0.12); }
 
+/* Direct-visit button on card */
+.osint-card-visit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: rgba(34, 211, 238, 0.06);
+  border: 1px solid rgba(34, 211, 238, 0.16);
+  border-radius: 4px;
+  color: rgba(34, 211, 238, 0.45);
+  font-size: 0.68rem;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.osint-card-visit-btn:hover {
+  background: rgba(34, 211, 238, 0.18);
+  border-color: rgba(34, 211, 238, 0.45);
+  color: var(--cyan);
+}
+
 /* Goal chips row */
 .osint-goals {
   display: flex;

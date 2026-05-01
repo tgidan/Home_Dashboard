@@ -180,6 +180,19 @@ function renderOsintGrid() {
 
     top.appendChild(nameEl);
     top.appendChild(impBadge);
+
+    if (entry.url) {
+      const visitBtn = document.createElement('a');
+      visitBtn.className = 'osint-card-visit-btn';
+      visitBtn.href      = entry.url;
+      visitBtn.target    = '_blank';
+      visitBtn.rel       = 'noopener noreferrer';
+      visitBtn.title     = 'Visit tool';
+      visitBtn.textContent = '↗';
+      visitBtn.addEventListener('click', e => e.stopPropagation());
+      top.appendChild(visitBtn);
+    }
+
     li.appendChild(top);
 
     /* Goal chips */
