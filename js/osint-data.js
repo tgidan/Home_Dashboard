@@ -1,9 +1,9 @@
 "use strict";
 
-/* ═══════════════════════════════════════════════════════════════
-   OSINT DATA — parsed from "OSINT tool collection.xlsx"
-   Importance: red=critical, orange=relevant, yellow=occasional, default=standard
-   ═══════════════════════════════════════════════════════════════ */
+/* 
+ * OSINT DATA: parsed from "OSINT tool collection.xlsx"
+ * Importance: red=critical, orange=relevant, yellow=occasional, default=standard
+ */
 
 const OSINT_URLS = {
   'VirusTotal':                          'https://www.virustotal.com',
@@ -340,9 +340,10 @@ const OSINT_TABLES = [
 /* Importance rank used when merging duplicates — highest wins */
 const IMP_RANK = { red: 4, orange: 3, yellow: 2, default: 1 };
 
-/* Deduplicated tools: same name across tables → merged goals (each carrying its
-   own note), merged tags, highest importance. Comments are stored per-goal so
-   no note is ever lost when a tool appears in multiple tables. */
+/* Deduplicated tools: same name across tables -> merged goals (each carrying its
+ * own note), merged tags, highest importance. Comments are stored per-goal so
+ * no note is ever lost when a tool appears in multiple tables. 
+ */
 const OSINT_DEDUPED = (() => {
   const map = new Map();
   for (const table of OSINT_TABLES) {

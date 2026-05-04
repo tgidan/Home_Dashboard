@@ -180,7 +180,7 @@
   margin-left: auto;
 }
 
-/* ─── Tool grid ─────────────────────────────────────────────── */
+/* Tool grid */
 #osint-grid {
   flex: 1;
   min-height: 0;
@@ -197,7 +197,7 @@
 #osint-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 #osint-grid::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
 
-/* ─── Tool card ─────────────────────────────────────────────── */
+/* Tool card */
 .osint-card {
   display: flex;
   flex-direction: column;
@@ -328,15 +328,12 @@
   border-color: rgba(255,255,255,0.08);
 }
 
-/* ─── Empty state ───────────────────────────────────────────── */
+/* Empty state */
 #osint-grid > .state-msg-wrapper {
   grid-column: 1 / -1;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   SUBVIEW OVERLAY
-   ═══════════════════════════════════════════════════════════════ */
-
+/* SUBVIEW OVERLAY */
 @keyframes sv-fade-in  { from { opacity: 0; } to { opacity: 1; } }
 @keyframes sv-slide-in { from { transform: translateY(12px); opacity: 0; }
                          to   { transform: translateY(0);    opacity: 1; } }
@@ -507,7 +504,7 @@
 /* Prevent body scroll while subview is open */
 body.subview-open { overflow: hidden; }
 
-/* ─── Responsive ────────────────────────────────────────────── */
+/* Responsive */
 @media (max-width: 900px) {
   #osint-grid { grid-template-columns: 1fr; }
   #osint-filters { gap: 6px; }

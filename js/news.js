@@ -1,18 +1,16 @@
 "use strict";
 
-/* ═══════════════════════════════════════════════════════════════
-   NEWS — single merged feed with source dropdown + day filter
-   Depends on: config.js (CONFIG), utils.js ($, cache, timeAgo, MONTHS)
-   ═══════════════════════════════════════════════════════════════ */
+/**
+ * NEWS: single merged feed with source dropdown + day filter
+ * Depends on: config.js (CONFIG), utils.js ($, cache, timeAgo, MONTHS)
+ */
+   
 
-/* ─── State ──────────────────────────────────────────────────── */
+/* State */
 let dayOffset    = 0;     // 0 = current window, +N = N days back
 let activeSource = null;  // null = all, or a feed.id string
 
-/* ═══════════════════════════════════════════════════════════════
-   DAY WINDOW
-   ═══════════════════════════════════════════════════════════════ */
-
+/* DAY WINDOW */
 function getWindow(offset) {
   const end = new Date();
   end.setHours(6, 0, 0, 0);
@@ -45,9 +43,7 @@ function navigateDay(delta) {
   applyFilters();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   SOURCE DROPDOWN
-   ═══════════════════════════════════════════════════════════════ */
+/* SOURCE DROPDOWN */
 
 function setActiveSource(sourceId) {
   activeSource = sourceId === 'all' ? null : sourceId;
@@ -105,10 +101,7 @@ function initSourceDropdown() {
   menu.addEventListener('click', e => e.stopPropagation());
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   SEVERITY
-   ═══════════════════════════════════════════════════════════════ */
-
+/* SEVERITY */
 const HIGH_KEYWORDS   = /ransomware|zero.?day|0.?day|exploit|cve-|critical|breach|backdoor|rce|remote code|data leak|nation.state|apt\b/i;
 const MEDIUM_KEYWORDS = /phishing|malware|trojan|spyware|adware|ddos|botnet|vulnerability|patch|update|attack|threat|hacker|compromise|spoof|bypass/i;
 
@@ -118,9 +111,7 @@ function severity(title) {
   return ['INFO', 'badge-green'];
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   RENDER
-   ═══════════════════════════════════════════════════════════════ */
+/* RENDER */
 
 function renderMergedFeed(items) {
   const list = $('feed-merged');
@@ -154,7 +145,7 @@ function renderMergedFeed(items) {
   }).join('');
 }
 
-/* ─── Collect, filter, sort, render ─────────────────────────── */
+/* Collect, filter, sort, renderstea */
 function applyFilters() {
   const win = getWindow(dayOffset);
 
@@ -189,9 +180,7 @@ function applyFilters() {
   renderMergedFeed(items);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   FETCH
-   ═══════════════════════════════════════════════════════════════ */
+/* FETCH */
 
 /** Returns the most recent 6 AM (today if past 6, yesterday if before 6) */
 function getLastSixAm() {
@@ -255,7 +244,7 @@ async function refreshAllFeeds() {
   applyFilters();
 }
 
-/* ─── Manual refresh (bypasses cache TTL) ───────────────────── */
+/* Manual refresh (bypasses cache TTL) */
 async function forceRefreshAllFeeds() {
   const btn = $('news-refresh-btn');
   if (btn) { btn.disabled = true; btn.classList.add('spinning'); }
@@ -270,10 +259,7 @@ async function forceRefreshAllFeeds() {
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   INIT
-   ═══════════════════════════════════════════════════════════════ */
-
+/* INIT */
 async function initFeeds() {
   // Clear any previously cached test data (identifiable by link === '#')
   CONFIG.news.feeds.forEach(f => {

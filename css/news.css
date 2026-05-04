@@ -116,7 +116,7 @@
   content: '\25B8\0020'; /* ▸ */
 }
 
-/* ─── Day navigation ────────────────────────────────────────── */
+/* Day navigation */
 #day-nav {
   display: flex;
   align-items: center;
@@ -157,7 +157,7 @@
   cursor: default;
 }
 
-/* ─── Merged article list ───────────────────────────────────── */
+/* Merged article list */
 #feed-merged {
   flex: 1;
   min-height: 0;
@@ -174,7 +174,7 @@
 #feed-merged::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 #feed-merged::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
 
-/* ─── Article card ──────────────────────────────────────────── */
+/* Article card */
 .article-item {
   display: block;
   padding: 10px 12px;
@@ -206,7 +206,7 @@
   min-width: 0;
 }
 
-/* ─── Severity badges ───────────────────────────────────────── */
+/* Severity badges */
 .article-badge {
   font-size: 9px;
   letter-spacing: 1px;
@@ -250,20 +250,22 @@
   overflow: hidden;
 }
 
-/* ─── Empty / error state spans full grid width ─────────────── */
+/* Empty / error state spans full grid width */
 #feed-merged > .state-msg-wrapper {
   grid-column: 1 / -1;
 }
 
-/* ─── Responsive ────────────────────────────────────────────── */
+/* Responsive */
 @media (max-width: 900px) {
   #feed-merged {
     grid-template-columns: 1fr;
   }
 }
 
-/* On narrow phones (≤ 600px, e.g. Pixel 7 at 412px):
-   stack label above controls so nothing overflows */
+/* 
+ * On narrow phones (≤ 600px, e.g. Pixel 7 at 412px):
+ * stack label above controls so nothing overflows 
+ */
 @media (max-width: 600px) {
   #feeds-header {
     flex-direction: column;

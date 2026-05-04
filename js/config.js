@@ -1,8 +1,6 @@
 "use strict";
 
-/* ═══════════════════════════════════════════════════════════════
-   CONFIG — edit this file to customise your dashboard
-   ═══════════════════════════════════════════════════════════════ */
+/** CONFIG: edit this file to customise your dashboard */
 const CONFIG = {
   location: {
     latitude:       52.3676,   // fallback coordinates if geolocation fails

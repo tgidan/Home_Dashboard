@@ -1,11 +1,8 @@
 "use strict";
 
-/* ═══════════════════════════════════════════════════════════════
-   UTILS — shared helpers used across all widgets
-   ═══════════════════════════════════════════════════════════════ */
-
-/** Shorthand for document.getElementById */
-function $(id) { return document.getElementById(id); }
+/* 
+ * UTILS: shared helpers used across all widgets
+ */
 
 /** Escapes HTML special characters to prevent XSS when inserting into innerHTML */
 function escapeHtml(str) {
@@ -19,8 +16,8 @@ function escapeHtml(str) {
 
 /**
  * Persistent localStorage cache.
- * cache(key, value)  → stores value as JSON
- * cache(key)         → returns parsed value, or null on miss/error
+ * cache(key, value) -> stores value as JSON
+ * cache(key) -> returns parsed value, or null on miss/error
  */
 function cache(key, val) {
   if (val !== undefined) {

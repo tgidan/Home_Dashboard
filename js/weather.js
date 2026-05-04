@@ -1,11 +1,11 @@
 "use strict";
 
-/* ═══════════════════════════════════════════════════════════════
-   WEATHER — fetches and renders current conditions
-   Depends on: config.js (CONFIG), utils.js ($, cache)
-   ═══════════════════════════════════════════════════════════════ */
+/**
+ * WEATHER: fetches and renders current conditions
+ * Depends on: config.js (CONFIG), utils.js ($, cache)
+ */
 
-/* ─── WMO weather code → [description, emoji] ───────────────── */
+/* WMO weather code -> [description, emoji] */
 const WMO = {
   0:  ['Clear Sky',           '☀️'],
   1:  ['Mainly Clear',        '🌤️'],
@@ -37,7 +37,7 @@ function wmo(code) {
   return WMO[code] || ['Unknown', '🌡️'];
 }
 
-/* ─── Render ─────────────────────────────────────────────────── */
+/* Render */
 function renderWeather(data, cityName) {
   const c            = data.current;
   const d            = data.daily;
@@ -98,7 +98,7 @@ function renderWeather(data, cityName) {
   `;
 }
 
-/* ─── Fetch ──────────────────────────────────────────────────── */
+/* Fetch */
 async function fetchWeather(lat, lon, city) {
   // Skip if cached data is still within the refresh window
   const fetchedAt = cache('weather_fetchedAt');
@@ -126,7 +126,7 @@ async function fetchWeather(lat, lon, city) {
   renderWeather(data, city);
 }
 
-/* ─── Load (module-level so refreshWeather can call it) ─────── */
+/* Load (module-level so refreshWeather can call it) */
 async function _weatherLoad() {
   let lat  = CONFIG.location.latitude;
   let lon  = CONFIG.location.longitude;
@@ -160,7 +160,7 @@ async function _weatherLoad() {
   await fetchWeather(lat, lon, city);
 }
 
-/* ─── Manual refresh (bypasses cache TTL) ───────────────────── */
+/* Manual refresh (bypasses cache TTL) */
 async function refreshWeather() {
   const btn = $('weather-refresh-btn');
   if (btn) { btn.disabled = true; btn.classList.add('spinning'); }
@@ -174,7 +174,7 @@ async function refreshWeather() {
   }
 }
 
-/* ─── Init ───────────────────────────────────────────────────── */
+/* Init */
 async function initWeather() {
   // Show cached data immediately so the panel isn't blank on load
   const cached = cache('weather_data');

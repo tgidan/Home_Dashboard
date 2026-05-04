@@ -1,9 +1,8 @@
 "use strict";
 
-/* ═══════════════════════════════════════════════════════════════
-   MAIN — application boot and footer refresh ticker
-   Depends on: all other js/ files
-   ═══════════════════════════════════════════════════════════════ */
+/* MAIN: application boot and footer refresh ticker
+ * Depends on: all other js/ files
+ */
 
 /** Updates the footer "Updated Xm ago" label once per minute */
 function startRefreshTicker() {
@@ -28,7 +27,7 @@ function startRefreshTicker() {
   };
 }
 
-/* ─── Boot ───────────────────────────────────────────────────── */
+/* Boot */
 document.addEventListener('DOMContentLoaded', () => {
   initClock();
   initWeather();

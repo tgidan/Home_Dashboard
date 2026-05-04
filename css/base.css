@@ -1,8 +1,8 @@
-/* ═══════════════════════════════════════════════════════════════
-   BASE — design tokens, reset, body chrome, shared components
-   ═══════════════════════════════════════════════════════════════ */
+/* 
+ * BASE: design tokens, reset, body chrome, shared components
+ */
 
-/* ─── Design tokens ─────────────────────────────────────────── */
+/* Design tokens */
 :root {
   --bg:          #0a0e1a;
   --bg-panel:    #1a1f35;
@@ -25,12 +25,12 @@
   --radius:      12px;
 }
 
-/* ─── Reset ─────────────────────────────────────────────────── */
+/* Reset */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 a   { color: inherit; text-decoration: none; }
 ul  { list-style: none; }
 
-/* ─── Base ──────────────────────────────────────────────────── */
+/* Base */
 html, body {
   height: 100%;
   background: var(--bg);
@@ -41,7 +41,7 @@ html, body {
   overflow: hidden;
 }
 
-/* Ambient glow orbs — sit above the canvas, below the app */
+/* Ambient glow orbs: sit above the canvas, below the app */
 body::before {
   content: '';
   position: fixed;
@@ -53,7 +53,7 @@ body::before {
   z-index: 1;
 }
 
-/* ─── Animations ────────────────────────────────────────────── */
+/* Animations */
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.25; }
@@ -61,7 +61,7 @@ body::before {
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ─── Shared: loading spinner ───────────────────────────────── */
+/* Shared: loading spinner */
 .spinner {
   width: 24px;
   height: 24px;
@@ -71,7 +71,7 @@ body::before {
   animation: spin 0.7s linear infinite;
 }
 
-/* ─── Shared: empty / error state ──────────────────────────── */
+/* Shared: empty / error state */
 .state-msg {
   display: flex;
   flex-direction: column;
@@ -85,7 +85,7 @@ body::before {
   flex: 1;
 }
 
-/* ─── Shared: refresh button ────────────────────────────────── */
+/* Shared: refresh button */
 .refresh-btn {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -113,7 +113,7 @@ body::before {
   animation: spin 0.7s linear infinite;
 }
 
-/* ─── Shared: live indicator dot ────────────────────────────── */
+/* Shared: live indicator dot */
 .dot {
   width: 7px;
   height: 7px;

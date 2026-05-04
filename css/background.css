@@ -1,6 +1,6 @@
-/* ═══════════════════════════════════════════════════════════════
-   BACKGROUND — city canvas container + scanline overlay
-   ═══════════════════════════════════════════════════════════════ */
+/* 
+ * BACKGROUND: city canvas container + scanline overlay
+ */
 
 #bg {
   position: fixed;

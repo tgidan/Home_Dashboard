@@ -1,9 +1,9 @@
 "use strict";
 
-/* ═══════════════════════════════════════════════════════════════
-   OSINT DASHBOARD — rendering, filter logic, tool subview
-   Depends on: osint-data.js
-   ═══════════════════════════════════════════════════════════════ */
+/* 
+ * OSINT DASHBOARD: rendering, filter logic, tool subview
+ * Depends on: osint-data.js
+ */
 
 const IMPORTANCE_LABEL = {
   red:     'Critical',
@@ -14,7 +14,7 @@ const IMPORTANCE_LABEL = {
 
 const TAG_PREVIEW_MAX = 4;
 
-/* ─── Filter state ───────────────────────────────────────────── */
+/* Filter state */
 const osintFilter = {
   importance: 'all',
   goal:       'all',
@@ -22,7 +22,7 @@ const osintFilter = {
   query:      '',
 };
 
-/* ─── Helpers ────────────────────────────────────────────────── */
+/* Helpers */
 function impBadgeClass(imp) { return `badge-imp-${imp}`; }
 function cardImpClass(imp)  { return `imp-${imp}`; }
 
@@ -40,7 +40,7 @@ function makeTagChip(tag) {
   return chip;
 }
 
-/* ─── Build filter UI ────────────────────────────────────────── */
+/* Build filter UI */
 function buildFilterUI() {
   /* Importance buttons */
   const group = $('importance-group');
@@ -129,7 +129,7 @@ function populateTagSelect() {
   }
 }
 
-/* ─── Filtering ──────────────────────────────────────────────── */
+/* Filtering  */
 function filteredEntries() {
   const q = osintFilter.query.toLowerCase();
   return OSINT_DEDUPED.filter(e => {
@@ -144,7 +144,7 @@ function filteredEntries() {
   });
 }
 
-/* ─── Grid render ────────────────────────────────────────────── */
+/* Grid render */
 function renderOsintGrid() {
   const grid    = $('osint-grid');
   const entries = filteredEntries();
@@ -223,7 +223,7 @@ function renderOsintGrid() {
   grid.appendChild(fragment);
 }
 
-/* ─── Subview ────────────────────────────────────────────────── */
+/* Subview */
 function openSubview(entry) {
   const panel = $('osint-subview');
 
@@ -288,7 +288,7 @@ function closeSubview() {
   document.body.classList.remove('subview-open');
 }
 
-/* ─── Dashboard navigation ───────────────────────────────────── */
+/* Dashboard navigation */
 function initDashNav() {
   document.querySelectorAll('.dash-nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -301,7 +301,7 @@ function initDashNav() {
   });
 }
 
-/* ─── Init ───────────────────────────────────────────────────── */
+/* Init */
 function initOsint() {
   initDashNav();
   buildFilterUI();

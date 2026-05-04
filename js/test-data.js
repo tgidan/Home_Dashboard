@@ -1,10 +1,10 @@
 "use strict";
 
 /* 
-   `test-data.js` is used as fallback when RSS proxy is unreachable. (e.g. opening index.html directly via file://)
-   Therefore, it fills TEST_FEEDS with standard entries. 
-   Helps with testing of news feed container on sizes outside of the average person's screen.
-*/
+ * `test-data.js` is used as fallback when RSS proxy is unreachable. (e.g. opening index.html directly via file://)
+ *  Therefore, it fills TEST_FEEDS with standard entries. 
+ *  Helps with testing of news feed container on sizes outside of the average person's screen.
+ */
 
 function makeDate(hoursBeforeWindowEnd) {
   // Anchor to the last 6 AM so articles always fall inside the current window

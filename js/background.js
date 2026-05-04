@@ -2,8 +2,14 @@
 
 /**
  * `background.js` creates a new cyberpunk theme background of a city where it is always raining.
- * a few objects are 
- * 
+ * a few objects are randomly generated on page load to create some variety, but the animation is deterministic and will be the same on every load.
+ * the scene is rendered on a canvas element, and the clock and date are updated in sync with the animation frames for smoothness.
+ * the rain is rendered as individual line segments with varying lengths, speeds, and opacities to create a natural look.
+ * the buildings are rendered in three layers (far, mid, near) with different colors and details to create depth.
+ * the mid layer has randomly lit windows and occasional neon signs that pulse in brightness.
+ * the near layer has taller buildings with fewer details and some with neon signs as well.
+ * the sky has a gradient and a purple nebula for visual interest, and there are twinkling stars scattered throughout.
+ * the ground has a wet look with reflections of the neon signs.
  */
 
 
@@ -13,7 +19,7 @@
 
   let W = 0, H = 0, GY = 0; // GY = ground Y
 
-  /* ── Deterministic PRNG (xorshift32) ─────────────────────── */
+  /* Deterministic PRNG (xorshift32) */
   function makeRng(seed) {
     let s = (seed >>> 0) || 1;
     return () => {
@@ -22,14 +28,14 @@
     };
   }
 
-  /* ── Scene objects ────────────────────────────────────────── */
+  /* Scene objects */
   let farBuildings  = [];
   let midBuildings  = [];
   let nearBuildings = [];
   let stars         = [];
   let drops         = [];
 
-  /* ── Build scene (called on init + resize) ────────────────── */
+  /* Build scene (called on init + resize) */
   function buildScene() {
     W  = canvas.width  = window.innerWidth;
     H  = canvas.height = window.innerHeight;
@@ -51,7 +57,7 @@
       });
     }
 
-    /* Far buildings — dense, short */
+    /* Far buildings: dense, short */
     farBuildings = [];
     for (let x = 0; x < W + 70;) {
       const w = rng() * 55 + 22;
@@ -60,7 +66,7 @@
       x += w - rng() * 4;
     }
 
-    /* Mid buildings — taller, windows, signs, antennas */
+    /* Mid buildings: taller, windows, signs, antennas */
     midBuildings = [];
     for (let x = -35; x < W + 70;) {
       const w  = rng() * 95 + 35;
@@ -109,7 +115,7 @@
       x += w + rng() * 14;
     }
 
-    /* Near buildings — tallest, very dark, sparse */
+    /* Near buildings: tallest, very dark, sparse */
     nearBuildings = [];
     for (let x = -45; x < W + 70;) {
       const w = rng() * 130 + 55;
@@ -144,7 +150,7 @@
     };
   }
 
-  /* ── Color palettes ───────────────────────────────────────── */
+  /* Color palettes */
   const WIN_COLORS = [
     (a) => `rgba(34,211,238,${a})`,    // cyan
     (a) => `rgba(192,132,252,${a})`,   // purple
@@ -156,7 +162,7 @@
     (a) => `rgba(240,72,152,${a})`,    // hot pink
   ];
 
-  /* ── Draw: sky + atmosphere ───────────────────────────────── */
+  /* Draw: sky + atmosphere */
   function drawSky() {
     const g = ctx.createLinearGradient(0, 0, 0, GY);
     g.addColorStop(0,    '#040115');
@@ -167,7 +173,7 @@
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, W, GY + 2);
 
-    // Purple nebula — upper right
+    // Purple nebula: upper right
     const ng = ctx.createRadialGradient(W * 0.78, H * 0.10, 0, W * 0.78, H * 0.10, W * 0.32);
     ng.addColorStop(0,   'rgba(140,50,230,0.13)');
     ng.addColorStop(0.5, 'rgba(80,15,180,0.04)');
@@ -183,7 +189,7 @@
     ctx.fillRect(0, GY - H * 0.20, W, H * 0.20);
   }
 
-  /* ── Draw: stars ──────────────────────────────────────────── */
+  /* Draw: stars */
   function drawStars(t) {
     stars.forEach(s => {
       const tw = 0.5 + 0.5 * Math.sin(t * s.spd + s.phase);
@@ -194,14 +200,14 @@
     });
   }
 
-  /* ── Draw: solid building silhouette layers ───────────────── */
+  /* Draw: solid building silhouette layers */
   function drawLayer(buildings, fill) {
     ctx.shadowBlur = 0;
     ctx.fillStyle = fill;
     buildings.forEach(b => ctx.fillRect(b.x, b.y, b.w, b.h));
   }
 
-  /* ── Draw: mid building details ───────────────────────────── */
+  /* Draw: mid building details */
   function drawMidDetails(t) {
     midBuildings.forEach(b => {
 
@@ -241,7 +247,7 @@
     ctx.shadowBlur = 0;
   }
 
-  /* ── Draw: neon horizontal sign strip ────────────────────── */
+  /* Draw: neon horizontal sign strip */
   function drawSign(s, t) {
     const pulse = 0.68 + 0.32 * (0.5 + 0.5 * Math.sin(t * s.spd + s.phase));
     const cfn   = SIGN_COLORS[s.color];
@@ -256,14 +262,14 @@
     ctx.shadowBlur  = 0;
   }
 
-  /* ── Draw: near building signs ────────────────────────────── */
+  /* Draw: near building signs */
   function drawNearSigns(t) {
     nearBuildings.forEach(b => {
       if (b.sign) drawSign(b.sign, t);
     });
   }
 
-  /* ── Draw: ground + wet-road reflections ─────────────────── */
+  /* Draw: ground + wet-road reflections */
   function drawGround() {
     const g = ctx.createLinearGradient(0, GY, 0, H);
     g.addColorStop(0, '#05091a');
@@ -285,7 +291,7 @@
     });
   }
 
-  /* ── Draw: rain ───────────────────────────────────────────── */
+  /* Draw: rain */
   function drawRain() {
     ctx.save();
     ctx.strokeStyle = 'rgba(140,200,255,1)';
@@ -303,7 +309,7 @@
     ctx.restore();
   }
 
-  /* ── Render loop ──────────────────────────────────────────── */
+  /* Render loop */
   function render(t) {
     ctx.clearRect(0, 0, W, H);
 
@@ -322,7 +328,7 @@
     requestAnimationFrame(render);
   }
 
-  /* ── Bootstrap ────────────────────────────────────────────── */
+  /* Bootstrap */
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);

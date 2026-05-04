@@ -1,7 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
-   WEATHER — weather panel widget
-   ═══════════════════════════════════════════════════════════════ */
-
+/* WEATHER: weather panel widget */
 #weather-panel {
   display: flex;
   flex-direction: column;
@@ -25,7 +22,7 @@
   justify-content: center;
 }
 
-/* ─── Main row: icon + temp ─────────────────────────────────── */
+/* Main row: icon + temp */
 .weather-main {
   display: flex;
   align-items: center;
@@ -61,7 +58,7 @@
   color: var(--muted);
 }
 
-/* ─── Stats row ─────────────────────────────────────────────── */
+/* Stats row */
 .weather-stats {
   display: flex;
   gap: 10px;
@@ -92,7 +89,7 @@
   margin-top: 3px;
 }
 
-/* ─── 7-day forecast strip ──────────────────────────────────── */
+/* 7-day forecast strip */
 .weather-forecast {
   display: flex;
   gap: 6px;

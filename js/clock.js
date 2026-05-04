@@ -1,9 +1,10 @@
 "use strict";
 
-/* ═══════════════════════════════════════════════════════════════
-   CLOCK — live time and date display
-   Depends on: utils.js ($, formatDateFull)
-   ═══════════════════════════════════════════════════════════════ */
+/**
+ * CLOCK: live time and date display
+ * Depends on: utils.js ($, formatDateFull)
+ */
+   
 
 function tickClock() {
   const now = new Date();
