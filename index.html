@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="css/weather.css">
   <link rel="stylesheet" href="css/news.css">
   <link rel="stylesheet" href="css/osint.css">
+  <link rel="stylesheet" href="css/htb.css">
 </head>
 <body>
 <div id="bg"><canvas id="city-canvas"></canvas></div>
@@ -24,6 +25,7 @@
   <!-- ── Dashboard navigation ── -->
   <nav id="dash-nav">
     <button class="dash-nav-btn active" data-dash="dash-main">Main Dashboard</button>
+    <button class="dash-nav-btn" data-dash="dash-htb">HTB Academy</button>
     <button class="dash-nav-btn" data-dash="dash-osint">OSINT Tools</button>
   </nav>
 
@@ -96,6 +98,162 @@
       </ul>
     </div>
 
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       HTB ACADEMY DASHBOARD — Road to CPTS
+       ══════════════════════════════════════════════════════════ -->
+  <div id="dash-htb" class="dashboard-view">
+    <div id="htb-scroll">
+
+      <!-- ── Hero: title + data source ── -->
+      <div class="panel" id="htb-hero">
+        <div>
+          <div class="htb-eyebrow">Penetration Tester · Certification Journey</div>
+          <h1 id="htb-title">Road to <span>CPTS.</span></h1>
+          <div id="htb-who"></div>
+        </div>
+        <div id="htb-hero-meta">
+          <div class="htb-meta-row">
+            <span id="htb-source-tag" class="htb-tag">Loading…</span>
+            <button id="htb-refresh-btn" class="refresh-btn" title="Refresh HTB data">↻</button>
+          </div>
+          <div id="htb-updated"></div>
+          <a id="htb-profile-link" class="htb-link-btn" target="_blank" rel="noopener noreferrer">HTB Profile ↗</a>
+        </div>
+      </div>
+
+      <!-- ── Profile stats ── -->
+      <section id="htb-stats" aria-label="Profile stats">
+        <article class="panel htb-stat">
+          <div class="htb-stat-label" id="htb-level-label">HTB Level</div>
+          <div class="htb-stat-value"><span id="htb-level"></span><small id="htb-rank"></small></div>
+          <div class="htb-track"><i id="htb-level-track"></i></div>
+          <div class="htb-stat-sub" id="htb-level-sub"></div>
+        </article>
+        <article class="panel htb-stat">
+          <div class="htb-stat-label">Total XP</div>
+          <div class="htb-stat-value"><span id="htb-total-xp"></span><small>XP</small></div>
+          <div class="htb-stat-sub"><span id="htb-period-total"></span> XP in the HTB yearly overview</div>
+        </article>
+        <article class="panel htb-stat">
+          <div class="htb-stat-label">Academy Milestones</div>
+          <div class="htb-stat-value"><span id="htb-badge-count"></span><small>badges</small></div>
+          <div class="htb-stat-sub" id="htb-badge-detail"></div>
+        </article>
+        <article class="panel htb-stat">
+          <div class="htb-stat-label">Active Weeks</div>
+          <div class="htb-stat-value"><span id="htb-weeks-active"></span><small>weeks</small></div>
+          <div class="htb-stat-sub">With XP in the yearly overview</div>
+        </article>
+      </section>
+
+      <div id="htb-main-grid">
+
+        <!-- ── 01 Learning path ── -->
+        <section class="panel" id="htb-route">
+          <div class="htb-section-head">
+            <div>
+              <div class="htb-eyebrow">01 / Learning Path</div>
+              <div class="label">From fundamentals to pentest</div>
+            </div>
+            <span class="htb-count"><b id="htb-confirmed-count"></b> <span>/ <span id="htb-module-total"></span></span></span>
+          </div>
+          <p class="htb-muted">CPTS modules with a publicly confirmed completion.</p>
+          <div id="htb-segments" role="img"></div>
+          <p class="htb-note">Evidence of completed modules, not an exact course percentage. Progress within other modules is unknown.</p>
+          <div id="htb-route-groups"></div>
+          <a class="htb-text-link" href="https://academy.hackthebox.com/path/preview/penetration-tester" target="_blank" rel="noopener noreferrer">View the official learning path ↗</a>
+        </section>
+
+        <aside id="htb-aside">
+          <!-- ── 02 This week ── -->
+          <section class="panel" id="htb-focus">
+            <div class="htb-eyebrow">02 / This Week</div>
+            <div class="label">Make room for focus.</div>
+            <p class="htb-muted">Pick your current module and one achievable goal.</p>
+            <div id="htb-streak" hidden>
+              <div class="htb-streak-head">
+                <span id="htb-streak-weeks"></span>
+                <span id="htb-streak-xp"></span>
+              </div>
+              <div class="htb-track"><i id="htb-streak-track"></i></div>
+              <div class="htb-stat-sub" id="htb-streak-sub"></div>
+            </div>
+            <form id="htb-goal-form">
+              <label class="htb-field-label" for="htb-goal-module">Current module</label>
+              <select id="htb-goal-module" class="htb-input">
+                <option value="">Choose your module</option>
+              </select>
+              <label class="htb-field-label" for="htb-goal-text">My weekly goal</label>
+              <textarea id="htb-goal-text" class="htb-input" maxlength="500" rows="3" placeholder="For example: finish two sections and redo the exercise on my own."></textarea>
+              <label class="htb-check"><input id="htb-goal-done" type="checkbox"> Weekly goal achieved</label>
+              <button type="submit" id="htb-goal-save">Save weekly goal <span>↗</span></button>
+              <p id="htb-goal-status" role="status">Stored in this browser only.</p>
+            </form>
+          </section>
+
+          <!-- ── Next in route ── -->
+          <section class="panel" id="htb-next">
+            <div class="htb-eyebrow">Next in the Route</div>
+            <div id="htb-next-module"></div>
+            <p class="htb-muted">The first module in the route without a publicly confirmed completion.</p>
+            <p class="htb-note">Suggestion based on route order; your current module is not public.</p>
+          </section>
+        </aside>
+
+      </div>
+
+      <!-- ── 03 Study rhythm ── -->
+      <section class="panel" id="htb-activity">
+        <div class="htb-section-head">
+          <div>
+            <div class="htb-eyebrow">03 / Study Rhythm</div>
+            <div class="label">Your effort, made visible.</div>
+          </div>
+          <select id="htb-period" class="osint-select" title="Period">
+            <option value="8">Last 8 full weeks</option>
+            <option value="4">Last 4 full weeks</option>
+          </select>
+        </div>
+        <div id="htb-activity-grid">
+          <div>
+            <div id="htb-chart" role="img"></div>
+            <div id="htb-chart-labels"><span id="htb-chart-start"></span><span id="htb-chart-end"></span></div>
+          </div>
+          <div id="htb-activity-summary">
+            <strong id="htb-period-xp"></strong>
+            <span>XP in this period</span>
+            <p><b id="htb-recent-xp"></b> in the last 4 full weeks</p>
+            <p class="htb-note"><span id="htb-previous-xp"></span><br>XP measures activity, not study time or exam readiness.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── 04 Milestones ── -->
+      <section class="panel" id="htb-milestones">
+        <div class="htb-section-head">
+          <div>
+            <div class="htb-eyebrow">04 / Earned Milestones</div>
+            <div class="label">Built up, step by step.</div>
+          </div>
+          <span class="htb-tag" id="htb-module-badge-count"></span>
+        </div>
+        <div id="htb-badges"></div>
+        <p class="htb-note" id="htb-other-badges"></p>
+      </section>
+
+      <!-- ── Sources ── -->
+      <div id="htb-sources">
+        <span>Keep learning. Keep practising.</span>
+        <span>
+          Sources: <a id="htb-badges-link" target="_blank" rel="noopener noreferrer">HTB profile &amp; badges</a> ·
+          <a href="https://academy.hackthebox.com/path/preview/penetration-tester" target="_blank" rel="noopener noreferrer">CPTS learning path</a> ·
+          Independent dashboard, public data only
+        </span>
+      </div>
+
+    </div>
   </div>
 
   <!-- ══════════════════════════════════════════════════════════
@@ -199,6 +357,8 @@
 <script src="js/news.js"></script>
 <script src="js/osint-data.js"></script>
 <script src="js/osint.js"></script>
+<script src="js/htb-data.js"></script>
+<script src="js/htb.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

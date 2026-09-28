@@ -1,0 +1,8 @@
+# Server-side cache of htb-proxy.php (public HTB data). Never serve it directly.
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>

@@ -33,4 +33,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initWeather();
   initFeeds().then(startRefreshTicker);
   initOsint();
+  initHtb();
 });

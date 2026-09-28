@@ -1,1 +1,5 @@
 OSINT tool collection.xlsx
+
+# htb-proxy.php cache contents (keep the access rules)
+cache/*
+!cache/.htaccess

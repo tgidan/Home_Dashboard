@@ -4,6 +4,21 @@ A self-contained cyberpunk-themed dashboard showing live cybersecurity news, wea
 
 ## Features
 
+### HTB Academy Dashboard — Road to CPTS
+
+- **Third dashboard** (between Main and OSINT) tracking progress on the Hack The Box Academy *Penetration Tester* (CPTS) path. Design contributed by a colleague and adapted to the dashboard's look.
+- **Live public data** via `htb-proxy.php` — level & rank, total XP, yearly XP, active weeks, weekly XP, weekly streak and earned Academy badges from the public HTB profile. No login or API key.
+  - Server-side validation and a 15-minute cache in `cache/` (web access blocked); if HTB is unreachable the last good response is served
+  - HTB is contacted at most once a minute however often the proxy is called; redirects are refused and response size is capped
+  - Browser cache in `localStorage` (hourly refresh) plus a bundled offline snapshot in `js/htb-data.js`, so the view is never empty
+  - Status tag shows whether data is *Live*, *Cached* or an *Offline snapshot*; manual **refresh button**
+- **Profile stats** — HTB level, rank and progress to the next level, total XP, badge count, active weeks
+- **01 Learning path** — all 28 CPTS modules in route order, a segmented progress bar, and four collapsible sections. A module counts as done only when its completion badge is publicly confirmed
+- **02 This week** — your HTB weekly streak (XP still needed before the week resets), plus a picker for your current module and write a weekly goal with an *achieved* checkbox; stored only in this browser
+- **Next in the route** — first module without a confirmed completion
+- **03 Study rhythm** — XP bar chart for the last 8 or 4 full weeks, with period total, last-4-weeks total and previous-4-weeks comparison
+- **04 Earned milestones** — module badges in the order earned, plus other Academy badges and modules outside the CPTS path
+
 ### OSINT Tool Dashboard
 
 - **Second dashboard** accessible via the nav bar — completely separate from the main dashboard (no clock, weather, or news)
@@ -73,6 +88,8 @@ Home_Dashboard/
 ├── index.html          # Main entry point and layout
 ├── project.json        # Wallpaper Engine metadata
 ├── rss-proxy.php       # Server-side RSS fetcher (CORS bypass, whitelist enforced)
+├── htb-proxy.php       # Server-side HTB public profile fetcher (validated, cached)
+├── cache/              # htb-proxy.php cache; .htaccess denies web access (must be writable by PHP)
 ├── .htaccess           # Apache rewrite / caching rules
 ├── css/
 │   ├── base.css        # Reset and root variables
@@ -80,6 +97,7 @@ Home_Dashboard/
 │   ├── clock.css       # Clock and date styles
 │   ├── news.css        # News feed, badges, source dropdown, nav
 │   ├── osint.css       # OSINT dashboard: nav, cards, filters, subview overlay
+│   ├── htb.css         # HTB Academy dashboard: stats, route, goal form, chart, badges
 │   └── background.css  # Canvas positioning
 └── js/
     ├── config.js       # All user-editable settings (location, feeds, refresh)
@@ -89,6 +107,8 @@ Home_Dashboard/
     ├── news.js         # Feed fetch, severity tagging, filtering, render
     ├── osint-data.js   # Static OSINT tool data: tables, URLs, deduplication logic
     ├── osint.js        # OSINT dashboard: filter UI, grid render, subview logic
+    ├── htb-data.js     # CPTS module list/sections + offline HTB profile snapshot
+    ├── htb.js          # HTB Academy dashboard: fetch, render, weekly goal
     ├── background.js   # Cityscape canvas animation
     └── main.js         # Boot sequence and refresh status ticker
 ```
@@ -116,12 +136,21 @@ const CONFIG = {
     ],
     itemsPerFeed: 30           // max articles stored per feed
   },
+  htb: {
+    profileId: '019d2a9f-…',   // public HTB profile id (also set in htb-proxy.php)
+    username:  'DVERKADE',
+    fullName:  'Daan Verkade',
+    showFullName: false        // true shows the full name next to the username
+  },
   refresh: {
     weatherMins: 30,           // weather auto-refresh interval
-    newsMins:    20            // news auto-refresh interval
+    newsMins:    20,           // news auto-refresh interval
+    htbMins:     60            // HTB profile auto-refresh interval
   }
 };
 ```
+
+To track a different HTB profile, change `CONFIG.htb.profileId` **and** `$PROFILE_ID` in [htb-proxy.php](htb-proxy.php). If HTB updates the CPTS path, edit `CPTS_MODULES` / `CPTS_GROUPS` in [js/htb-data.js](js/htb-data.js).
 
 To add a news feed, add an entry to `CONFIG.news.feeds` and add the same URL to the `$ALLOWED` array in [rss-proxy.php](rss-proxy.php).
 
@@ -132,6 +161,7 @@ To add a news feed, add an entry to `CONFIG.news.feeds` and add the same URL to 
 | Weather | [Open-Meteo](https://open-meteo.com/) | No |
 | Geolocation | [Nominatim](https://nominatim.openstreetmap.org/) (OpenStreetMap) | No |
 | News | Direct RSS/Atom via `rss-proxy.php` | No |
+| HTB Academy | Public [HTB profile](https://profile.hackthebox.com/) and experience APIs via `htb-proxy.php` | No |
 
 All data sources are completely free with no account or API key required.
 
@@ -139,7 +169,7 @@ All data sources are completely free with no account or API key required.
 
 ### Browser / Mobile
 
-Serve the folder with any web server that supports PHP (needed for `rss-proxy.php`). Open `index.html` in the browser. Geolocation requires HTTPS or `localhost`.
+Serve the folder with any web server that supports PHP (needed for `rss-proxy.php`, `weather-proxy.php` and `htb-proxy.php`). Upload `cache/.htaccess` too and make sure PHP can write to `cache/`; without it `htb-proxy.php` returns 503 and the HTB tab stays on its offline snapshot. Open `index.html` in the browser. Geolocation requires HTTPS or `localhost`.
 
 ### Wallpaper Engine (2.7.3)
 
