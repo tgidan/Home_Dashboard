@@ -2,14 +2,16 @@
 
 /*
  * HTB ACADEMY DASHBOARD: Road to CPTS — profile stats, learning path,
- * weekly goal, study rhythm chart and earned badges
+ * weekly goal, study rhythm chart and earned badges; section progress per
+ * module comes from data/htb-sections.json (synced from HackTheBox-Academy)
  * Depends on: config.js (CONFIG), utils.js ($, cache), htb-data.js
  */
 
-const HTB_PROXY_URL   = '/htb-proxy.php';
-const HTB_GOAL_KEY    = 'htb_weekgoal';
-const HTB_TZ          = 'Europe/Amsterdam';
-const MODULE_SUFFIX   = / module completed$/;
+const HTB_PROXY_URL    = '/htb-proxy.php';
+const HTB_SECTIONS_URL = 'data/htb-sections.json';   // generated from the HackTheBox-Academy repo
+const HTB_GOAL_KEY     = 'htb_weekgoal';
+const HTB_TZ           = 'Europe/Amsterdam';
+const MODULE_SUFFIX    = / module completed$/;
 
 const HTB_SOURCE_LABEL = {
   live:     'Live · public profile',
@@ -20,6 +22,10 @@ const HTB_SOURCE_LABEL = {
 
 /* Data from the most recent render; used by the period selector */
 let htbWeeks = [];
+/* Confirmed modules from the last profile render, so section data can re-render the route */
+let htbCompleted = new Set();
+/* Section progress per module name from data/htb-sections.json; {} until loaded */
+let htbSections = {};
 
 /* Helpers */
 const htbFmt = n => n.toLocaleString('en-GB');
@@ -51,6 +57,24 @@ function isValidHtbData(d) {
     // level/streak are optional: null when HTB's experience endpoint was unavailable
     && (d.level  == null || (Number.isInteger(d.level.value) && typeof d.level.rank === 'string' && count(d.level.xpInLevel) && count(d.level.xpToNext)))
     && (d.streak == null || (count(d.streak.weeks) && count(d.streak.xp) && count(d.streak.requiredXp)));
+}
+
+/** Same limits as scripts/validate-progress.js in the HackTheBox-Academy repo */
+function isValidSectionData(d) {
+  const name = n => typeof n === 'string' && n.trim() !== '' && n.length <= 200;
+  return !!d && d.schemaVersion === 1
+    && !!d.modules && typeof d.modules === 'object' && !Array.isArray(d.modules)
+    && Object.keys(d.modules).length <= 100
+    && Object.values(d.modules).every(list => Array.isArray(list) && list.length <= 100
+      && list.every(s => !!s && name(s.name) && typeof s.done === 'boolean'));
+}
+
+/** Returns { done, total, next } for a module with section data, else null */
+function htbSectionProgress(module) {
+  const list = Object.hasOwn(htbSections, module) ? htbSections[module] : null;
+  if (!list || !list.length) return null;
+  const next = list.find(s => !s.done);
+  return { done: list.filter(s => s.done).length, total: list.length, next: next ? next.name : null };
 }
 
 /* Render: hero + stats */
@@ -104,12 +128,20 @@ function renderHtbStreak(data) {
 
 /* Render: 01 learning path */
 function renderHtbRoute(completed) {
+  htbCompleted = completed;
   const confirmed = CPTS_MODULES.filter(m => completed.has(m)).length;
   $('htb-confirmed-count').textContent = confirmed;
   $('htb-module-total').textContent    = CPTS_MODULES.length;
 
   const segments = $('htb-segments');
-  segments.replaceChildren(...CPTS_MODULES.map(m => htbEl('i', completed.has(m) ? 'complete' : '')));
+  segments.replaceChildren(...CPTS_MODULES.map(m => {
+    if (completed.has(m)) return htbEl('i', 'complete');
+    const prog = htbSectionProgress(m);
+    if (!prog || !prog.done) return htbEl('i');
+    const seg = htbEl('i', 'progress');   // partly filled up to the share of sections done
+    seg.style.setProperty('--p', `${prog.done / prog.total * 100}%`);
+    return seg;
+  }));
   segments.setAttribute('aria-label', `${confirmed} of ${CPTS_MODULES.length} module completions publicly confirmed`);
 
   // Remember which groups the user expanded so a data refresh doesn't collapse them
@@ -131,11 +163,20 @@ function renderHtbRoute(completed) {
 
     mods.forEach((name, j) => {
       const done = completed.has(name);
-      const row  = htbEl('div', 'htb-module-row' + (done ? ' confirmed' : ''));
+      const prog = done ? null : htbSectionProgress(name);
+      const row  = htbEl('div', 'htb-module-row' + (done ? ' confirmed' : prog && prog.done ? ' in-progress' : ''));
+      const cell = htbEl('span', 'htb-module-name', name);
+      if (prog) {
+        const track = htbEl('span', 'htb-track htb-section-track');
+        const fill  = htbEl('i');
+        fill.style.width = `${prog.done / prog.total * 100}%`;
+        track.appendChild(fill);
+        cell.appendChild(track);
+      }
       row.append(
         htbEl('span', 'htb-symbol', done ? '✓' : String(start + j + 1).padStart(2, '0')),
-        htbEl('span', 'htb-module-name', name),
-        htbEl('small', '', done ? 'Badge confirmed' : 'Not confirmed'),
+        cell,
+        htbEl('small', '', done ? 'Badge confirmed' : prog ? `${prog.done} / ${prog.total} sections` : 'Not confirmed'),
       );
       details.appendChild(row);
     });
@@ -143,7 +184,15 @@ function renderHtbRoute(completed) {
   });
   container.replaceChildren(fragment);
 
-  $('htb-next-module').textContent = CPTS_MODULES.find(m => !completed.has(m)) || 'All modules confirmed';
+  const nextModule = CPTS_MODULES.find(m => !completed.has(m));
+  const nextProg   = nextModule ? htbSectionProgress(nextModule) : null;
+  $('htb-next-module').textContent = nextModule || 'All modules confirmed';
+  $('htb-next-section').hidden     = !nextProg;
+  if (nextProg) {
+    $('htb-next-section').textContent = nextProg.next
+      ? `Next section: ${nextProg.next} · ${nextProg.done} / ${nextProg.total} done`
+      : `All ${nextProg.total} sections done · badge not confirmed yet`;
+  }
 }
 
 /* Render: 04 milestones */
@@ -289,11 +338,24 @@ async function fetchHtb(force = false) {
   renderHtb(data, source);
 }
 
+/* Section progress: a static file, revalidated with the server on every fetch */
+async function fetchHtbSections() {
+  const res = await fetch(HTB_SECTIONS_URL, { cache: 'no-cache' });
+  if (!res.ok) throw new Error(`HTB sections HTTP ${res.status}`);
+  const data = await res.json();
+  if (!isValidSectionData(data)) throw new Error('HTB sections file has unexpected data');
+
+  cache('htb_sections', data);
+  htbSections = data.modules;
+  renderHtbRoute(htbCompleted);
+}
+
 /* Manual refresh (bypasses the TTL on both browser and server cache) */
 async function refreshHtb() {
   const btn = $('htb-refresh-btn');
   btn.disabled = true;
   btn.classList.add('spinning');
+  fetchHtbSections().catch(e => console.warn('HTB sections refresh failed:', e));
   try {
     await fetchHtb(true);
   } catch (e) {
@@ -320,10 +382,16 @@ function initHtb() {
   $('htb-refresh-btn').addEventListener('click', refreshHtb);
 
   // Show the last good data immediately, falling back to the bundled snapshot
+  const cachedSections = cache('htb_sections');
+  if (isValidSectionData(cachedSections)) htbSections = cachedSections.modules;
   const cached = cache('htb_data');
   if (isValidHtbData(cached)) renderHtb(cached, 'cached');
   else                        renderHtb(HTB_SNAPSHOT, 'snapshot');
 
-  fetchHtb().catch(e => console.warn('HTB fetch failed:', e));
-  setInterval(() => fetchHtb().catch(e => console.warn('HTB fetch failed:', e)), CONFIG.refresh.htbMins * 60 * 1000);
+  const update = () => {
+    fetchHtb().catch(e => console.warn('HTB fetch failed:', e));
+    fetchHtbSections().catch(e => console.warn('HTB sections fetch failed:', e));
+  };
+  update();
+  setInterval(update, CONFIG.refresh.htbMins * 60 * 1000);
 }

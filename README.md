@@ -13,9 +13,12 @@ A self-contained cyberpunk-themed dashboard showing live cybersecurity news, wea
   - Browser cache in `localStorage` (hourly refresh) plus a bundled offline snapshot in `js/htb-data.js`, so the view is never empty
   - Status tag shows whether data is *Live*, *Cached* or an *Offline snapshot*; manual **refresh button**
 - **Profile stats** — HTB level, rank and progress to the next level, total XP, badge count, active weeks
-- **01 Learning path** — all 28 CPTS modules in route order, a segmented progress bar, and four collapsible sections. A module counts as done only when its completion badge is publicly confirmed
+- **01 Learning path** — all 28 CPTS modules in route order, a segmented progress bar, and four collapsible sections. A module counts as done only when its completion badge is publicly confirmed; modules in progress show `x / y sections` and a partly filled segment
 - **02 This week** — your HTB weekly streak (XP still needed before the week resets), plus a picker for your current module and write a weekly goal with an *achieved* checkbox; stored only in this browser
-- **Next in the route** — first module without a confirmed completion
+- **Next in the route** — first module without a confirmed completion, plus its next unfinished section
+- **Section progress** — `data/htb-sections.json` is **generated**; don't edit it here. Edit `progress.json` in the private HackTheBox-Academy repo instead. A GitHub Action there validates it and commits the copy to this repo when it changes (only module/section names and done flags are copied, never notes). Module names must match `CPTS_MODULES` in `js/htb-data.js` exactly
+  - Setup: create a fine-grained PAT with access to this repo only (*Contents: Read and write*) and save it as the secret `DASHBOARD_TOKEN` in HackTheBox-Academy
+  - The Action commits here, so `git pull` before pushing local changes
 - **03 Study rhythm** — XP bar chart for the last 8 or 4 full weeks, with period total, last-4-weeks total and previous-4-weeks comparison
 - **04 Earned milestones** — module badges in the order earned, plus other Academy badges and modules outside the CPTS path
 
@@ -90,6 +93,8 @@ Home_Dashboard/
 ├── rss-proxy.php       # Server-side RSS fetcher (CORS bypass, whitelist enforced)
 ├── htb-proxy.php       # Server-side HTB public profile fetcher (validated, cached)
 ├── cache/              # htb-proxy.php cache; .htaccess denies web access (must be writable by PHP)
+├── data/
+│   └── htb-sections.json  # HTB section progress, generated from the HackTheBox-Academy repo
 ├── .htaccess           # Apache rewrite / caching rules
 ├── css/
 │   ├── base.css        # Reset and root variables
@@ -162,6 +167,7 @@ To add a news feed, add an entry to `CONFIG.news.feeds` and add the same URL to 
 | Geolocation | [Nominatim](https://nominatim.openstreetmap.org/) (OpenStreetMap) | No |
 | News | Direct RSS/Atom via `rss-proxy.php` | No |
 | HTB Academy | Public [HTB profile](https://profile.hackthebox.com/) and experience APIs via `htb-proxy.php` | No |
+| HTB section progress | `data/htb-sections.json`, synced from the private HackTheBox-Academy repo | No (the sync Action uses a PAT) |
 
 All data sources are completely free with no account or API key required.
 

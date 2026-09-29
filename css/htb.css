@@ -266,6 +266,11 @@
   box-shadow: 0 0 6px rgba(180, 244, 105, 0.4);
 }
 
+/* Module in progress: filled up to --p (share of sections done, set in htb.js) */
+#htb-segments i.progress {
+  background: linear-gradient(to right, var(--htb-line) var(--p), rgba(255, 255, 255, 0.08) var(--p));
+}
+
 #htb-route > .htb-note { margin-bottom: 14px; }
 
 .htb-route-group { border-top: 1px solid var(--border); }
@@ -345,6 +350,16 @@
 }
 
 .htb-module-row.confirmed small { color: var(--htb); }
+
+/* Section progress under the module name */
+.htb-section-track {
+  display: block;
+  max-width: 220px;
+  margin-top: 6px;
+}
+
+.htb-module-row.in-progress .htb-symbol { border-color: var(--htb-line); color: var(--htb); }
+.htb-module-row.in-progress small       { color: var(--htb-muted); }
 
 .htb-text-link {
   display: inline-block;
@@ -490,6 +505,13 @@ textarea.htb-input::placeholder { color: var(--muted); }
   font-size: 1.15rem;
   font-weight: 600;
   margin: 4px 0 8px;
+}
+
+#htb-next-section {
+  margin: -2px 0 10px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--htb);
 }
 
 #htb-next .htb-note { margin-top: 8px; }
