@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "modules": {
+    "Shells & Payloads": [
+      {
+        "name": "Shells Jack Us In, Payloads Deliver Us Shells",
+        "done": true
+      },
+      {
+        "name": "CAT5 Security's Engagement Preparation",
+        "done": true
+      },
+      {
+        "name": "Anatomy of a Shell",
+        "done": true
+      },
+      {
+        "name": "Bind Shells",
+        "done": true
+      },
+      {
+        "name": "Reverse Shells",
+        "done": true
+      },
+      {
+        "name": "Introduction to Payloads",
+        "done": true
+      },
+      {
+        "name": "Automating Payloads & Delivery with Metasploit",
+        "done": true
+      },
+      {
+        "name": "Crafting Payloads with MSFvenom",
+        "done": true
+      },
+      {
+        "name": "Infiltrating Windows",
+        "done": true
+      },
+      {
+        "name": "Infiltrating Unix/Linux",
+        "done": true
+      },
+      {
+        "name": "Spawning Interactive Shells",
+        "done": true
+      },
+      {
+        "name": "Introduction to Web Shells",
+        "done": true
+      },
+      {
+        "name": "Laudanum, One Webshell to Rule Them All",
+        "done": true
+      },
+      {
+        "name": "Antak Webshell",
+        "done": false
+      },
+      {
+        "name": "PHP Web Shells",
+        "done": false
+      },
+      {
+        "name": "The Live Engagement",
+        "done": false
+      },
+      {
+        "name": "Detection & Prevention",
+        "done": false
+      }
+    ]
+  }
+}
