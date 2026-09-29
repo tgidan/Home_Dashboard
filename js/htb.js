@@ -21,6 +21,8 @@ const HTB_SOURCE_LABEL = {
 
 /* Data from the most recent render; used by the period selector */
 let htbWeeks = [];
+/* Module pace chart model from the most recent render; redrawn when the chart resizes */
+let htbPace = null;
 /* Confirmed modules from the last profile render, so section data can re-render the route */
 let htbCompleted = new Set();
 /* Section progress per module name from data/htb-sections.json; {} until loaded */
@@ -47,6 +49,19 @@ function htbEl(tag, className, text) {
   if (className)          node.className   = className;
   if (text !== undefined) node.textContent = text;
   return node;
+}
+
+function htbSvg(tag, attrs = {}, text) {
+  const node = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+/** Calendar day (YYYY-MM-DD) of a moment in the dashboard's timezone */
+function htbDay(date) {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: HTB_TZ, year: 'numeric', month: '2-digit', day: '2-digit' })
+    .format(new Date(date));
 }
 
 /** Rejects anything that doesn't match the schema produced by htb-proxy.php */
@@ -283,8 +298,7 @@ function renderHtbBadges(data) {
 function prepareHtbWeeks(data) {
   // Only count weeks that had fully ended when the data was fetched, so a
   // stale snapshot doesn't invent empty weeks for time spent offline
-  const snapshotDay = new Intl.DateTimeFormat('en-CA', { timeZone: HTB_TZ, year: 'numeric', month: '2-digit', day: '2-digit' })
-    .format(new Date(data.updatedAt));
+  const snapshotDay = htbDay(data.updatedAt);
   htbWeeks = data.weeks
     .filter(w => w.end < snapshotDay)
     .sort((a, b) => a.start.localeCompare(b.start))
@@ -315,6 +329,146 @@ function renderHtbChart() {
   $('htb-period-xp').textContent   = htbFmt(htbSum(visible));
 }
 
+/* Render: 03 module pace — completed CPTS modules vs. one module per week since CONFIG.htb.paceStart.
+   Days are counted as indexes from the start day; both lines start at the modules done before it. */
+const HTB_DAY_MS = 24 * 60 * 60 * 1000;
+
+const htbPaceDone   = (p, i) => p.base + p.steps.filter(s => s.i <= i).length;
+const htbPaceTarget = (p, i) => Math.min(p.total, p.base + Math.floor(i / 7));
+const htbPaceDate   = (p, i, opts) => new Date(Date.parse(p.start + 'T12:00:00Z') + i * HTB_DAY_MS)
+  .toLocaleDateString('en-GB', { ...opts, timeZone: 'UTC' });
+
+function prepareHtbPace(data) {
+  const start    = CONFIG.htb.paceStart;
+  const dayIndex = t => Math.round((Date.parse(htbDay(t) + 'T12:00:00Z') - Date.parse(start + 'T12:00:00Z')) / HTB_DAY_MS);
+  const done = data.badges
+    .filter(b => MODULE_SUFFIX.test(b.description) && CPTS_MODULES.includes(b.description.replace(MODULE_SUFFIX, '')))
+    .map(b => {
+      const t = Date.parse(b.awardedAt);
+      return { module: b.description.replace(MODULE_SUFFIX, ''), i: isNaN(t) ? -Infinity : dayIndex(t) };   // no date: count as done before the start
+    })
+    .sort((a, b) => a.i - b.i);
+
+  const total = CPTS_MODULES.length;
+  const base  = done.filter(s => s.i < 0).length;
+  const today = Math.max(0, dayIndex(data.updatedAt));
+  const steps = done.filter(s => s.i >= 0 && s.i <= today);
+  const paceEnd = (total - base) * 7;
+  htbPace = { start, total, base, steps, today, paceEnd, days: Math.max(paceEnd, today, 7) };
+
+  const nowDone = htbPaceDone(htbPace, today);
+  const target  = htbPaceTarget(htbPace, today);
+  const diff    = nowDone - target;
+  const endDate = htbPaceDate(htbPace, paceEnd, { day: 'numeric', month: 'short', year: 'numeric' });
+  $('htb-pace-title').textContent  = `Modules completed since ${htbPaceDate(htbPace, 0, { day: 'numeric', month: 'short' })}`;
+  $('htb-pace-status').textContent = `${nowDone} of ${total} done · `
+    + (diff > 0 ? `${diff} ahead of pace` : diff < 0 ? `${-diff} behind pace` : 'on pace')
+    + ` · the pace line reaches ${total} on ${endDate}`;
+  $('htb-pace-chart').setAttribute('aria-label',
+    `${nowDone} of ${total} CPTS modules completed; one module per week would mean ${target} by today and all ${total} by ${endDate}.`);
+}
+
+function renderHtbPace() {
+  const p   = htbPace;
+  const box = $('htb-pace-chart');
+  const W   = box.clientWidth;
+  if (!p || !W) return;   // view hidden: the ResizeObserver draws it once it has a size
+
+  const H = box.clientHeight || 200;
+  const m = { t: 26, r: 14, b: 22, l: 26 };
+  const x = i => m.l + i / p.days * (W - m.l - m.r);
+  const y = v => m.t + (1 - v / p.total) * (H - m.t - m.b);
+  const svg = htbSvg('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, 'aria-hidden': 'true' });
+
+  // Recessive grid with a label every 7 modules
+  for (let v = 0; v <= p.total; v += 7) {
+    svg.append(
+      htbSvg('line', { class: 'htb-pace-grid', x1: m.l, x2: W - m.r, y1: y(v), y2: y(v) }),
+      htbSvg('text', { class: 'htb-pace-axis', x: m.l - 6, y: y(v) + 3, 'text-anchor': 'end' }, v),
+    );
+  }
+
+  // X axis: the start day, then the first of each month (skipped when it would collide)
+  let lastTick = -Infinity;
+  for (let i = 0; i <= p.days; i++) {
+    const date = new Date(Date.parse(p.start + 'T12:00:00Z') + i * HTB_DAY_MS);
+    if (i > 0 && date.getUTCDate() !== 1) continue;
+    if (x(i) - lastTick < 44) continue;
+    const label = i === 0 ? htbPaceDate(p, 0, { day: 'numeric', month: 'short' })
+      : htbPaceDate(p, i, date.getUTCMonth() === 0 ? { month: 'short', year: 'numeric' } : { month: 'short' });
+    svg.append(htbSvg('text', { class: 'htb-pace-axis', x: x(i), y: H - 6, 'text-anchor': i === 0 ? 'start' : 'middle' }, label));
+    lastTick = x(i);
+  }
+
+  // Pace: one step up every 7 days until all modules are done
+  let pace = `M${x(0)},${y(p.base)}`;
+  for (let k = 1; k <= p.total - p.base; k++) pace += `H${x(k * 7)}V${y(p.base + k)}`;
+  if (p.days > p.paceEnd) pace += `H${x(p.days)}`;
+  svg.append(htbSvg('path', { class: 'htb-pace-line pace', d: pace }));
+
+  // Completed: a step at each badge date, drawn up to today
+  let n = p.base;
+  let done = `M${x(0)},${y(n)}`;
+  for (const s of p.steps) done += `H${x(s.i)}V${y(++n)}`;
+  done += `H${x(p.today)}`;
+  svg.append(htbSvg('path', { class: 'htb-pace-line done', d: done }));
+
+  // Markers: each completion, the end of the pace line, and today's count
+  n = p.base;
+  for (const s of p.steps) svg.append(htbSvg('circle', { class: 'htb-pace-dot', cx: x(s.i), cy: y(++n), r: 4 }));
+  svg.append(
+    htbSvg('circle', { class: 'htb-pace-dot pace', cx: x(p.paceEnd), cy: y(p.total), r: 4 }),
+    htbSvg('text', { class: 'htb-pace-value', x: x(p.paceEnd), y: y(p.total) - 10, 'text-anchor': 'end' },
+      `${p.total} · ${htbPaceDate(p, p.paceEnd, { day: 'numeric', month: 'short' })}`),
+  );
+  const nearEnd = x(p.today) > W - m.r - 30;
+  svg.append(htbSvg('text', {
+    class: 'htb-pace-value', x: x(p.today) + (nearEnd ? -8 : 8), y: y(n) - 8, 'text-anchor': nearEnd ? 'end' : 'start',
+  }, n));
+
+  // Hover layer: a crosshair snaps to the nearest day; the tooltip lists both lines
+  const cross = htbSvg('line', { class: 'htb-pace-cross', y1: m.t - 6, y2: H - m.b, visibility: 'hidden' });
+  const hit   = htbSvg('rect', { class: 'htb-pace-hit', x: m.l, y: 0, width: W - m.l - m.r, height: H - m.b });
+  svg.append(cross, hit);
+
+  const tip = $('htb-pace-tip');
+  p.show = i => {
+    i = Math.max(0, Math.min(p.days, i));
+    p.cursor = i;
+    cross.setAttribute('x1', x(i));
+    cross.setAttribute('x2', x(i));
+    cross.setAttribute('visibility', 'visible');
+
+    const row = (cls, value, label) => {
+      const r = htbEl('div', 'htb-pace-tip-row');
+      r.append(htbEl('i', 'htb-key' + cls), htbEl('b', '', String(value)), htbEl('span', '', label));
+      return r;
+    };
+    tip.replaceChildren(
+      htbEl('div', 'htb-pace-tip-date', htbPaceDate(p, i, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })),
+      row('', i <= p.today ? htbPaceDone(p, i) : '–', 'Completed'),
+      row(' pace', htbPaceTarget(p, i), '1 module / week'),
+      ...p.steps.filter(s => s.i === i).map(s => htbEl('div', 'htb-pace-tip-module', `✓ ${s.module}`)),
+    );
+    tip.hidden = false;
+    const left = x(i) > W / 2 ? x(i) - 12 - tip.offsetWidth : x(i) + 12;
+    tip.style.left = `${Math.max(0, left)}px`;
+  };
+  p.hide = () => {
+    p.cursor = null;
+    cross.setAttribute('visibility', 'hidden');
+    tip.hidden = true;
+  };
+  hit.addEventListener('pointermove', e => {
+    const r = svg.getBoundingClientRect();
+    p.show(Math.round((e.clientX - r.left - m.l) / (W - m.l - m.r) * p.days));
+  });
+
+  box.querySelector('svg')?.remove();
+  box.prepend(svg);
+  if (p.cursor != null) p.show(p.cursor);
+}
+
 /** Renders every data-driven part of the view */
 function renderHtb(data, source) {
   const completed = new Set(
@@ -327,6 +481,8 @@ function renderHtb(data, source) {
   renderHtbBadges(data);
   prepareHtbWeeks(data);
   renderHtbChart();
+  prepareHtbPace(data);
+  renderHtbPace();
 }
 
 /* Fetch */
@@ -394,6 +550,22 @@ function initHtb() {
   new ResizeObserver(() => {
     if (htbSectionsScrollPending) htbSectionsScrollPending = !scrollHtbSectionsToNext();
   }).observe($('htb-sections-list'));
+
+  // Module pace chart: redraw at the new width; same tooltip on keyboard focus as on hover
+  const pace = $('htb-pace-chart');
+  new ResizeObserver(renderHtbPace).observe(pace);
+  pace.addEventListener('pointerleave', () => htbPace?.hide?.());
+  pace.addEventListener('focus', () => htbPace?.show?.(htbPace.today));
+  pace.addEventListener('blur',  () => htbPace?.hide?.());
+  pace.addEventListener('keydown', e => {
+    const p = htbPace;
+    if (!p?.show) return;
+    const cur  = p.cursor ?? p.today;
+    const keys = { ArrowLeft: cur - 7, ArrowRight: cur + 7, Home: 0, End: p.days };
+    if (!(e.key in keys)) return;
+    e.preventDefault();
+    p.show(keys[e.key]);
+  });
   $('htb-period').addEventListener('change', renderHtbChart);
   $('htb-refresh-btn').addEventListener('click', refreshHtb);
 

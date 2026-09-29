@@ -574,6 +574,99 @@
 #htb-activity-summary > span { color: var(--htb-muted); font-size: 0.8rem; }
 #htb-activity-summary p      { font-size: 0.8rem; margin-top: 8px; }
 
+/* Module pace: completed modules (solid green) vs. one module per week (dashed orange) */
+#htb-pace {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.htb-pace-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.htb-pace-head .htb-stat-label { margin-bottom: 4px; }
+
+.htb-pace-legend {
+  display: flex;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--htb-muted);
+}
+
+.htb-pace-legend span { display: flex; align-items: center; gap: 6px; }
+
+.htb-key {
+  display: inline-block;
+  width: 16px;
+  border-top: 2px solid var(--htb);
+}
+
+.htb-key.pace { border-top-style: dashed; border-top-color: var(--orange); }
+
+#htb-pace-chart {
+  position: relative;
+  height: 210px;
+  margin-top: 10px;
+  border-radius: 6px;
+}
+
+#htb-pace-chart:focus-visible { outline: 2px solid var(--htb); outline-offset: 3px; }
+#htb-pace-chart svg           { display: block; overflow: visible; }
+
+.htb-pace-grid  { stroke: rgba(255, 255, 255, 0.06); }
+.htb-pace-axis  { fill: var(--muted); font-family: var(--font-mono); font-size: 9px; }
+.htb-pace-value { fill: var(--text); font-family: var(--font-mono); font-size: 10px; font-weight: 700; }
+
+.htb-pace-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.htb-pace-line.done { stroke: var(--htb); filter: drop-shadow(0 0 4px rgba(180, 244, 105, 0.5)); }
+.htb-pace-line.pace { stroke: var(--orange); stroke-dasharray: 5 4; }
+
+.htb-pace-dot      { fill: var(--htb); stroke: var(--bg-panel); stroke-width: 2; }
+.htb-pace-dot.pace { fill: var(--orange); }
+
+.htb-pace-cross { stroke: rgba(255, 255, 255, 0.35); stroke-width: 1; }
+.htb-pace-hit   { fill: transparent; cursor: crosshair; }
+
+#htb-pace-tip {
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  pointer-events: none;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 8px;
+  background: rgba(10, 14, 26, 0.92);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.htb-pace-tip-date {
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.htb-pace-tip-row          { display: flex; align-items: center; gap: 8px; }
+.htb-pace-tip-row b        { min-width: 16px; font-family: var(--font-mono); color: var(--text); }
+.htb-pace-tip-row span     { color: var(--htb-muted); }
+.htb-pace-tip-module       { margin-top: 4px; color: var(--text); font-size: 0.72rem; }
+
 /* ─── 04 Milestones ─────────────────────────────────────────── */
 #htb-badges {
   display: grid;

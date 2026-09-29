@@ -21,6 +21,7 @@ A self-contained cyberpunk-themed dashboard showing live cybersecurity news, wea
   - Setup: create a fine-grained PAT with access to this repo only (*Contents: Read and write*) and save it as the secret `DASHBOARD_TOKEN` in HackTheBox-Academy
   - The Action commits here, so `git pull` before pushing local changes
 - **03 Study rhythm** — XP bar chart for the last 8 or 4 full weeks, with period total, last-4-weeks total and previous-4-weeks comparison
+  - **Module pace** — CPTS modules completed since `CONFIG.htb.paceStart` (step line, neon green, from badge dates) against a one-module-per-week pace (dashed orange) until all 28 are done; both start at the modules done before that date. Hover or focus + arrow keys for a per-date readout
 - **04 Earned milestones** — module badges in the order earned, plus other Academy badges and modules outside the CPTS path
 
 ### OSINT Tool Dashboard
@@ -146,7 +147,8 @@ const CONFIG = {
     profileId: '019d2a9f-…',   // public HTB profile id (also set in htb-proxy.php)
     username:  'DVERKADE',
     fullName:  'Daan Verkade',
-    showFullName: false        // true shows the full name next to the username
+    showFullName: false,       // true shows the full name next to the username
+    paceStart: '2026-09-14'    // start of the one-module-per-week pace chart
   },
   refresh: {
     weatherMins: 30,           // weather auto-refresh interval

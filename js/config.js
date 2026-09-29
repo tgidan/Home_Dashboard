@@ -23,7 +23,8 @@ const CONFIG = {
     profileId:  '019d2a9f-0715-70fa-a685-10b7c86bf0e5',   // also hardcoded in htb-proxy.php
     username:   'DVERKADE',
     fullName:   'Daan Verkade',
-    showFullName: false                                   // true shows the full name next to the username
+    showFullName: false,                                  // true shows the full name next to the username
+    paceStart:  '2026-09-14'                              // start of the one-module-per-week pace chart
   },
   refresh: {
     weatherMins: 30,
