@@ -421,6 +421,20 @@
 
 #htb-focus .label { margin-bottom: 6px; }
 
+/* XP this week */
+#htb-week-xp { margin-top: 12px; }
+
+#htb-week-xp-value {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  line-height: 1.1;
+  color: var(--htb);
+  margin-right: 8px;
+}
+
+#htb-week-xp > span        { color: var(--htb-muted); font-size: 0.8rem; }
+#htb-week-xp .htb-stat-sub { margin-top: 4px; }
+
 /* Weekly streak */
 #htb-streak {
   margin-top: 14px;

@@ -150,6 +150,20 @@ function renderHtbStreak(data) {
     : `${htbFmt(Math.max(0, s.requiredXp - s.xp))} XP more before ${deadline} to keep it going.`;
 }
 
+/* XP in the current, unfinished week (02 This week); the study rhythm chart only shows full weeks */
+function renderHtbWeekXp(data) {
+  const today = htbDay(Date.now());
+  const weeks = [...data.weeks].sort((a, b) => a.start.localeCompare(b.start));
+  const i     = weeks.findIndex(w => w.start <= today && today <= w.end);
+  if (i === -1) {   // data is from an earlier week (offline snapshot or HTB unreachable)
+    $('htb-week-xp-value').textContent = '–';
+    $('htb-week-xp-sub').textContent   = 'No data for this week yet';
+    return;
+  }
+  $('htb-week-xp-value').textContent = htbFmt(weeks[i].xp);
+  $('htb-week-xp-sub').textContent   = htbWeekLabel(weeks[i]) + (i > 0 ? ` · last week ${htbFmt(weeks[i - 1].xp)} XP` : '');
+}
+
 /* Render: 01 learning path */
 function renderHtbRoute(completed) {
   htbCompleted = completed;
@@ -467,6 +481,7 @@ function renderHtb(data, source) {
   renderHtbHeader(data, source);
   renderHtbLevel(data);
   renderHtbStreak(data);
+  renderHtbWeekXp(data);
   renderHtbRoute(completed);
   renderHtbBadges(data);
   prepareHtbWeeks(data);
