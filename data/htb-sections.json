@@ -1,6 +1,488 @@
 {
   "schemaVersion": 1,
   "modules": {
+    "Penetration Testing Process": [
+      {
+        "name": "Introduction to the Penetration Tester Path",
+        "done": true
+      },
+      {
+        "name": "Academy Modules Layout",
+        "done": true
+      },
+      {
+        "name": "Academy Exercises & Questions",
+        "done": true
+      },
+      {
+        "name": "Penetration Testing Overview",
+        "done": true
+      },
+      {
+        "name": "Laws and Regulations",
+        "done": true
+      },
+      {
+        "name": "Penetration Testing Process",
+        "done": true
+      },
+      {
+        "name": "Pre-Engagement",
+        "done": true
+      },
+      {
+        "name": "Information Gathering",
+        "done": true
+      },
+      {
+        "name": "Vulnerability Assessment",
+        "done": true
+      },
+      {
+        "name": "Exploitation",
+        "done": true
+      },
+      {
+        "name": "Post-Exploitation",
+        "done": true
+      },
+      {
+        "name": "Lateral Movement",
+        "done": true
+      },
+      {
+        "name": "Proof-of-Concept",
+        "done": true
+      },
+      {
+        "name": "Post-Engagement",
+        "done": true
+      },
+      {
+        "name": "Practice",
+        "done": true
+      }
+    ],
+    "Getting Started": [
+      {
+        "name": "Infosec Overview",
+        "done": true
+      },
+      {
+        "name": "Getting Started with a Pentest Distro",
+        "done": true
+      },
+      {
+        "name": "Staying Organized",
+        "done": true
+      },
+      {
+        "name": "Connecting Using VPN",
+        "done": true
+      },
+      {
+        "name": "Common Terms",
+        "done": true
+      },
+      {
+        "name": "Basic Tools",
+        "done": true
+      },
+      {
+        "name": "Service Scanning",
+        "done": true
+      },
+      {
+        "name": "Web Enumeration",
+        "done": true
+      },
+      {
+        "name": "Public Exploits",
+        "done": true
+      },
+      {
+        "name": "Types of Shells",
+        "done": true
+      },
+      {
+        "name": "Privilege Escalation",
+        "done": true
+      },
+      {
+        "name": "Transferring Files",
+        "done": true
+      },
+      {
+        "name": "Starting Out",
+        "done": true
+      },
+      {
+        "name": "Navigating HTB",
+        "done": true
+      },
+      {
+        "name": "Nibbles - Enumeration",
+        "done": true
+      },
+      {
+        "name": "Nibbles - Web Footprinting",
+        "done": true
+      },
+      {
+        "name": "Nibbles - Initial Foothold",
+        "done": true
+      },
+      {
+        "name": "Nibbles - Privilege Escalation",
+        "done": true
+      },
+      {
+        "name": "Nibbles - Alternate User Method - Metasploit",
+        "done": true
+      },
+      {
+        "name": "Common Pitfalls",
+        "done": true
+      },
+      {
+        "name": "Getting Help",
+        "done": true
+      },
+      {
+        "name": "Next Steps",
+        "done": true
+      },
+      {
+        "name": "Knowledge Check",
+        "done": true
+      }
+    ],
+    "Network Enumeration with Nmap": [
+      {
+        "name": "Enumeration",
+        "done": true
+      },
+      {
+        "name": "Introduction to Nmap",
+        "done": true
+      },
+      {
+        "name": "Host Discovery",
+        "done": true
+      },
+      {
+        "name": "Host and Port Scanning",
+        "done": true
+      },
+      {
+        "name": "Saving the Results",
+        "done": true
+      },
+      {
+        "name": "Service Enumeration",
+        "done": true
+      },
+      {
+        "name": "Nmap Scripting Engine",
+        "done": true
+      },
+      {
+        "name": "Performance",
+        "done": true
+      },
+      {
+        "name": "Firewall and IDS/IPS Evasion",
+        "done": true
+      },
+      {
+        "name": "Firewall and IDS/IPS Evasion - Easy Lab",
+        "done": true
+      },
+      {
+        "name": "Firewall and IDS/IPS Evasion - Medium Lab",
+        "done": true
+      },
+      {
+        "name": "Firewall and IDS/IPS Evasion - Hard Lab",
+        "done": true
+      }
+    ],
+    "Footprinting": [
+      {
+        "name": "Enumeration Principles",
+        "done": true
+      },
+      {
+        "name": "Enumeration Methodology",
+        "done": true
+      },
+      {
+        "name": "Domain Information",
+        "done": true
+      },
+      {
+        "name": "Cloud Resources",
+        "done": true
+      },
+      {
+        "name": "Staff",
+        "done": true
+      },
+      {
+        "name": "FTP",
+        "done": true
+      },
+      {
+        "name": "SMB",
+        "done": true
+      },
+      {
+        "name": "NFS",
+        "done": true
+      },
+      {
+        "name": "DNS",
+        "done": true
+      },
+      {
+        "name": "SMTP",
+        "done": true
+      },
+      {
+        "name": "IMAP / POP3",
+        "done": true
+      },
+      {
+        "name": "SNMP",
+        "done": true
+      },
+      {
+        "name": "MySQL",
+        "done": true
+      },
+      {
+        "name": "MSSQL",
+        "done": true
+      },
+      {
+        "name": "Oracle TNS",
+        "done": true
+      },
+      {
+        "name": "IPMI",
+        "done": true
+      },
+      {
+        "name": "Linux Remote Management Protocols",
+        "done": true
+      },
+      {
+        "name": "Windows Remote Management Protocols",
+        "done": true
+      },
+      {
+        "name": "Footprinting Lab - Easy",
+        "done": true
+      },
+      {
+        "name": "Footprinting Lab - Medium",
+        "done": true
+      },
+      {
+        "name": "Footprinting Lab - Hard",
+        "done": true
+      }
+    ],
+    "Information Gathering - Web Edition": [
+      {
+        "name": "Introduction",
+        "done": true
+      },
+      {
+        "name": "WHOIS",
+        "done": true
+      },
+      {
+        "name": "Utilizing WHOIS",
+        "done": true
+      },
+      {
+        "name": "DNS",
+        "done": true
+      },
+      {
+        "name": "Digging DNS",
+        "done": true
+      },
+      {
+        "name": "Subdomains",
+        "done": true
+      },
+      {
+        "name": "Subdomain Bruteforcing",
+        "done": true
+      },
+      {
+        "name": "DNS Zone Transfers",
+        "done": true
+      },
+      {
+        "name": "Virtual Hosts",
+        "done": true
+      },
+      {
+        "name": "Certificate Transparency Logs",
+        "done": true
+      },
+      {
+        "name": "Fingerprinting",
+        "done": true
+      },
+      {
+        "name": "Crawling",
+        "done": true
+      },
+      {
+        "name": "robots.txt",
+        "done": true
+      },
+      {
+        "name": ".Well-Known URIs",
+        "done": true
+      },
+      {
+        "name": "Creepy Crawlies",
+        "done": true
+      },
+      {
+        "name": "Search Engine Discovery",
+        "done": true
+      },
+      {
+        "name": "Web Archives",
+        "done": true
+      },
+      {
+        "name": "Automating Recon",
+        "done": true
+      },
+      {
+        "name": "Skills Assessment",
+        "done": true
+      }
+    ],
+    "Vulnerability Assessment": [
+      {
+        "name": "Security Assessments",
+        "done": true
+      },
+      {
+        "name": "Vulnerability Assessment",
+        "done": true
+      },
+      {
+        "name": "Assessment Standards",
+        "done": true
+      },
+      {
+        "name": "Common Vulnerability Scoring System (CVSS)",
+        "done": true
+      },
+      {
+        "name": "Common Vulnerabilities and Exposures (CVE)",
+        "done": true
+      },
+      {
+        "name": "Vulnerability Scanning Overview",
+        "done": true
+      },
+      {
+        "name": "Getting Started with Nessus",
+        "done": true
+      },
+      {
+        "name": "Nessus Scan",
+        "done": true
+      },
+      {
+        "name": "Advanced Settings",
+        "done": true
+      },
+      {
+        "name": "Working with Nessus Scan Output",
+        "done": true
+      },
+      {
+        "name": "Scanning Issues",
+        "done": true
+      },
+      {
+        "name": "Nessus Skills Assessment",
+        "done": true
+      },
+      {
+        "name": "Getting Started with OpenVAS",
+        "done": true
+      },
+      {
+        "name": "OpenVAS Scan",
+        "done": true
+      },
+      {
+        "name": "Exporting The Results",
+        "done": true
+      },
+      {
+        "name": "OpenVAS Skills Assessment",
+        "done": true
+      },
+      {
+        "name": "Reporting",
+        "done": true
+      }
+    ],
+    "File Transfers": [
+      {
+        "name": "File Transfers",
+        "done": true
+      },
+      {
+        "name": "Windows File Transfer Methods",
+        "done": true
+      },
+      {
+        "name": "Linux File Transfer Methods",
+        "done": true
+      },
+      {
+        "name": "Transferring Files with Code",
+        "done": true
+      },
+      {
+        "name": "Miscellaneous File Transfer Methods",
+        "done": true
+      },
+      {
+        "name": "Protected File Transfers",
+        "done": true
+      },
+      {
+        "name": "Catching Files over HTTP/S",
+        "done": true
+      },
+      {
+        "name": "Living off The Land",
+        "done": true
+      },
+      {
+        "name": "Detection",
+        "done": true
+      },
+      {
+        "name": "Evading Detection",
+        "done": true
+      }
+    ],
     "Shells & Payloads": [
       {
         "name": "Shells Jack Us In, Payloads Deliver Us Shells",
@@ -31,7 +513,7 @@
         "done": true
       },
       {
-        "name": "Crafting Payloads with MSFvenom",
+        "name": "Crafting payloads with MSFvenom",
         "done": true
       },
       {
@@ -68,6 +550,1490 @@
       },
       {
         "name": "Detection & Prevention",
+        "done": false
+      }
+    ],
+    "Using the Metasploit Framework": [
+      {
+        "name": "Preface",
+        "done": false
+      },
+      {
+        "name": "Introduction to Metasploit",
+        "done": false
+      },
+      {
+        "name": "Introduction to MSFconsole",
+        "done": false
+      },
+      {
+        "name": "Modules",
+        "done": false
+      },
+      {
+        "name": "Targets",
+        "done": false
+      },
+      {
+        "name": "Payloads",
+        "done": false
+      },
+      {
+        "name": "Encoders",
+        "done": false
+      },
+      {
+        "name": "Databases",
+        "done": false
+      },
+      {
+        "name": "Plugins & Mixins",
+        "done": false
+      },
+      {
+        "name": "Sessions & Jobs",
+        "done": false
+      },
+      {
+        "name": "Meterpreter",
+        "done": false
+      },
+      {
+        "name": "Writing & Importing Modules",
+        "done": false
+      },
+      {
+        "name": "Introduction to MSFVenom",
+        "done": false
+      },
+      {
+        "name": "Firewall and IDS/IPS evasion",
+        "done": false
+      },
+      {
+        "name": "Metasploit-Framework Updates - August 2020",
+        "done": false
+      }
+    ],
+    "Password Attacks": [
+      {
+        "name": "Introduction",
+        "done": false
+      },
+      {
+        "name": "Introduction to Password Cracking",
+        "done": false
+      },
+      {
+        "name": "Introduction to John The Ripper",
+        "done": false
+      },
+      {
+        "name": "Introduction to Hashcat",
+        "done": false
+      },
+      {
+        "name": "Writing Custom Wordlists and Rules",
+        "done": false
+      },
+      {
+        "name": "Cracking Protected Files",
+        "done": false
+      },
+      {
+        "name": "Cracking Protected Archives",
+        "done": false
+      },
+      {
+        "name": "Network Services",
+        "done": false
+      },
+      {
+        "name": "Spraying, Stuffing, and Defaults",
+        "done": false
+      },
+      {
+        "name": "Windows Authentication Process",
+        "done": false
+      },
+      {
+        "name": "Attacking SAM, SYSTEM, and SECURITY",
+        "done": false
+      },
+      {
+        "name": "Attacking LSASS",
+        "done": false
+      },
+      {
+        "name": "Attacking Windows Credential Manager",
+        "done": false
+      },
+      {
+        "name": "Attacking Active Directory and NTDS.dit",
+        "done": false
+      },
+      {
+        "name": "Credential Hunting in Windows",
+        "done": false
+      },
+      {
+        "name": "Linux Authentication Process",
+        "done": false
+      },
+      {
+        "name": "Credential Hunting in Linux",
+        "done": false
+      },
+      {
+        "name": "Credential Hunting in Network Traffic",
+        "done": false
+      },
+      {
+        "name": "Credential Hunting in Network Shares",
+        "done": false
+      },
+      {
+        "name": "Pass the Hash (PtH)",
+        "done": false
+      },
+      {
+        "name": "Pass the Ticket (PtT) from Windows",
+        "done": false
+      },
+      {
+        "name": "Pass the Ticket (PtT) from Linux",
+        "done": false
+      },
+      {
+        "name": "Pass the Certificate",
+        "done": false
+      },
+      {
+        "name": "Password Policies",
+        "done": false
+      },
+      {
+        "name": "Password Managers",
+        "done": false
+      },
+      {
+        "name": "Skills Assessment - Password Attacks",
+        "done": false
+      }
+    ],
+    "Attacking Common Services": [
+      {
+        "name": "Interacting with Common Services",
+        "done": false
+      },
+      {
+        "name": "The Concept of Attacks",
+        "done": false
+      },
+      {
+        "name": "Service Misconfigurations",
+        "done": false
+      },
+      {
+        "name": "Finding Sensitive Information",
+        "done": false
+      },
+      {
+        "name": "Attacking FTP",
+        "done": false
+      },
+      {
+        "name": "Latest FTP Vulnerabilities",
+        "done": false
+      },
+      {
+        "name": "Attacking SMB",
+        "done": false
+      },
+      {
+        "name": "Latest SMB Vulnerabilities",
+        "done": false
+      },
+      {
+        "name": "Attacking SQL Databases",
+        "done": false
+      },
+      {
+        "name": "Latest SQL Vulnerabilities",
+        "done": false
+      },
+      {
+        "name": "Attacking RDP",
+        "done": false
+      },
+      {
+        "name": "Latest RDP Vulnerabilities",
+        "done": false
+      },
+      {
+        "name": "Attacking DNS",
+        "done": false
+      },
+      {
+        "name": "Latest DNS Vulnerabilities",
+        "done": false
+      },
+      {
+        "name": "Attacking Email Services",
+        "done": false
+      },
+      {
+        "name": "Latest Email Service Vulnerabilities",
+        "done": false
+      },
+      {
+        "name": "Attacking Common Services - Easy",
+        "done": false
+      },
+      {
+        "name": "Attacking Common Services - Medium",
+        "done": false
+      },
+      {
+        "name": "Attacking Common Services - Hard",
+        "done": false
+      }
+    ],
+    "Pivoting, Tunneling, and Port Forwarding": [
+      {
+        "name": "Introduction to Pivoting, Tunneling, and Port Forwarding",
+        "done": false
+      },
+      {
+        "name": "The Networking Behind Pivoting",
+        "done": false
+      },
+      {
+        "name": "Dynamic Port Forwarding with SSH and SOCKS Tunneling",
+        "done": false
+      },
+      {
+        "name": "Remote/Reverse Port Forwarding with SSH",
+        "done": false
+      },
+      {
+        "name": "Meterpreter Tunneling & Port Forwarding",
+        "done": false
+      },
+      {
+        "name": "Socat Redirection with a Reverse Shell",
+        "done": false
+      },
+      {
+        "name": "Socat Redirection with a Bind Shell",
+        "done": false
+      },
+      {
+        "name": "SSH for Windows: plink.exe",
+        "done": false
+      },
+      {
+        "name": "SSH Pivoting with sshuttle",
+        "done": false
+      },
+      {
+        "name": "Web Server Pivoting with Rpivot",
+        "done": false
+      },
+      {
+        "name": "Port Forwarding with Windows: Netsh",
+        "done": false
+      },
+      {
+        "name": "DNS Tunneling with Dnscat2",
+        "done": false
+      },
+      {
+        "name": "SOCKS5 Tunneling with Chisel",
+        "done": false
+      },
+      {
+        "name": "ICMP Tunneling with SOCKS",
+        "done": false
+      },
+      {
+        "name": "RDP and SOCKS Tunneling with SocksOverRDP",
+        "done": false
+      },
+      {
+        "name": "Skills Assessment",
+        "done": false
+      },
+      {
+        "name": "Detection & Prevention",
+        "done": false
+      },
+      {
+        "name": "Beyond this Module",
+        "done": false
+      }
+    ],
+    "Active Directory Enumeration & Attacks": [
+      {
+        "name": "Introduction to Active Directory Enumeration & Attacks",
+        "done": false
+      },
+      {
+        "name": "Tools Of The Trade",
+        "done": false
+      },
+      {
+        "name": "Scenario",
+        "done": false
+      },
+      {
+        "name": "External Recon and Enumeration Principles",
+        "done": false
+      },
+      {
+        "name": "Initial Enumeration of the Domain",
+        "done": false
+      },
+      {
+        "name": "LLMNR/NBT-NS Poisoning - from Linux",
+        "done": false
+      },
+      {
+        "name": "LLMNR/NBT-NS Poisoning - from Windows",
+        "done": false
+      },
+      {
+        "name": "Password Spraying Overview",
+        "done": false
+      },
+      {
+        "name": "Enumerating & Retrieving Password Policies",
+        "done": false
+      },
+      {
+        "name": "Password Spraying - Making a Target User List",
+        "done": false
+      },
+      {
+        "name": "Internal Password Spraying - from Linux",
+        "done": false
+      },
+      {
+        "name": "Internal Password Spraying - from Windows",
+        "done": false
+      },
+      {
+        "name": "Enumerating Security Controls",
+        "done": false
+      },
+      {
+        "name": "Credentialed Enumeration - from Linux",
+        "done": false
+      },
+      {
+        "name": "Credentialed Enumeration - from Windows",
+        "done": false
+      },
+      {
+        "name": "Living Off the Land",
+        "done": false
+      },
+      {
+        "name": "Kerberoasting - from Linux",
+        "done": false
+      },
+      {
+        "name": "Kerberoasting - from Windows",
+        "done": false
+      },
+      {
+        "name": "Access Control List (ACL) Abuse Primer",
+        "done": false
+      },
+      {
+        "name": "ACL Enumeration",
+        "done": false
+      },
+      {
+        "name": "ACL Abuse Tactics",
+        "done": false
+      },
+      {
+        "name": "DCSync",
+        "done": false
+      },
+      {
+        "name": "Privileged Access",
+        "done": false
+      },
+      {
+        "name": "Kerberos \"Double Hop\" Problem",
+        "done": false
+      },
+      {
+        "name": "Bleeding Edge Vulnerabilities",
+        "done": false
+      },
+      {
+        "name": "Miscellaneous Misconfigurations",
+        "done": false
+      },
+      {
+        "name": "Domain Trusts Primer",
+        "done": false
+      },
+      {
+        "name": "Attacking Domain Trusts - Child -> Parent Trusts - from Windows",
+        "done": false
+      },
+      {
+        "name": "Attacking Domain Trusts - Child -> Parent Trusts - from Linux",
+        "done": false
+      },
+      {
+        "name": "Attacking Domain Trusts - Cross-Forest Trust Abuse - from Windows",
+        "done": false
+      },
+      {
+        "name": "Attacking Domain Trusts - Cross-Forest Trust Abuse - from Linux",
+        "done": false
+      },
+      {
+        "name": "Hardening Active Directory",
+        "done": false
+      },
+      {
+        "name": "Additional AD Auditing Techniques",
+        "done": false
+      },
+      {
+        "name": "AD Enumeration & Attacks - Skills Assessment Part I",
+        "done": false
+      },
+      {
+        "name": "AD Enumeration & Attacks - Skills Assessment Part II",
+        "done": false
+      },
+      {
+        "name": "Beyond this Module",
+        "done": false
+      }
+    ],
+    "Using Web Proxies": [
+      {
+        "name": "Intro to Web Proxies",
+        "done": false
+      },
+      {
+        "name": "Setting Up",
+        "done": false
+      },
+      {
+        "name": "Proxy Setup",
+        "done": false
+      },
+      {
+        "name": "Intercepting Web Requests",
+        "done": false
+      },
+      {
+        "name": "Intercepting Responses",
+        "done": false
+      },
+      {
+        "name": "Automatic Modification",
+        "done": false
+      },
+      {
+        "name": "Repeating Requests",
+        "done": false
+      },
+      {
+        "name": "Encoding/Decoding",
+        "done": false
+      },
+      {
+        "name": "Proxying Tools",
+        "done": false
+      },
+      {
+        "name": "Burp Intruder",
+        "done": false
+      },
+      {
+        "name": "ZAP Fuzzer",
+        "done": false
+      },
+      {
+        "name": "Burp Scanner",
+        "done": false
+      },
+      {
+        "name": "ZAP Scanner",
+        "done": false
+      },
+      {
+        "name": "Extensions",
+        "done": false
+      },
+      {
+        "name": "Skills Assessment - Using Web Proxies",
+        "done": false
+      }
+    ],
+    "Attacking Web Applications with Ffuf": [
+      {
+        "name": "Introduction",
+        "done": false
+      },
+      {
+        "name": "Web Fuzzing",
+        "done": false
+      },
+      {
+        "name": "Directory Fuzzing",
+        "done": false
+      },
+      {
+        "name": "Page Fuzzing",
+        "done": false
+      },
+      {
+        "name": "Recursive Fuzzing",
+        "done": false
+      },
+      {
+        "name": "DNS Records",
+        "done": false
+      },
+      {
+        "name": "Sub-domain Fuzzing",
+        "done": false
+      },
+      {
+        "name": "Vhost Fuzzing",
+        "done": false
+      },
+      {
+        "name": "Filtering Results",
+        "done": false
+      },
+      {
+        "name": "Parameter Fuzzing - GET",
+        "done": false
+      },
+      {
+        "name": "Parameter Fuzzing - POST",
+        "done": false
+      },
+      {
+        "name": "Value Fuzzing",
+        "done": false
+      },
+      {
+        "name": "Skills Assessment - Web Fuzzing",
+        "done": false
+      }
+    ],
+    "Login Brute Forcing": [
+      {
+        "name": "Introduction",
+        "done": false
+      },
+      {
+        "name": "Password Security Fundamentals",
+        "done": false
+      },
+      {
+        "name": "Brute Force Attacks",
+        "done": false
+      },
+      {
+        "name": "Dictionary Attacks",
+        "done": false
+      },
+      {
+        "name": "Hybrid Attacks",
+        "done": false
+      },
+      {
+        "name": "Hydra",
+        "done": false
+      },
+      {
+        "name": "Basic HTTP Authentication",
+        "done": false
+      },
+      {
+        "name": "Login Forms",
+        "done": false
+      },
+      {
+        "name": "Medusa",
+        "done": false
+      },
+      {
+        "name": "Web Services",
+        "done": false
+      },
+      {
+        "name": "Custom Wordlists",
+        "done": false
+      },
+      {
+        "name": "Skills Assessment Part 1",
+        "done": false
+      },
+      {
+        "name": "Skills Assessment Part 2",
+        "done": false
+      }
+    ],
+    "SQL Injection Fundamentals": [
+      {
+        "name": "Introduction",
+        "done": false
+      },
+      {
+        "name": "Intro to Databases",
+        "done": false
+      },
+      {
+        "name": "Types of Databases",
+        "done": false
+      },
+      {
+        "name": "Intro to MySQL",
+        "done": false
+      },
+      {
+        "name": "SQL Statements",
+        "done": false
+      },
+      {
+        "name": "Query Results",
+        "done": false
+      },
+      {
+        "name": "SQL Operators",
+        "done": false
+      },
+      {
+        "name": "Intro to SQL Injections",
+        "done": false
+      },
+      {
+        "name": "Subverting Query Logic",
+        "done": false
+      },
+      {
+        "name": "Using Comments",
+        "done": false
+      },
+      {
+        "name": "Union Clause",
+        "done": false
+      },
+      {
+        "name": "Union Injection",
+        "done": false
+      },
+      {
+        "name": "Database Enumeration",
+        "done": false
+      },
+      {
+        "name": "Reading Files",
+        "done": false
+      },
+      {
+        "name": "Writing Files",
+        "done": false
+      },
+      {
+        "name": "Mitigating SQL Injection",
+        "done": false
+      },
+      {
+        "name": "Skills Assessment - SQL Injection Fundamentals",
+        "done": false
+      }
+    ],
+    "SQLMap Essentials": [
+      {
+        "name": "SQLMap Overview",
+        "done": false
+      },
+      {
+        "name": "Getting Started with SQLMap",
+        "done": false
+      },
+      {
+        "name": "SQLMap Output Description",
+        "done": false
+      },
+      {
+        "name": "Running SQLMap on an HTTP Request",
+        "done": false
+      },
+      {
+        "name": "Handling SQLMap Errors",
+        "done": false
+      },
+      {
+        "name": "Attack Tuning",
+        "done": false
+      },
+      {
+        "name": "Database Enumeration",
+        "done": false
+      },
+      {
+        "name": "Advanced Database Enumeration",
+        "done": false
+      },
+      {
+        "name": "Bypassing Web Application Protections",
+        "done": false
+      },
+      {
+        "name": "OS Exploitation",
+        "done": false
+      },
+      {
+        "name": "Skills Assessment",
+        "done": false
+      }
+    ],
+    "Cross-Site Scripting (XSS)": [
+      {
+        "name": "Intro to XSS",
+        "done": false
+      },
+      {
+        "name": "Stored XSS",
+        "done": false
+      },
+      {
+        "name": "Reflected XSS",
+        "done": false
+      },
+      {
+        "name": "DOM XSS",
+        "done": false
+      },
+      {
+        "name": "XSS Discovery",
+        "done": false
+      },
+      {
+        "name": "Defacing",
+        "done": false
+      },
+      {
+        "name": "Phishing",
+        "done": false
+      },
+      {
+        "name": "Session Hijacking",
+        "done": false
+      },
+      {
+        "name": "XSS Prevention",
+        "done": false
+      },
+      {
+        "name": "Skills Assessment",
+        "done": false
+      }
+    ],
+    "File Inclusion": [
+      {
+        "name": "Intro to File Inclusions",
+        "done": false
+      },
+      {
+        "name": "Local File Inclusion (LFI)",
+        "done": false
+      },
+      {
+        "name": "Basic Bypasses",
+        "done": false
+      },
+      {
+        "name": "PHP Filters",
+        "done": false
+      },
+      {
+        "name": "PHP Wrappers",
+        "done": false
+      },
+      {
+        "name": "Remote File Inclusion (RFI)",
+        "done": false
+      },
+      {
+        "name": "LFI and File Uploads",
+        "done": false
+      },
+      {
+        "name": "Log Poisoning",
+        "done": false
+      },
+      {
+        "name": "Automated Scanning",
+        "done": false
+      },
+      {
+        "name": "File Inclusion Prevention",
+        "done": false
+      },
+      {
+        "name": "Skills Assessment - File Inclusion",
+        "done": false
+      }
+    ],
+    "File Upload Attacks": [
+      {
+        "name": "Intro to File Upload Attacks",
+        "done": false
+      },
+      {
+        "name": "Absent Validation",
+        "done": false
+      },
+      {
+        "name": "Upload Exploitation",
+        "done": false
+      },
+      {
+        "name": "Client-Side Validation",
+        "done": false
+      },
+      {
+        "name": "Blacklist Filters",
+        "done": false
+      },
+      {
+        "name": "Whitelist Filters",
+        "done": false
+      },
+      {
+        "name": "Type Filters",
+        "done": false
+      },
+      {
+        "name": "Limited File Uploads",
+        "done": false
+      },
+      {
+        "name": "Other Upload Attacks",
+        "done": false
+      },
+      {
+        "name": "Preventing File Upload Vulnerabilities",
+        "done": false
+      },
+      {
+        "name": "Skills Assessment - File Upload Attacks",
+        "done": false
+      }
+    ],
+    "Command Injections": [
+      {
+        "name": "Intro to Command Injections",
+        "done": false
+      },
+      {
+        "name": "Detection",
+        "done": false
+      },
+      {
+        "name": "Injecting Commands",
+        "done": false
+      },
+      {
+        "name": "Other Injection Operators",
+        "done": false
+      },
+      {
+        "name": "Identifying Filters",
+        "done": false
+      },
+      {
+        "name": "Bypassing Space Filters",
+        "done": false
+      },
+      {
+        "name": "Bypassing Other Blacklisted Characters",
+        "done": false
+      },
+      {
+        "name": "Bypassing Blacklisted Commands",
+        "done": false
+      },
+      {
+        "name": "Advanced Command Obfuscation",
+        "done": false
+      },
+      {
+        "name": "Evasion Tools",
+        "done": false
+      },
+      {
+        "name": "Command Injection Prevention",
+        "done": false
+      },
+      {
+        "name": "Skills Assessment",
+        "done": false
+      }
+    ],
+    "Web Attacks": [
+      {
+        "name": "Introduction to Web Attacks",
+        "done": false
+      },
+      {
+        "name": "Intro to HTTP Verb Tampering",
+        "done": false
+      },
+      {
+        "name": "Bypassing Basic Authentication",
+        "done": false
+      },
+      {
+        "name": "Bypassing Security Filters",
+        "done": false
+      },
+      {
+        "name": "Verb Tampering Prevention",
+        "done": false
+      },
+      {
+        "name": "Intro to IDOR",
+        "done": false
+      },
+      {
+        "name": "Identifying IDORs",
+        "done": false
+      },
+      {
+        "name": "Mass IDOR Enumeration",
+        "done": false
+      },
+      {
+        "name": "Bypassing Encoded References",
+        "done": false
+      },
+      {
+        "name": "IDOR in Insecure APIs",
+        "done": false
+      },
+      {
+        "name": "Chaining IDOR Vulnerabilities",
+        "done": false
+      },
+      {
+        "name": "IDOR Prevention",
+        "done": false
+      },
+      {
+        "name": "Intro to XXE",
+        "done": false
+      },
+      {
+        "name": "Local File Disclosure",
+        "done": false
+      },
+      {
+        "name": "Advanced File Disclosure",
+        "done": false
+      },
+      {
+        "name": "Blind Data Exfiltration",
+        "done": false
+      },
+      {
+        "name": "XXE Prevention",
+        "done": false
+      },
+      {
+        "name": "Web Attacks - Skills Assessment",
+        "done": false
+      }
+    ],
+    "Attacking Common Applications": [
+      {
+        "name": "Introduction to Attacking Common Applications",
+        "done": false
+      },
+      {
+        "name": "Application Discovery & Enumeration",
+        "done": false
+      },
+      {
+        "name": "WordPress - Discovery & Enumeration",
+        "done": false
+      },
+      {
+        "name": "Attacking WordPress",
+        "done": false
+      },
+      {
+        "name": "Joomla - Discovery & Enumeration",
+        "done": false
+      },
+      {
+        "name": "Attacking Joomla",
+        "done": false
+      },
+      {
+        "name": "Drupal - Discovery & Enumeration",
+        "done": false
+      },
+      {
+        "name": "Attacking Drupal",
+        "done": false
+      },
+      {
+        "name": "Tomcat - Discovery & Enumeration",
+        "done": false
+      },
+      {
+        "name": "Attacking Tomcat",
+        "done": false
+      },
+      {
+        "name": "Jenkins - Discovery & Enumeration",
+        "done": false
+      },
+      {
+        "name": "Attacking Jenkins",
+        "done": false
+      },
+      {
+        "name": "Splunk - Discovery & Enumeration",
+        "done": false
+      },
+      {
+        "name": "Attacking Splunk",
+        "done": false
+      },
+      {
+        "name": "PRTG Network Monitor",
+        "done": false
+      },
+      {
+        "name": "osTicket",
+        "done": false
+      },
+      {
+        "name": "Gitlab - Discovery & Enumeration",
+        "done": false
+      },
+      {
+        "name": "Attacking GitLab",
+        "done": false
+      },
+      {
+        "name": "Attacking Tomcat CGI",
+        "done": false
+      },
+      {
+        "name": "Attacking CGI Applications - Shellshock",
+        "done": false
+      },
+      {
+        "name": "Attacking Thick Client Applications",
+        "done": false
+      },
+      {
+        "name": "Exploiting Web Vulnerabilities in Thick-Client Applications",
+        "done": false
+      },
+      {
+        "name": "ColdFusion - Discovery & Enumeration",
+        "done": false
+      },
+      {
+        "name": "Attacking ColdFusion",
+        "done": false
+      },
+      {
+        "name": "IIS Tilde Enumeration",
+        "done": false
+      },
+      {
+        "name": "Attacking LDAP",
+        "done": false
+      },
+      {
+        "name": "Web Mass Assignment Vulnerabilities",
+        "done": false
+      },
+      {
+        "name": "Attacking Applications Connecting to Services",
+        "done": false
+      },
+      {
+        "name": "Other Notable Applications",
+        "done": false
+      },
+      {
+        "name": "Application Hardening",
+        "done": false
+      },
+      {
+        "name": "Attacking Common Applications - Skills Assessment I",
+        "done": false
+      },
+      {
+        "name": "Attacking Common Applications - Skills Assessment II",
+        "done": false
+      },
+      {
+        "name": "Attacking Common Applications - Skills Assessment III",
+        "done": false
+      }
+    ],
+    "Linux Privilege Escalation": [
+      {
+        "name": "Introduction to Linux Privilege Escalation",
+        "done": false
+      },
+      {
+        "name": "Environment Enumeration",
+        "done": false
+      },
+      {
+        "name": "Linux Services & Internals Enumeration",
+        "done": false
+      },
+      {
+        "name": "Credential Hunting",
+        "done": false
+      },
+      {
+        "name": "Path Abuse",
+        "done": false
+      },
+      {
+        "name": "Wildcard Abuse",
+        "done": false
+      },
+      {
+        "name": "Escaping Restricted Shells",
+        "done": false
+      },
+      {
+        "name": "Special Permissions",
+        "done": false
+      },
+      {
+        "name": "Sudo Rights Abuse",
+        "done": false
+      },
+      {
+        "name": "Privileged Groups",
+        "done": false
+      },
+      {
+        "name": "Capabilities",
+        "done": false
+      },
+      {
+        "name": "Vulnerable Services",
+        "done": false
+      },
+      {
+        "name": "Cron Job Abuse",
+        "done": false
+      },
+      {
+        "name": "LXD",
+        "done": false
+      },
+      {
+        "name": "Docker",
+        "done": false
+      },
+      {
+        "name": "Kubernetes",
+        "done": false
+      },
+      {
+        "name": "Logrotate",
+        "done": false
+      },
+      {
+        "name": "Miscellaneous Techniques",
+        "done": false
+      },
+      {
+        "name": "Kernel Exploits",
+        "done": false
+      },
+      {
+        "name": "Shared Libraries",
+        "done": false
+      },
+      {
+        "name": "Shared Object Hijacking",
+        "done": false
+      },
+      {
+        "name": "Python Library Hijacking",
+        "done": false
+      },
+      {
+        "name": "Sudo",
+        "done": false
+      },
+      {
+        "name": "Polkit",
+        "done": false
+      },
+      {
+        "name": "Dirty Pipe",
+        "done": false
+      },
+      {
+        "name": "Netfilter",
+        "done": false
+      },
+      {
+        "name": "Linux Hardening",
+        "done": false
+      },
+      {
+        "name": "Linux Local Privilege Escalation - Skills Assessment",
+        "done": false
+      }
+    ],
+    "Windows Privilege Escalation": [
+      {
+        "name": "Introduction to Windows Privilege Escalation",
+        "done": false
+      },
+      {
+        "name": "Useful Tools",
+        "done": false
+      },
+      {
+        "name": "Situational Awareness",
+        "done": false
+      },
+      {
+        "name": "Initial Enumeration",
+        "done": false
+      },
+      {
+        "name": "Communication with Processes",
+        "done": false
+      },
+      {
+        "name": "Windows Privileges Overview",
+        "done": false
+      },
+      {
+        "name": "SeImpersonate and SeAssignPrimaryToken",
+        "done": false
+      },
+      {
+        "name": "SeDebugPrivilege",
+        "done": false
+      },
+      {
+        "name": "SeTakeOwnershipPrivilege",
+        "done": false
+      },
+      {
+        "name": "Windows Built-in Groups",
+        "done": false
+      },
+      {
+        "name": "Event Log Readers",
+        "done": false
+      },
+      {
+        "name": "DnsAdmins",
+        "done": false
+      },
+      {
+        "name": "Hyper-V Administrators",
+        "done": false
+      },
+      {
+        "name": "Print Operators",
+        "done": false
+      },
+      {
+        "name": "Server Operators",
+        "done": false
+      },
+      {
+        "name": "User Account Control",
+        "done": false
+      },
+      {
+        "name": "Weak Permissions",
+        "done": false
+      },
+      {
+        "name": "Kernel Exploits",
+        "done": false
+      },
+      {
+        "name": "Vulnerable Services",
+        "done": false
+      },
+      {
+        "name": "DLL Injection",
+        "done": false
+      },
+      {
+        "name": "Credential Hunting",
+        "done": false
+      },
+      {
+        "name": "Other Files",
+        "done": false
+      },
+      {
+        "name": "Further Credential Theft",
+        "done": false
+      },
+      {
+        "name": "Citrix Breakout",
+        "done": false
+      },
+      {
+        "name": "Interacting with Users",
+        "done": false
+      },
+      {
+        "name": "Pillaging",
+        "done": false
+      },
+      {
+        "name": "Miscellaneous Techniques",
+        "done": false
+      },
+      {
+        "name": "Legacy Operating Systems",
+        "done": false
+      },
+      {
+        "name": "Windows Server",
+        "done": false
+      },
+      {
+        "name": "Windows Desktop Versions",
+        "done": false
+      },
+      {
+        "name": "Windows Hardening",
+        "done": false
+      },
+      {
+        "name": "Windows Privilege Escalation Skills Assessment - Part I",
+        "done": false
+      },
+      {
+        "name": "Windows Privilege Escalation Skills Assessment - Part II",
+        "done": false
+      }
+    ],
+    "Documentation & Reporting": [
+      {
+        "name": "Introduction to Documentation & Reporting",
+        "done": false
+      },
+      {
+        "name": "Notetaking & Organization",
+        "done": false
+      },
+      {
+        "name": "Types of Reports",
+        "done": false
+      },
+      {
+        "name": "Components of a Report",
+        "done": false
+      },
+      {
+        "name": "How to Write Up a Finding",
+        "done": false
+      },
+      {
+        "name": "Reporting Tips and Tricks",
+        "done": false
+      },
+      {
+        "name": "Documentation & Reporting Practice Lab",
+        "done": false
+      },
+      {
+        "name": "Beyond this Module - Documentation & Reporting",
+        "done": false
+      }
+    ],
+    "Attacking Enterprise Networks": [
+      {
+        "name": "Intro to Attacking Enterprise Networks",
+        "done": false
+      },
+      {
+        "name": "Scenario & Kickoff",
+        "done": false
+      },
+      {
+        "name": "External Information Gathering",
+        "done": false
+      },
+      {
+        "name": "Service Enumeration & Exploitation",
+        "done": false
+      },
+      {
+        "name": "Web Enumeration & Exploitation",
+        "done": false
+      },
+      {
+        "name": "Initial Access",
+        "done": false
+      },
+      {
+        "name": "Post-Exploitation Persistence",
+        "done": false
+      },
+      {
+        "name": "Internal Information Gathering",
+        "done": false
+      },
+      {
+        "name": "Exploitation & Privilege Escalation",
+        "done": false
+      },
+      {
+        "name": "Lateral Movement",
+        "done": false
+      },
+      {
+        "name": "Active Directory Compromise",
+        "done": false
+      },
+      {
+        "name": "Post-Exploitation",
+        "done": false
+      },
+      {
+        "name": "Engagement Closeout",
+        "done": false
+      },
+      {
+        "name": "Beyond this Module",
         "done": false
       }
     ]
