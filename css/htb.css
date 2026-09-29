@@ -309,6 +309,23 @@
 .htb-route-group[open] > summary::after { content: '−'; }
 .htb-route-group summary:hover          { color: var(--htb); }
 
+/* Groups roll open and closed (browsers without ::details-content just snap) */
+#htb-route-groups { interpolate-size: allow-keywords; }
+
+.htb-route-group::details-content {
+  block-size: 0;
+  overflow: hidden;
+  margin-inline: -8px;    /* room for the rows' -8px margin and selected highlight */
+  padding-inline: 8px;
+  transition: block-size 0.3s ease, content-visibility 0.3s allow-discrete;
+}
+
+.htb-route-group[open]::details-content { block-size: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  .htb-route-group::details-content { transition: none; }
+}
+
 /* Rows are buttons: clicking one shows its sections in the Module Sections panel */
 .htb-module-row {
   display: flex;

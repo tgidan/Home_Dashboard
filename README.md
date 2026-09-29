@@ -13,7 +13,7 @@ A self-contained cyberpunk-themed dashboard showing live cybersecurity news, wea
   - Browser cache in `localStorage` (hourly refresh) plus a bundled offline snapshot in `js/htb-data.js`, so the view is never empty
   - Status tag shows whether data is *Live*, *Cached* or an *Offline snapshot*; manual **refresh button**
 - **Profile stats** — HTB level, rank and progress to the next level, total XP, badge count, active weeks
-- **01 Learning path** — all 28 CPTS modules in route order, a segmented progress bar, and four collapsible sections. A module counts as done only when its completion badge is publicly confirmed; modules in progress show `x / y sections` and a partly filled segment
+- **01 Learning path** — all 28 CPTS modules in route order, a segmented progress bar, and four collapsible sections (one open at a time, rolling open and closed; the one with the module in progress opens on load). A module counts as done only when its completion badge is publicly confirmed; modules in progress show `x / y sections` and a partly filled segment
 - **02 This week** — your HTB weekly streak (XP still needed before the week resets)
 - **Module sections** — every section of the module selected in the learning path (click a module row), with done / next markers; on load it shows the next module in the route
 - **Next in the route** — first module without a confirmed completion, plus its next unfinished section

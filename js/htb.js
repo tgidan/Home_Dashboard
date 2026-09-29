@@ -25,7 +25,7 @@ let htbWeeks = [];
 let htbCompleted = new Set();
 /* Section progress per module name from data/htb-sections.json; {} until loaded */
 let htbSections = {};
-/* Module clicked in the learning path; null follows the next module in the route */
+/* Module clicked in the learning path; null follows htbCurrentModule() */
 let htbSelected = null;
 /* The section list renders while the HTB view may be hidden, so its scroll can wait for layout */
 let htbSectionsScrollPending = false;
@@ -78,6 +78,12 @@ function htbSectionProgress(module) {
   if (!list || !list.length) return null;
   const next = list.find(s => !s.done);
   return { done: list.filter(s => s.done).length, total: list.length, next: next ? next.name : null };
+}
+
+/** The module being worked on: the first with sections done but no badge yet, else the next in the route */
+function htbCurrentModule() {
+  const open = CPTS_MODULES.filter(m => !htbCompleted.has(m));
+  return open.find(m => htbSectionProgress(m)?.done) || open[0];
 }
 
 /* Render: hero + stats */
@@ -147,21 +153,22 @@ function renderHtbRoute(completed) {
   }));
   segments.setAttribute('aria-label', `${confirmed} of ${CPTS_MODULES.length} module completions publicly confirmed`);
 
-  // Remember which groups the user expanded so a data refresh doesn't collapse them
+  // Remember which group the user expanded so a data refresh doesn't collapse it
   const container = $('htb-route-groups');
   const prevOpen  = container.children.length
     ? new Set([...container.querySelectorAll('details[open]')].map(d => d.dataset.group))
     : null;
 
-  // First render: open the group holding the next module, which the sections panel shows
-  const nextIndex = Math.max(0, CPTS_MODULES.findIndex(m => !completed.has(m)));
+  // First render: open the group holding the current module, which the sections panel shows
+  const currentIndex = Math.max(0, CPTS_MODULES.indexOf(htbCurrentModule()));
 
   const fragment = document.createDocumentFragment();
   CPTS_GROUPS.forEach(([title, start, end]) => {
     const mods    = CPTS_MODULES.slice(start, end);
     const details = htbEl('details', 'htb-route-group');
+    details.name = 'htb-route-group';   // shared name: opening one group closes the others
     details.dataset.group = title;
-    details.open = prevOpen ? prevOpen.has(title) : nextIndex >= start && nextIndex < end;
+    details.open = prevOpen ? prevOpen.has(title) : currentIndex >= start && currentIndex < end;
 
     const summary = htbEl('summary', '', title);
     summary.appendChild(htbEl('span', '', `${mods.filter(m => completed.has(m)).length} / ${mods.length} confirmed`));
@@ -205,10 +212,10 @@ function renderHtbRoute(completed) {
   renderHtbModuleSections();
 }
 
-/* Render: sections of the selected module (defaults to the next module in the route) */
+/* Render: sections of the selected module (defaults to the module being worked on) */
 function renderHtbModuleSections() {
   const nextModule = CPTS_MODULES.find(m => !htbCompleted.has(m));
-  const module     = htbSelected || nextModule || CPTS_MODULES.at(-1);
+  const module     = htbSelected || htbCurrentModule() || CPTS_MODULES.at(-1);
 
   for (const row of $('htb-route-groups').querySelectorAll('.htb-module-row')) {
     const on = row.dataset.module === module;
