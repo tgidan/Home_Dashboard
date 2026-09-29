@@ -214,16 +214,6 @@ function renderHtbRoute(completed) {
   });
   container.replaceChildren(fragment);
 
-  const nextModule = CPTS_MODULES.find(m => !completed.has(m));
-  const nextProg   = nextModule ? htbSectionProgress(nextModule) : null;
-  $('htb-next-module').textContent = nextModule || 'All modules confirmed';
-  $('htb-next-section').hidden     = !nextProg;
-  if (nextProg) {
-    $('htb-next-section').textContent = nextProg.next
-      ? `Next section: ${nextProg.next} · ${nextProg.done} / ${nextProg.total} done`
-      : `All ${nextProg.total} sections done · badge not confirmed yet`;
-  }
-
   renderHtbModuleSections();
 }
 

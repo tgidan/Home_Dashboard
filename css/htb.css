@@ -225,7 +225,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1.8fr) minmax(280px, 1fr);
   gap: 18px;
-  align-items: start;
+  align-items: stretch;   /* both columns end on the same line */
   flex-shrink: 0;
 }
 
@@ -233,6 +233,14 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+}
+
+/* Module Sections takes the rest of the column; its list grows or shrinks with the learning path */
+#htb-sections {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 /* 01 Learning path */
@@ -453,7 +461,8 @@
 #htb-sections-list {
   position: relative;   /* offset parent for scrolling to the next section */
   list-style: none;
-  max-height: 360px;
+  flex: 1 1 0;          /* no height of its own, so the learning path sets the row height */
+  min-height: 180px;
   overflow-y: auto;
   margin-top: 14px;
   padding-right: 6px;
@@ -477,22 +486,6 @@
 #htb-sections-list li.done .htb-symbol  { background: var(--htb-dim); border-color: var(--htb-line); color: var(--htb); font-size: 11px; }
 #htb-sections-list li.next              { color: var(--text); font-weight: 600; }
 #htb-sections-list li.next .htb-symbol  { border-color: var(--htb); color: var(--htb); box-shadow: 0 0 6px rgba(180, 244, 105, 0.4); }
-
-/* Next in route */
-#htb-next-module {
-  font-size: 1.15rem;
-  font-weight: 600;
-  margin: 4px 0 8px;
-}
-
-#htb-next-section {
-  margin: -2px 0 10px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--htb);
-}
-
-#htb-next .htb-note { margin-top: 8px; }
 
 /* ─── 03 Study rhythm ───────────────────────────────────────── */
 #htb-activity-grid {
@@ -758,6 +751,9 @@
 @media (max-width: 900px) {
   #htb-main-grid,
   #htb-activity-grid { grid-template-columns: 1fr; }
+
+  /* Stacked: nothing to line up with, so the list gets a fixed height */
+  #htb-sections-list { flex: none; max-height: 360px; }
 
   #htb-activity-summary {
     border-left: 0;
