@@ -14,7 +14,8 @@ A self-contained cyberpunk-themed dashboard showing live cybersecurity news, wea
   - Status tag shows whether data is *Live*, *Cached* or an *Offline snapshot*; manual **refresh button**
 - **Profile stats** — HTB level, rank and progress to the next level, total XP, badge count, active weeks
 - **01 Learning path** — all 28 CPTS modules in route order, a segmented progress bar, and four collapsible sections. A module counts as done only when its completion badge is publicly confirmed; modules in progress show `x / y sections` and a partly filled segment
-- **02 This week** — your HTB weekly streak (XP still needed before the week resets), plus a picker for your current module and write a weekly goal with an *achieved* checkbox; stored only in this browser
+- **02 This week** — your HTB weekly streak (XP still needed before the week resets)
+- **Module sections** — every section of the module selected in the learning path (click a module row), with done / next markers; on load it shows the next module in the route
 - **Next in the route** — first module without a confirmed completion, plus its next unfinished section
 - **Section progress** — `data/htb-sections.json` is **generated**; don't edit it here. Edit `progress.json` in the private HackTheBox-Academy repo instead. A GitHub Action there validates it and commits the copy to this repo when it changes (only module/section names and done flags are copied, never notes). Module names must match `CPTS_MODULES` in `js/htb-data.js` exactly
   - Setup: create a fine-grained PAT with access to this repo only (*Contents: Read and write*) and save it as the secret `DASHBOARD_TOKEN` in HackTheBox-Academy

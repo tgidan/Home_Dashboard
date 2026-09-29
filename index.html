@@ -159,7 +159,7 @@
             </div>
             <span class="htb-count"><b id="htb-confirmed-count"></b> <span>/ <span id="htb-module-total"></span></span></span>
           </div>
-          <p class="htb-muted">CPTS modules with a publicly confirmed completion.</p>
+          <p class="htb-muted">CPTS modules with a publicly confirmed completion. Select a module to see its sections.</p>
           <div id="htb-segments" role="img"></div>
           <p class="htb-note">Evidence of completed modules, not an exact course percentage. Section progress within a module comes from my study notes.</p>
           <div id="htb-route-groups"></div>
@@ -171,7 +171,7 @@
           <section class="panel" id="htb-focus">
             <div class="htb-eyebrow">02 / This Week</div>
             <div class="label">Make room for focus.</div>
-            <p class="htb-muted">Pick your current module and one achievable goal.</p>
+            <p class="htb-muted">Earn enough XP each week to keep the streak alive.</p>
             <div id="htb-streak" hidden>
               <div class="htb-streak-head">
                 <span id="htb-streak-weeks"></span>
@@ -180,17 +180,15 @@
               <div class="htb-track"><i id="htb-streak-track"></i></div>
               <div class="htb-stat-sub" id="htb-streak-sub"></div>
             </div>
-            <form id="htb-goal-form">
-              <label class="htb-field-label" for="htb-goal-module">Current module</label>
-              <select id="htb-goal-module" class="htb-input">
-                <option value="">Choose your module</option>
-              </select>
-              <label class="htb-field-label" for="htb-goal-text">My weekly goal</label>
-              <textarea id="htb-goal-text" class="htb-input" maxlength="500" rows="3" placeholder="For example: finish two sections and redo the exercise on my own."></textarea>
-              <label class="htb-check"><input id="htb-goal-done" type="checkbox"> Weekly goal achieved</label>
-              <button type="submit" id="htb-goal-save">Save weekly goal <span>↗</span></button>
-              <p id="htb-goal-status" role="status">Stored in this browser only.</p>
-            </form>
+          </section>
+
+          <!-- ── Module sections (selected in the learning path) ── -->
+          <section class="panel" id="htb-sections">
+            <div class="htb-eyebrow">Module Sections</div>
+            <div id="htb-sections-module"></div>
+            <div class="htb-stat-sub" id="htb-sections-sub"></div>
+            <div class="htb-track" hidden><i id="htb-sections-track"></i></div>
+            <ol id="htb-sections-list"></ol>
           </section>
 
           <!-- ── Next in route ── -->

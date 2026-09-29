@@ -2,14 +2,13 @@
 
 /*
  * HTB ACADEMY DASHBOARD: Road to CPTS — profile stats, learning path,
- * weekly goal, study rhythm chart and earned badges; section progress per
- * module comes from data/htb-sections.json (synced from HackTheBox-Academy)
+ * weekly streak, module sections, study rhythm chart and earned badges; section
+ * progress per module comes from data/htb-sections.json (synced from HackTheBox-Academy)
  * Depends on: config.js (CONFIG), utils.js ($, cache), htb-data.js
  */
 
 const HTB_PROXY_URL    = '/htb-proxy.php';
 const HTB_SECTIONS_URL = 'data/htb-sections.json';   // generated from the HackTheBox-Academy repo
-const HTB_GOAL_KEY     = 'htb_weekgoal';
 const HTB_TZ           = 'Europe/Amsterdam';
 const MODULE_SUFFIX    = / module completed$/;
 
@@ -26,6 +25,10 @@ let htbWeeks = [];
 let htbCompleted = new Set();
 /* Section progress per module name from data/htb-sections.json; {} until loaded */
 let htbSections = {};
+/* Module clicked in the learning path; null follows the next module in the route */
+let htbSelected = null;
+/* The section list renders while the HTB view may be hidden, so its scroll can wait for layout */
+let htbSectionsScrollPending = false;
 
 /* Helpers */
 const htbFmt = n => n.toLocaleString('en-GB');
@@ -150,12 +153,15 @@ function renderHtbRoute(completed) {
     ? new Set([...container.querySelectorAll('details[open]')].map(d => d.dataset.group))
     : null;
 
+  // First render: open the group holding the next module, which the sections panel shows
+  const nextIndex = Math.max(0, CPTS_MODULES.findIndex(m => !completed.has(m)));
+
   const fragment = document.createDocumentFragment();
-  CPTS_GROUPS.forEach(([title, start, end], g) => {
+  CPTS_GROUPS.forEach(([title, start, end]) => {
     const mods    = CPTS_MODULES.slice(start, end);
     const details = htbEl('details', 'htb-route-group');
     details.dataset.group = title;
-    details.open = prevOpen ? prevOpen.has(title) : g === 0;
+    details.open = prevOpen ? prevOpen.has(title) : nextIndex >= start && nextIndex < end;
 
     const summary = htbEl('summary', '', title);
     summary.appendChild(htbEl('span', '', `${mods.filter(m => completed.has(m)).length} / ${mods.length} confirmed`));
@@ -164,7 +170,9 @@ function renderHtbRoute(completed) {
     mods.forEach((name, j) => {
       const done = completed.has(name);
       const prog = done ? null : htbSectionProgress(name);
-      const row  = htbEl('div', 'htb-module-row' + (done ? ' confirmed' : prog && prog.done ? ' in-progress' : ''));
+      const row  = htbEl('button', 'htb-module-row' + (done ? ' confirmed' : prog && prog.done ? ' in-progress' : ''));
+      row.type = 'button';
+      row.dataset.module = name;
       const cell = htbEl('span', 'htb-module-name', name);
       if (prog) {
         const track = htbEl('span', 'htb-track htb-section-track');
@@ -193,6 +201,47 @@ function renderHtbRoute(completed) {
       ? `Next section: ${nextProg.next} · ${nextProg.done} / ${nextProg.total} done`
       : `All ${nextProg.total} sections done · badge not confirmed yet`;
   }
+
+  renderHtbModuleSections();
+}
+
+/* Render: sections of the selected module (defaults to the next module in the route) */
+function renderHtbModuleSections() {
+  const nextModule = CPTS_MODULES.find(m => !htbCompleted.has(m));
+  const module     = htbSelected || nextModule || CPTS_MODULES.at(-1);
+
+  for (const row of $('htb-route-groups').querySelectorAll('.htb-module-row')) {
+    const on = row.dataset.module === module;
+    row.classList.toggle('selected', on);
+    row.setAttribute('aria-pressed', on);
+  }
+
+  const list = Object.hasOwn(htbSections, module) ? htbSections[module] : [];
+  const prog = htbSectionProgress(module);
+  const tags = [];
+  if (htbCompleted.has(module))  tags.push('Badge confirmed');
+  if (module === nextModule)     tags.push('Next in the route');
+  $('htb-sections-module').textContent = module;
+  $('htb-sections-sub').textContent    = [prog ? `${prog.done} / ${prog.total} sections done` : 'No section data yet', ...tags].join(' · ');
+  $('htb-sections-track').parentElement.hidden = !prog;
+  if (prog) $('htb-sections-track').style.width = `${prog.done / prog.total * 100}%`;
+
+  const next = list.findIndex(s => !s.done);
+  $('htb-sections-list').replaceChildren(...list.map((s, i) => {
+    const li = htbEl('li', s.done ? 'done' : i === next ? 'next' : '');
+    li.append(htbEl('span', 'htb-symbol', s.done ? '✓' : String(i + 1).padStart(2, '0')), htbEl('span', '', s.name));
+    return li;
+  }));
+  htbSectionsScrollPending = !scrollHtbSectionsToNext();
+}
+
+/** Scrolls the section list (not the page) to the next open section; false while the list is hidden */
+function scrollHtbSectionsToNext() {
+  const ol = $('htb-sections-list');
+  if (!ol.clientHeight) return false;
+  const next = ol.querySelector('li.next');
+  ol.scrollTop = next ? next.offsetTop - ol.clientHeight / 3 : 0;
+  return true;
 }
 
 /* Render: 04 milestones */
@@ -273,54 +322,6 @@ function renderHtb(data, source) {
   renderHtbChart();
 }
 
-/* 02 weekly goal — stored only in this browser */
-function isValidGoal(g) {
-  return !!g && typeof g.goal === 'string' && g.goal.length <= 500
-    && typeof g.module === 'string' && (g.module === '' || CPTS_MODULES.includes(g.module))
-    && typeof g.done === 'boolean';
-}
-
-function saveHtbGoal(input) {
-  if (!isValidGoal(input)) throw new Error('Invalid weekly goal. Choose an existing module and at most 500 characters.');
-  localStorage.setItem(HTB_GOAL_KEY, JSON.stringify(input));
-  $('htb-goal-module').value = input.module;
-  $('htb-goal-text').value   = input.goal;
-  $('htb-goal-done').checked = input.done;
-  $('htb-goal-status').textContent = 'Saved in this browser. ✓';
-  $('htb-focus').classList.toggle('done', input.done);
-}
-
-function initHtbGoal() {
-  const select = $('htb-goal-module');
-  for (const name of CPTS_MODULES) {
-    const opt = htbEl('option', '', name);
-    opt.value = name;
-    select.appendChild(opt);
-  }
-
-  try {
-    const stored = JSON.parse(localStorage.getItem(HTB_GOAL_KEY));
-    if (isValidGoal(stored)) {
-      select.value               = stored.module;
-      $('htb-goal-text').value   = stored.goal;
-      $('htb-goal-done').checked = stored.done;
-      $('htb-focus').classList.toggle('done', stored.done);
-    }
-  } catch {
-    $('htb-goal-status').textContent = 'Local storage is unavailable or could not be read.';
-  }
-
-  $('htb-goal-form').addEventListener('submit', e => {
-    e.preventDefault();
-    try {
-      saveHtbGoal({ module: select.value, goal: $('htb-goal-text').value.trim(), done: $('htb-goal-done').checked });
-    } catch {
-      $('htb-goal-status').textContent = 'Saving failed. Check that browser storage is allowed.';
-    }
-  });
-
-}
-
 /* Fetch */
 async function fetchHtb(force = false) {
   const fetchedAt = cache('htb_fetchedAt');
@@ -377,7 +378,15 @@ function initHtb() {
   if (CONFIG.htb.showFullName) $('htb-who').replaceChildren(document.createTextNode(CONFIG.htb.fullName + ' '), htbEl('span', '', '/ '), handle);
   else                         $('htb-who').replaceChildren(handle);
 
-  initHtbGoal();
+  $('htb-route-groups').addEventListener('click', e => {
+    const row = e.target.closest('.htb-module-row');
+    if (!row) return;
+    htbSelected = row.dataset.module;
+    renderHtbModuleSections();
+  });
+  new ResizeObserver(() => {
+    if (htbSectionsScrollPending) htbSectionsScrollPending = !scrollHtbSectionsToNext();
+  }).observe($('htb-sections-list'));
   $('htb-period').addEventListener('change', renderHtbChart);
   $('htb-refresh-btn').addEventListener('click', refreshHtb);
 
