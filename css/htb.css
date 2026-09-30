@@ -581,7 +581,7 @@
 #htb-activity-summary > span { color: var(--htb-muted); font-size: 0.8rem; }
 #htb-activity-summary p      { font-size: 0.8rem; margin-top: 8px; }
 
-/* Module pace: completed modules (solid green) vs. one module per week (dashed orange) */
+/* Module pace: completed modules (solid green) vs. the target (dashed orange) and the forecast (dotted cyan) */
 #htb-pace {
   margin-top: 24px;
   padding-top: 18px;
@@ -600,7 +600,8 @@
 
 .htb-pace-legend {
   display: flex;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 6px 16px;
   font-family: var(--font-mono);
   font-size: 9px;
   letter-spacing: 1px;
@@ -616,7 +617,8 @@
   border-top: 2px solid var(--htb);
 }
 
-.htb-key.pace { border-top-style: dashed; border-top-color: var(--orange); }
+.htb-key.pace     { border-top-style: dashed; border-top-color: var(--orange); }
+.htb-key.forecast { border-top-style: dotted; border-top-color: var(--cyan); }
 
 #htb-pace-chart {
   position: relative;
@@ -640,9 +642,11 @@
 
 .htb-pace-line.done { stroke: var(--htb); filter: drop-shadow(0 0 4px rgba(180, 244, 105, 0.5)); }
 .htb-pace-line.pace { stroke: var(--orange); stroke-dasharray: 5 4; }
+.htb-pace-line.forecast { stroke: var(--cyan); stroke-dasharray: 1 5; stroke-linecap: round; }
 
-.htb-pace-dot      { fill: var(--htb); stroke: var(--bg-panel); stroke-width: 2; }
-.htb-pace-dot.pace { fill: var(--orange); }
+.htb-pace-dot          { fill: var(--htb); stroke: var(--bg-panel); stroke-width: 2; }
+.htb-pace-dot.pace     { fill: var(--orange); }
+.htb-pace-dot.forecast { fill: var(--cyan); }
 
 .htb-pace-cross { stroke: rgba(255, 255, 255, 0.35); stroke-width: 1; }
 .htb-pace-hit   { fill: transparent; cursor: crosshair; }

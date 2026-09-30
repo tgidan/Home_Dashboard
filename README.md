@@ -20,7 +20,7 @@ A self-contained cyberpunk-themed dashboard showing live cybersecurity news, wea
   - Setup: create a fine-grained PAT with access to this repo only (*Contents: Read and write*) and save it as the secret `DASHBOARD_TOKEN` in HackTheBox-Academy
   - The Action commits here, so `git pull` before pushing local changes
 - **03 Study rhythm** — XP bar chart for the last 8 or 4 full weeks, with period total, last-4-weeks total and previous-4-weeks comparison
-  - **Module pace** — CPTS modules completed since `CONFIG.htb.paceStart` (step line, neon green, from badge dates) against a one-module-per-week pace (dashed orange) until all 28 are done; both start at the modules done before that date. Hover or focus + arrow keys for a per-date readout
+  - **Module pace** — CPTS modules completed since `CONFIG.htb.paceStart` (step line, neon green, from badge dates) against two expected lines that give each module time in proportion to its section count: a **target** of `CONFIG.htb.paceSectionsPerWeek` sections a week (dashed orange) and a **forecast** from today at the rate achieved since the start (dotted cyan, once a full week has passed). All lines start at the modules done before that date. The status line counts ahead / behind the target in sections, so progress inside a long module shows before its badge. Without section data the target falls back to one module per week. Hover or focus + arrow keys for a per-date readout
 - **04 Earned milestones** — module badges in the order earned, plus other Academy badges and modules outside the CPTS path
 
 ### OSINT Tool Dashboard
@@ -147,7 +147,8 @@ const CONFIG = {
     username:  'DVERKADE',
     fullName:  'Daan Verkade',
     showFullName: false,       // true shows the full name next to the username
-    paceStart: '2026-09-14'    // start of the one-module-per-week pace chart
+    paceStart: '2026-09-14',   // start of the module pace chart
+    paceSectionsPerWeek: 12    // target rate for the pace chart
   },
   refresh: {
     weatherMins: 30,           // weather auto-refresh interval

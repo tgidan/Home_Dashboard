@@ -23,6 +23,8 @@ const HTB_SOURCE_LABEL = {
 let htbWeeks = [];
 /* Module pace chart model from the most recent render; redrawn when the chart resizes */
 let htbPace = null;
+/* Profile data from the last render, so section data can rebuild the pace chart */
+let htbData = null;
 /* Confirmed modules from the last profile render, so section data can re-render the route */
 let htbCompleted = new Set();
 /* Section progress per module name from data/htb-sections.json; {} until loaded */
@@ -333,17 +335,21 @@ function renderHtbChart() {
   $('htb-period-xp').textContent   = htbFmt(htbSum(visible));
 }
 
-/* Render: 03 module pace — completed CPTS modules vs. one module per week since CONFIG.htb.paceStart.
-   Days are counted as indexes from the start day; both lines start at the modules done before it. */
+/* Render: 03 module pace — completed CPTS modules since CONFIG.htb.paceStart against two expected lines:
+   a target of CONFIG.htb.paceSectionsPerWeek and a forecast at the rate achieved so far. Both give each
+   module time in proportion to its section count. Days are counted as indexes from the start day. */
 const HTB_DAY_MS = 24 * 60 * 60 * 1000;
 
-const htbPaceDone   = (p, i) => p.base + p.steps.filter(s => s.i <= i).length;
-const htbPaceTarget = (p, i) => Math.min(p.total, p.base + Math.floor(i / 7));
-const htbPaceDate   = (p, i, opts) => new Date(Date.parse(p.start + 'T12:00:00Z') + i * HTB_DAY_MS)
+const htbPaceDone     = (p, i) => p.base + p.steps.filter(s => s.i <= i).length;
+const htbPaceTarget   = (p, i) => p.base + p.target.filter(s => s.i <= i).length;
+const htbPaceForecast = (p, i) => !p.forecast || i < p.today ? null
+  : htbPaceDone(p, p.today) + p.forecast.filter(s => s.i <= i).length;
+const htbPaceDate     = (p, i, opts) => new Date(Date.parse(p.start + 'T12:00:00Z') + i * HTB_DAY_MS)
   .toLocaleDateString('en-GB', { ...opts, timeZone: 'UTC' });
 
 function prepareHtbPace(data) {
   const start    = CONFIG.htb.paceStart;
+  const perWeek  = CONFIG.htb.paceSectionsPerWeek;
   const dayIndex = t => Math.round((Date.parse(htbDay(t) + 'T12:00:00Z') - Date.parse(start + 'T12:00:00Z')) / HTB_DAY_MS);
   const done = data.badges
     .filter(b => MODULE_SUFFIX.test(b.description) && CPTS_MODULES.includes(b.description.replace(MODULE_SUFFIX, '')))
@@ -357,19 +363,55 @@ function prepareHtbPace(data) {
   const base  = done.filter(s => s.i < 0).length;
   const today = Math.max(0, dayIndex(data.updatedAt));
   const steps = done.filter(s => s.i >= 0 && s.i <= today);
-  const paceEnd = (total - base) * 7;
-  htbPace = { start, total, base, steps, today, paceEnd, days: Math.max(paceEnd, today, 7) };
 
-  const nowDone = htbPaceDone(htbPace, today);
-  const target  = htbPaceTarget(htbPace, today);
-  const diff    = nowDone - target;
-  const endDate = htbPaceDate(htbPace, paceEnd, { day: 'numeric', month: 'short', year: 'numeric' });
+  // Sections per module; a module without section data counts as the mean of the known ones.
+  // With no section data at all every module takes one week, as one module per week would
+  const known = CPTS_MODULES.map(m => htbSectionProgress(m)?.total).filter(Boolean);
+  const mean  = known.length ? known.reduce((a, b) => a + b, 0) / known.length : perWeek;
+  const size  = m => htbSectionProgress(m)?.total ?? mean;
+
+  // Target: the modules still open at the start, in route order, each done once its sections fit the rate
+  const before    = new Set(done.filter(s => s.i < 0).map(s => s.module));
+  const confirmed = new Set(done.map(s => s.module));
+  const queue     = CPTS_MODULES.filter(m => !before.has(m));
+  let sections = 0;
+  const target    = queue.map(m => ({ module: m, i: Math.ceil((sections += size(m)) / perWeek * 7) }));
+  const targetEnd = target.length ? target.at(-1).i : 0;
+
+  // Forecast: the sections still open, at the rate achieved since the start (needs section data and a full week)
+  const left       = m => confirmed.has(m) ? 0 : size(m) - (htbSectionProgress(m)?.done || 0);
+  const remaining  = queue.reduce((n, m) => n + left(m), 0);
+  const sinceStart = sections - remaining;
+  const perDay     = sinceStart / today;
+  let forecast = null;
+  if (known.length && today >= 7 && sinceStart > 0 && remaining > 0) {
+    let open = 0;
+    forecast = queue.filter(m => !confirmed.has(m)).map(m => ({ module: m, i: today + Math.ceil((open += left(m)) / perDay) }));
+  }
+  const forecastEnd = forecast ? forecast.at(-1).i : null;
+
+  // A slow start would stretch the forecast far out, so it gets at most twice the target's span
+  const days = Math.max(targetEnd, Math.min(forecastEnd ?? 0, targetEnd * 2), today, 7);
+  htbPace = { start, total, base, steps, today, target, targetEnd, forecast, forecastEnd, days };
+
+  // Ahead or behind is counted in sections, so work inside a long module shows before its badge does
+  const nowDone    = htbPaceDone(htbPace, today);
+  const diff       = Math.round(sinceStart - Math.min(sections, perWeek * today / 7));
+  const count      = n => `${n} section${n === 1 ? '' : 's'}`;
+  const long       = { day: 'numeric', month: 'short', year: 'numeric' };
+  const targetDate = htbPaceDate(htbPace, targetEnd, long);
+  const rate       = +(perDay * 7).toFixed(1);
   $('htb-pace-title').textContent  = `Modules completed since ${htbPaceDate(htbPace, 0, { day: 'numeric', month: 'short' })}`;
   $('htb-pace-status').textContent = `${nowDone} of ${total} done · `
-    + (diff > 0 ? `${diff} ahead of pace` : diff < 0 ? `${-diff} behind pace` : 'on pace')
-    + ` · the pace line reaches ${total} on ${endDate}`;
+    + (diff > 0 ? `${count(diff)} ahead of target` : diff < 0 ? `${count(-diff)} behind target` : 'on target')
+    + ` · target ends ${targetDate}`
+    + (forecast ? ` · forecast ends ${htbPaceDate(htbPace, forecastEnd, long)}`
+      : !remaining ? '' : today < 7 ? ' · forecast after the first full week' : ' · no forecast yet');
+  $('htb-pace-target-label').textContent   = `Target · ${perWeek} sections / week`;
+  $('htb-pace-forecast-label').textContent = forecast ? `Forecast · ${rate} sections / week` : 'Forecast';
   $('htb-pace-chart').setAttribute('aria-label',
-    `${nowDone} of ${total} CPTS modules completed; one module per week would mean ${target} by today and all ${total} by ${endDate}.`);
+    `${nowDone} of ${total} CPTS modules completed; at ${perWeek} sections per week the target is ${htbPaceTarget(htbPace, today)} by today and all ${total} by ${targetDate}`
+    + (forecast ? `; at the current ${rate} sections per week all ${total} would be done by ${htbPaceDate(htbPace, forecastEnd, long)}.` : '.'));
 }
 
 function renderHtbPace() {
@@ -381,6 +423,10 @@ function renderHtbPace() {
   const H = box.clientHeight || 200;
   const m = { t: 26, r: 14, b: 22, l: 26 };
   const x = i => m.l + i / p.days * (W - m.l - m.r);
+  // The forecast's end label gets its own row above the target's when the two would overlap
+  const forecastShown = p.forecast && p.forecastEnd <= p.days;
+  const stacked       = forecastShown && Math.abs(x(p.forecastEnd) - x(p.targetEnd)) < 96;
+  if (stacked) m.t += 12;
   const y = v => m.t + (1 - v / p.total) * (H - m.t - m.b);
   const svg = htbSvg('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, 'aria-hidden': 'true' });
 
@@ -404,11 +450,20 @@ function renderHtbPace() {
     lastTick = x(i);
   }
 
-  // Pace: one step up every 7 days until all modules are done
+  // Target: a step up on each day the target rate would have finished the next module
   let pace = `M${x(0)},${y(p.base)}`;
-  for (let k = 1; k <= p.total - p.base; k++) pace += `H${x(k * 7)}V${y(p.base + k)}`;
-  if (p.days > p.paceEnd) pace += `H${x(p.days)}`;
+  p.target.forEach((s, k) => { pace += `H${x(s.i)}V${y(p.base + k + 1)}`; });
+  if (p.days > p.targetEnd) pace += `H${x(p.days)}`;
   svg.append(htbSvg('path', { class: 'htb-pace-line pace', d: pace }));
+
+  // Forecast: from today's count, a step up on each day the current rate would finish the next module
+  if (p.forecast) {
+    let f = p.base + p.steps.length;
+    let ahead = `M${x(p.today)},${y(f)}`;
+    for (const s of p.forecast) if (s.i <= p.days) ahead += `H${x(s.i)}V${y(++f)}`;
+    if (p.forecastEnd > p.days) ahead += `H${x(p.days)}`;
+    svg.append(htbSvg('path', { class: 'htb-pace-line forecast', d: ahead }));
+  }
 
   // Completed: a step at each badge date, drawn up to today
   let n = p.base;
@@ -417,20 +472,27 @@ function renderHtbPace() {
   done += `H${x(p.today)}`;
   svg.append(htbSvg('path', { class: 'htb-pace-line done', d: done }));
 
-  // Markers: each completion, the end of the pace line, and today's count
+  // Markers: each completion, the end of both expected lines, and today's count
   n = p.base;
   for (const s of p.steps) svg.append(htbSvg('circle', { class: 'htb-pace-dot', cx: x(s.i), cy: y(++n), r: 4 }));
+  const endLabel = i => `${p.total} · ${htbPaceDate(p, i, { day: 'numeric', month: 'short' })}`;
   svg.append(
-    htbSvg('circle', { class: 'htb-pace-dot pace', cx: x(p.paceEnd), cy: y(p.total), r: 4 }),
-    htbSvg('text', { class: 'htb-pace-value', x: x(p.paceEnd), y: y(p.total) - 10, 'text-anchor': 'end' },
-      `${p.total} · ${htbPaceDate(p, p.paceEnd, { day: 'numeric', month: 'short' })}`),
+    htbSvg('circle', { class: 'htb-pace-dot pace', cx: x(p.targetEnd), cy: y(p.total), r: 4 }),
+    htbSvg('text', { class: 'htb-pace-value', x: x(p.targetEnd), y: y(p.total) - 10, 'text-anchor': 'end' }, endLabel(p.targetEnd)),
   );
-  const nearEnd = x(p.today) > W - m.r - 30;
+  if (forecastShown) {
+    svg.append(
+      htbSvg('circle', { class: 'htb-pace-dot forecast', cx: x(p.forecastEnd), cy: y(p.total), r: 4 }),
+      htbSvg('text', { class: 'htb-pace-value', x: x(p.forecastEnd), y: y(p.total) - (stacked ? 22 : 10), 'text-anchor': 'end' }, endLabel(p.forecastEnd)),
+    );
+  }
+  // The forecast continues to the right of today, so the count moves to the left of it
+  const leftOf = p.forecast || x(p.today) > W - m.r - 30;
   svg.append(htbSvg('text', {
-    class: 'htb-pace-value', x: x(p.today) + (nearEnd ? -8 : 8), y: y(n) - 8, 'text-anchor': nearEnd ? 'end' : 'start',
+    class: 'htb-pace-value', x: x(p.today) + (leftOf ? -8 : 8), y: y(n) - 8, 'text-anchor': leftOf ? 'end' : 'start',
   }, n));
 
-  // Hover layer: a crosshair snaps to the nearest day; the tooltip lists both lines
+  // Hover layer: a crosshair snaps to the nearest day; the tooltip lists all three lines
   const cross = htbSvg('line', { class: 'htb-pace-cross', y1: m.t - 6, y2: H - m.b, visibility: 'hidden' });
   const hit   = htbSvg('rect', { class: 'htb-pace-hit', x: m.l, y: 0, width: W - m.l - m.r, height: H - m.b });
   svg.append(cross, hit);
@@ -451,7 +513,8 @@ function renderHtbPace() {
     tip.replaceChildren(
       htbEl('div', 'htb-pace-tip-date', htbPaceDate(p, i, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })),
       row('', i <= p.today ? htbPaceDone(p, i) : '–', 'Completed'),
-      row(' pace', htbPaceTarget(p, i), '1 module / week'),
+      row(' pace', htbPaceTarget(p, i), 'Target'),
+      row(' forecast', htbPaceForecast(p, i) ?? '–', 'Forecast'),
       ...p.steps.filter(s => s.i === i).map(s => htbEl('div', 'htb-pace-tip-module', `✓ ${s.module}`)),
     );
     tip.hidden = false;
@@ -478,6 +541,7 @@ function renderHtb(data, source) {
   const completed = new Set(
     data.badges.filter(b => MODULE_SUFFIX.test(b.description)).map(b => b.description.replace(MODULE_SUFFIX, ''))
   );
+  htbData = data;
   renderHtbHeader(data, source);
   renderHtbLevel(data);
   renderHtbStreak(data);
@@ -517,6 +581,10 @@ async function fetchHtbSections() {
   cache('htb_sections', data);
   htbSections = data.modules;
   renderHtbRoute(htbCompleted);
+  if (htbData) {   // module sizes changed, so the expected lines move
+    prepareHtbPace(htbData);
+    renderHtbPace();
+  }
 }
 
 /* Manual refresh (bypasses the TTL on both browser and server cache) */
