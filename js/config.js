@@ -25,7 +25,7 @@ const CONFIG = {
     fullName:   'Daan Verkade',
     showFullName: false,                                  // true shows the full name next to the username
     paceStart:  '2026-09-14',                             // start of the module pace chart
-    paceSectionsPerWeek: 12                               // target rate; each module gets time for its section count
+    paceSectionsPerWeek: 15                               // target rate; each module gets time for its section count
   },
   refresh: {
     weatherMins: 30,
