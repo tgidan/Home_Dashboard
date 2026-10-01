@@ -546,11 +546,11 @@
       },
       {
         "name": "The Live Engagement",
-        "done": false
+        "done": true
       },
       {
         "name": "Detection & Prevention",
-        "done": false
+        "done": true
       }
     ],
     "Using the Metasploit Framework": [
