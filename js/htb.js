@@ -27,6 +27,11 @@ let htbPace = null;
 let htbPaceMode = 'modules';
 let htbPaceMix  = 0;
 let htbPaceAnim = 0;
+/* Pace chart zoom as [first day, last day] since the start, or null for the whole period */
+let htbPaceZoom = null;
+/* What the pace chart shows now ({ v0, v1, mA, sA }), where a zoom animation starts from */
+let htbPaceShown    = null;
+let htbPaceZoomAnim = 0;
 /* Profile data from the last render, so section data can rebuild the pace chart */
 let htbData = null;
 /* Confirmed modules from the last profile render, so section data can re-render the route */
@@ -490,62 +495,24 @@ function setHtbPaceMode(mode) {
   htbPaceAnim = requestAnimationFrame(tick);
 }
 
-function renderHtbPace() {
-  const p   = htbPace;
-  const box = $('htb-pace-chart');
-  const W   = box.clientWidth;
-  if (!p || !W) return;   // view hidden: the ResizeObserver draws it once it has a size
-
-  const H = box.clientHeight || 200;
-  const m = { t: 26, r: 14, b: 22, l: 26 };
-  const x = i => m.l + i / p.days * (W - m.l - m.r);
-  // The forecast's end label gets its own row above the target's when the two would overlap
-  const forecastShown = p.forecast && p.forecastEnd <= p.days;
-  const stacked       = forecastShown && Math.abs(x(p.forecastEnd) - x(p.targetEnd)) < 96;
-  if (stacked) m.t += 12;
-  // Both modes share the plot: a value is drawn as its share of that mode's total, blended by the mix (0 modules, 1 sections)
-  const plot = H - m.t - m.b;
-  const Y    = (mv, sv, mix) => m.t + (1 - mv / p.total * (1 - mix) - sv / p.secTotal * mix) * plot;
-  const svg  = htbSvg('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, 'aria-hidden': 'true' });
-  // Elements of one mode only; they crossfade while the lines morph
-  const onlyModules = [], onlySections = [];
-
-  // Recessive grid: a label every 7 modules, or every round number of sections that gives at most 5 lines
-  const grid = (list, yv, v) => {
-    const els = [
-      htbSvg('line', { class: 'htb-pace-grid', x1: m.l, x2: W - m.r, y1: yv, y2: yv }),
-      htbSvg('text', { class: 'htb-pace-axis', x: m.l - 6, y: yv + 3, 'text-anchor': 'end' }, v),
-    ];
-    list?.push(...els);
-    svg.append(...els);
-  };
-  const secStep = [10, 20, 25, 50, 100, 200, 250, 500].find(s => p.secTotal / s <= 5) ?? 1000;
-  grid(null, Y(0, 0, 0), 0);   // the baseline is shared
-  for (let v = 7; v <= p.total; v += 7)                grid(onlyModules, Y(v, 0, 0), v);
-  for (let v = secStep; v <= p.secTotal; v += secStep) grid(onlySections, Y(0, v, 1), v);
-
-  // X axis: the start day, then the first of each month (skipped when it would collide)
-  let lastTick = -Infinity;
-  for (let i = 0; i <= p.days; i++) {
-    const date = new Date(Date.parse(p.start + 'T12:00:00Z') + i * HTB_DAY_MS);
-    if (i > 0 && date.getUTCDate() !== 1) continue;
-    if (x(i) - lastTick < 44) continue;
-    const label = i === 0 ? htbPaceDate(p, 0, { day: 'numeric', month: 'short' })
-      : htbPaceDate(p, i, date.getUTCMonth() === 0 ? { month: 'short', year: 'numeric' } : { month: 'short' });
-    svg.append(htbSvg('text', { class: 'htb-pace-axis', x: x(i), y: H - 6, 'text-anchor': i === 0 ? 'start' : 'middle' }, label));
-    lastTick = x(i);
+/** Round axis bounds around [min, max]: the smallest step from the list that needs at most 5 grid lines */
+function htbPaceAxis(min, max, steps) {
+  for (const step of steps) {
+    const lo = Math.floor(min / step) * step;
+    const hi = Math.max(lo + step, Math.ceil(max / step) * step);
+    if ((hi - lo) / step <= 5 || step === steps.at(-1)) return { lo, hi, step };
   }
+}
 
-  // Each line is sampled per day as two points at x(i), the value before that day and after it: a stepped line
-  // jumps between them, a straight one has both equal. Both modes share the points, so morphing slides each
-  // point straight up or down while its x stays put
-  const lines   = [];
-  const line    = (cls, from, to, mod, sec) => {
-    const path = htbSvg('path', { class: `htb-pace-line ${cls}` });
-    const pts  = [];
-    for (let i = from; i <= to; i++) pts.push([x(i).toFixed(1), ...mod(i), ...sec(i)]);
-    lines.push([path, pts]);
-    svg.append(path);
+/** The three lines, sampled per day from v0 to v1 as [class, [[day, modules before, after, sections before, after], …]].
+    A stepped line jumps from the value before a day to the value after it; a straight one has both equal. Both
+    modes share the days, so morphing slides each point straight up or down while its x stays put */
+function htbPaceLines(p, v0, v1) {
+  const lines = [];
+  const line  = (cls, from, to, mod, sec) => {
+    const pts = [];
+    for (let i = Math.max(from, v0); i <= Math.min(to, v1); i++) pts.push([i, ...mod(i), ...sec(i)]);
+    if (pts.length) lines.push([cls, pts]);
   };
   const stepped  = (v, first, from) => i => [i === from ? first : v(i - 1), v(i)];
   const straight = v => i => [v(i), v(i)];
@@ -559,33 +526,172 @@ function renderHtbPace() {
   }
   // Completed: a step at each badge date, or at each section's date, drawn up to today
   line('done', 0, p.today, stepped(i => htbPaceDone(p, i), p.base, 0), stepped(i => htbPaceSecDone(p, i), p.secBase, 0));
+  return lines;
+}
 
-  // Markers: each module completion, the end of both expected lines (top of the plot in both modes) and today's count
-  const dots = p.steps.map((s, k) => {
+/** Where the chart settles for a zoom: the days in view and both y-axes. The whole period shows the whole route;
+    a zoom gets round bounds around the values in view. Null when the zoom no longer fits the data */
+function htbPaceFrame(p, zoom) {
+  if (!zoom) {
+    const secStep = [10, 20, 25, 50, 100, 200, 250, 500].find(s => p.secTotal / s <= 5) ?? 1000;
+    return { v0: 0, v1: p.days, mA: { lo: 0, hi: p.total, step: 7 }, sA: { lo: 0, hi: p.secTotal, step: secStep } };
+  }
+  const v0 = Math.max(0, zoom[0]), v1 = Math.min(p.days, zoom[1]);
+  if (v1 - v0 < 1) return null;
+  const pts    = htbPaceLines(p, v0, v1).flatMap(([, pts]) => pts);
+  const extent = (a, b) => {
+    const vals = pts.flatMap(pt => [pt[a], pt[b]]);
+    return [Math.min(...vals), Math.max(...vals)];
+  };
+  return {
+    v0, v1,
+    mA: htbPaceAxis(...extent(1, 2), [1, 2, 5, 10]),
+    sA: htbPaceAxis(...extent(3, 4), [1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500]),
+  };
+}
+
+/** Zooms the pace chart to a range of days, or back to the whole period with null. The view slides there from
+    wherever it is, so a new selection during the animation simply changes course */
+function setHtbPaceZoom(range) {
+  const p = htbPace;
+  htbPaceZoom = range;
+  $('htb-pace-reset').classList.toggle('on', !!range);
+  cancelAnimationFrame(htbPaceZoomAnim);
+  const from = htbPaceShown;
+  const to   = p && htbPaceFrame(p, range);
+  if (!from || !to || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    renderHtbPace();
+    return;
+  }
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const ease = k => k < 0.5 ? 4 * k ** 3 : 1 - (-2 * k + 2) ** 3 / 2;   // ease-in-out cubic
+  const axis = (a, b, k) => ({ lo: lerp(a.lo, b.lo, k), hi: lerp(a.hi, b.hi, k), step: b.step, from: a.step, k });
+  const t0   = performance.now();
+  const tick = now => {
+    const t = Math.min(1, (now - t0) / 700);
+    const k = ease(t);
+    renderHtbPace(t < 1 ? {
+      v0: lerp(from.v0, to.v0, k), v1: lerp(from.v1, to.v1, k), mA: axis(from.mA, to.mA, k), sA: axis(from.sA, to.sA, k),
+    } : null);
+    if (t < 1) htbPaceZoomAnim = requestAnimationFrame(tick);
+  };
+  htbPaceZoomAnim = requestAnimationFrame(tick);
+}
+
+/** Draws the pace chart at a frame (days in view and both y-axes); without one, where the zoom settles */
+function renderHtbPace(frame = null) {
+  const p   = htbPace;
+  const box = $('htb-pace-chart');
+  const W   = box.clientWidth;
+  if (!p || !W) return;   // view hidden: the ResizeObserver draws it once it has a size
+
+  if (!frame) {
+    cancelAnimationFrame(htbPaceZoomAnim);   // a resize or new data during a zoom animation jumps to its end
+    frame = htbPaceFrame(p, htbPaceZoom);
+    if (!frame) {                            // the zoomed range no longer fits the data
+      htbPaceZoom = null;
+      $('htb-pace-reset').classList.remove('on');
+      frame = htbPaceFrame(p, null);
+    }
+  }
+  htbPaceShown = frame;
+  const { v0, v1, mA, sA } = frame;
+  const inView = i => i >= v0 && i <= v1;
+  p.view = [Math.ceil(v0), Math.floor(v1)];
+
+  const H = box.clientHeight || 200;
+  const m = { t: 26, r: 14, b: 22, l: 26 };
+  const x = i => m.l + (i - v0) / (v1 - v0) * (W - m.l - m.r);
+  // The forecast's end label gets its own row above the target's when the two would overlap
+  const forecastShown = p.forecast && p.forecastEnd <= p.days && inView(p.forecastEnd);
+  const stacked       = forecastShown && inView(p.targetEnd) && Math.abs(x(p.forecastEnd) - x(p.targetEnd)) < 96;
+  if (stacked) m.t += 12;
+  const plot = H - m.t - m.b;
+  const svg  = htbSvg('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, 'aria-hidden': 'true' });
+
+  // Both modes share the plot: a value is drawn at its place on that mode's axis, blended by the mix (0 modules, 1 sections)
+  const Y = (mv, sv, mix) => m.t + (1 - (mv - mA.lo) / (mA.hi - mA.lo) * (1 - mix) - (sv - sA.lo) / (sA.hi - sA.lo) * mix) * plot;
+  // Elements of one mode only, as [element, strength]; they crossfade while the lines morph
+  const onlyModules = [], onlySections = [];
+
+  // Recessive grid with a label per step of each axis. While zooming, the old step fades out as the new one fades
+  // in, and a step whose lines crowd together fades out on its own
+  const grid = (list, yv, v, w) => {
+    const els = [
+      htbSvg('line', { class: 'htb-pace-grid', x1: m.l, x2: W - m.r, y1: yv, y2: yv }),
+      htbSvg('text', { class: 'htb-pace-axis', x: m.l - 6, y: yv + 3, 'text-anchor': 'end' }, v),
+    ];
+    list?.push(...els.map(el => [el, w]));
+    svg.append(...els);
+  };
+  const shared = !mA.lo && !sA.lo;   // both axes start at 0, so the baseline is shared
+  if (shared) grid(null, Y(0, 0, 0), 0, 1);
+  const steps = (list, a, yOf) => {
+    const sets = a.from === undefined || a.from === a.step ? [[a.step, 1]] : [[a.from, 1 - a.k], [a.step, a.k]];
+    for (const [step, w0] of sets) {
+      const w = w0 * Math.min(1, Math.max(0, (step / (a.hi - a.lo) * plot - 10) / 14));
+      if (w < 0.01) continue;
+      for (let v = Math.ceil(a.lo / step - 1e-9) * step; v <= a.hi + 1e-9; v += step) {
+        if (!(shared && v === 0)) grid(list, yOf(v), v, w);
+      }
+    }
+  };
+  steps(onlyModules, mA, v => Y(v, 0, 0));
+  steps(onlySections, sA, v => Y(0, v, 1));
+
+  // X axis: the start day and the first of each month, or every few days from the start when under ten weeks
+  // are in view (skipped when it would collide). Tied to fixed days, so the labels slide along while zooming
+  const every = v1 - v0 > 70 ? 0 : [1, 2, 7, 14].find(s => x(v0 + s) - x(v0) >= 44) ?? 14;
+  let lastTick = -Infinity;
+  for (let i = Math.ceil(v0); i <= v1; i++) {
+    const date = new Date(Date.parse(p.start + 'T12:00:00Z') + i * HTB_DAY_MS);
+    if (i > 0 && (every ? i % every : date.getUTCDate() !== 1)) continue;
+    if (x(i) - lastTick < 44) continue;
+    const label = i === 0 || every ? htbPaceDate(p, i, { day: 'numeric', month: 'short' })
+      : htbPaceDate(p, i, date.getUTCMonth() === 0 ? { month: 'short', year: 'numeric' } : { month: 'short' });
+    svg.append(htbSvg('text', { class: 'htb-pace-axis', x: x(i), y: H - 6, 'text-anchor': i === 0 ? 'start' : 'middle' }, label));
+    lastTick = x(i);
+  }
+
+  // Lines: sampled a day past each edge and clipped to the plot, so they run to the edges mid-zoom
+  const clip = htbSvg('clipPath', { id: 'htb-pace-clip' });
+  clip.append(htbSvg('rect', { x: m.l, y: 0, width: W - m.l - m.r, height: H }));
+  const plotArea = htbSvg('g', { 'clip-path': 'url(#htb-pace-clip)' });
+  const lines = htbPaceLines(p, Math.floor(v0), Math.ceil(v1)).map(([cls, pts]) => {
+    const path = htbSvg('path', { class: `htb-pace-line ${cls}` });
+    plotArea.append(path);
+    return [path, pts.map(([i, ...vals]) => [x(i).toFixed(1), ...vals])];
+  });
+  svg.append(clip, plotArea);
+
+  // Markers: each module completion, the end of both expected lines and today's count, when in view
+  const dots = p.steps.flatMap((s, k) => {
+    if (!inView(s.i)) return [];
     const dot = htbSvg('circle', { class: 'htb-pace-dot', cx: x(s.i), r: 4 });
     svg.append(dot);
-    return [dot, p.base + k + 1, htbPaceSecDone(p, s.i)];
+    return [[dot, p.base + k + 1, htbPaceSecDone(p, s.i)]];
   });
   const label = (list, attrs, text) => {
     const t = htbSvg('text', { class: 'htb-pace-value', ...attrs }, text);
-    list.push(t);
+    list.push([t, 1]);
     svg.append(t);
     return t;
   };
-  const ends = [[p.targetEnd, 'pace', 10]];
-  if (forecastShown) ends.push([p.forecastEnd, 'forecast', stacked ? 22 : 10]);
-  for (const [i, cls, above] of ends) {
-    const at   = { x: x(i), y: m.t - above, 'text-anchor': 'end' };
+  const ends = [];
+  if (inView(p.targetEnd)) ends.push([p.targetEnd, 'pace', 10]);
+  if (forecastShown)       ends.push([p.forecastEnd, 'forecast', stacked ? 22 : 10]);
+  const endEls = ends.map(([i, cls, above]) => {
+    const at   = { x: x(i), 'text-anchor': 'end' };
     const date = htbPaceDate(p, i, { day: 'numeric', month: 'short' });
-    svg.append(htbSvg('circle', { class: `htb-pace-dot ${cls}`, cx: x(i), cy: m.t, r: 4 }));
-    label(onlyModules, at, `${p.total} · ${date}`);
-    label(onlySections, at, `${Math.round(p.secTotal)} · ${date}`);
-  }
+    const dot  = htbSvg('circle', { class: `htb-pace-dot ${cls}`, cx: x(i), r: 4 });
+    svg.append(dot);
+    return [dot, above, label(onlyModules, at, `${p.total} · ${date}`), label(onlySections, at, `${Math.round(p.secTotal)} · ${date}`)];
+  });
   // The forecast continues to the right of today, so the count moves to the left of it
   const leftOf = p.forecast || x(p.today) > W - m.r - 30;
   const nowAt  = { x: x(p.today) + (leftOf ? -8 : 8), 'text-anchor': leftOf ? 'end' : 'start' };
   const now    = [htbPaceDone(p, p.today), htbPaceSecDone(p, p.today)];
-  const nowEls = [label(onlyModules, nowAt, now[0]), label(onlySections, nowAt, Math.round(now[1]))];
+  const nowEls = inView(p.today) ? [label(onlyModules, nowAt, now[0]), label(onlySections, nowAt, Math.round(now[1]))] : [];
 
   p.draw = mix => {
     for (const [path, pts] of lines) {
@@ -593,20 +699,27 @@ function renderHtbPace() {
         `${k ? 'L' : 'M'}${px},${Y(mL, sL, mix).toFixed(1)}L${px},${Y(mR, sR, mix).toFixed(1)}`).join(''));
     }
     for (const [dot, mv, sv] of dots) dot.setAttribute('cy', Y(mv, sv, mix));
-    for (const el of nowEls)         el.setAttribute('y', Y(...now, mix) - 8);
-    for (const el of onlyModules)    el.setAttribute('opacity', 1 - mix);
-    for (const el of onlySections)   el.setAttribute('opacity', mix);
+    for (const [dot, above, ...els] of endEls) {
+      const top = Y(p.total, p.secTotal, mix);
+      dot.setAttribute('cy', top);
+      for (const el of els) el.setAttribute('y', top - above);
+    }
+    for (const el of nowEls)          el.setAttribute('y', Y(...now, mix) - 8);
+    for (const [el, w] of onlyModules)  el.setAttribute('opacity', w * (1 - mix));
+    for (const [el, w] of onlySections) el.setAttribute('opacity', w * mix);
   };
   p.draw(htbPaceMix);
 
-  // Hover layer: a crosshair snaps to the nearest day; the tooltip lists all three lines
+  // Hover layer: a crosshair snaps to the nearest day; the tooltip lists all three lines.
+  // Dragging across it selects a period to zoom in on
   const cross = htbSvg('line', { class: 'htb-pace-cross', y1: m.t - 6, y2: H - m.b, visibility: 'hidden' });
+  const brush = htbSvg('rect', { class: 'htb-pace-brush', y: m.t - 6, height: H - m.b - m.t + 6, visibility: 'hidden' });
   const hit   = htbSvg('rect', { class: 'htb-pace-hit', x: m.l, y: 0, width: W - m.l - m.r, height: H - m.b });
-  svg.append(cross, hit);
+  svg.append(brush, cross, hit);
 
   const tip = $('htb-pace-tip');
   p.show = i => {
-    i = Math.max(0, Math.min(p.days, i));
+    i = Math.max(p.view[0], Math.min(p.view[1], i));
     p.cursor = i;
     cross.setAttribute('x1', x(i));
     cross.setAttribute('x2', x(i));
@@ -635,10 +748,41 @@ function renderHtbPace() {
     cross.setAttribute('visibility', 'hidden');
     tip.hidden = true;
   };
-  hit.addEventListener('pointermove', e => {
+
+  // Press on the start day, drag to the end day and release to zoom in; a press without a drag only moves the crosshair
+  const dayAt = e => {
     const r = svg.getBoundingClientRect();
-    p.show(Math.round((e.clientX - r.left - m.l) / (W - m.l - m.r) * p.days));
+    return Math.max(p.view[0], Math.min(p.view[1], Math.round(v0 + (e.clientX - r.left - m.l) / (W - m.l - m.r) * (v1 - v0))));
+  };
+  let drag = null;
+  p.cancelDrag = () => {
+    if (!drag) return false;
+    drag = null;
+    brush.setAttribute('visibility', 'hidden');
+    return true;
+  };
+  hit.addEventListener('pointerdown', e => {
+    if (e.button !== 0) return;
+    hit.setPointerCapture(e.pointerId);   // keeps the drag going when the pointer leaves the chart
+    drag = { day: dayAt(e), px: e.clientX };
   });
+  hit.addEventListener('pointermove', e => {
+    const i = dayAt(e);
+    p.show(i);
+    if (!drag) return;
+    brush.setAttribute('x', x(Math.min(drag.day, i)));
+    brush.setAttribute('width', Math.abs(x(i) - x(drag.day)));
+    brush.setAttribute('visibility', 'visible');
+  });
+  hit.addEventListener('pointerup', e => {
+    if (!drag) return;
+    const i     = dayAt(e);
+    const moved = Math.abs(e.clientX - drag.px) >= 6;
+    const days  = [Math.min(drag.day, i), Math.max(drag.day, i)];
+    p.cancelDrag();
+    if (moved && days[1] - days[0] >= 1) setHtbPaceZoom(days);
+  });
+  hit.addEventListener('pointercancel', () => p.cancelDrag());
 
   box.querySelector('svg')?.remove();
   box.prepend(svg);
@@ -735,20 +879,27 @@ function initHtb() {
 
   // Module pace chart: redraw at the new width; same tooltip on keyboard focus as on hover
   const pace = $('htb-pace-chart');
-  new ResizeObserver(renderHtbPace).observe(pace);
+  new ResizeObserver(() => renderHtbPace()).observe(pace);
   pace.addEventListener('pointerleave', () => htbPace?.hide?.());
-  pace.addEventListener('focus', () => htbPace?.show?.(htbPace.today));
+  // Keyboard focus only: a mouse press focuses the chart too, and starts a zoom selection where it is
+  pace.addEventListener('focus', () => pace.matches(':focus-visible') && htbPace?.show?.(htbPace.today));
   pace.addEventListener('blur',  () => htbPace?.hide?.());
   pace.addEventListener('keydown', e => {
     const p = htbPace;
     if (!p?.show) return;
+    if (e.key === 'Escape') {   // cancels a selection in progress, else leaves the zoom
+      if (p.cancelDrag())  e.preventDefault();
+      else if (htbPaceZoom) { e.preventDefault(); setHtbPaceZoom(null); }
+      return;
+    }
     const cur  = p.cursor ?? p.today;
-    const keys = { ArrowLeft: cur - 7, ArrowRight: cur + 7, Home: 0, End: p.days };
+    const keys = { ArrowLeft: cur - 7, ArrowRight: cur + 7, Home: p.view[0], End: p.view[1] };
     if (!(e.key in keys)) return;
     e.preventDefault();
     p.show(keys[e.key]);
   });
   $('htb-pace-mode').addEventListener('click', () => setHtbPaceMode(htbPaceMode === 'modules' ? 'sections' : 'modules'));
+  $('htb-pace-reset').addEventListener('click', () => setHtbPaceZoom(null));
   $('htb-period').addEventListener('change', renderHtbChart);
   $('htb-refresh-btn').addEventListener('click', refreshHtb);
 

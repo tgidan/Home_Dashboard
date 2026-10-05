@@ -655,6 +655,22 @@
 
 #htb-pace-mode[aria-checked="true"] .htb-switch i { transform: translateX(12px); }
 
+/* Reset zoom: keeps its place while hidden, so showing it never moves the legend */
+#htb-pace-reset {
+  padding: 2px 8px;
+  border: 1px solid var(--htb-line);
+  border-radius: 20px;
+  background: var(--htb-dim);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: var(--htb);
+  cursor: pointer;
+}
+
+#htb-pace-reset:not(.on) { visibility: hidden; }
+#htb-pace-reset:hover    { background: rgba(180, 244, 105, 0.2); }
+
 @media (prefers-reduced-motion: reduce) {
   #htb-pace-mode > span:not(.htb-switch),
   .htb-switch i { transition: none; }
@@ -677,7 +693,7 @@
 }
 
 #htb-pace-chart:focus-visible { outline: 2px solid var(--htb); outline-offset: 3px; }
-#htb-pace-chart svg           { display: block; overflow: visible; }
+#htb-pace-chart svg           { display: block; overflow: visible; touch-action: pan-y; }   /* a sideways drag selects, not scrolls */
 
 .htb-pace-grid  { stroke: rgba(255, 255, 255, 0.06); }
 .htb-pace-axis  { fill: var(--muted); font-family: var(--font-mono); font-size: 9px; }
@@ -699,6 +715,7 @@
 
 .htb-pace-cross { stroke: rgba(255, 255, 255, 0.35); stroke-width: 1; }
 .htb-pace-hit   { fill: transparent; cursor: crosshair; }
+.htb-pace-brush { fill: rgba(180, 244, 105, 0.08); stroke: var(--htb-line); pointer-events: none; }
 
 #htb-pace-tip {
   position: absolute;
