@@ -556,15 +556,15 @@
     "Using the Metasploit Framework": [
       {
         "name": "Preface",
-        "done": false
+        "done": true
       },
       {
         "name": "Introduction to Metasploit",
-        "done": false
+        "done": true
       },
       {
         "name": "Introduction to MSFconsole",
-        "done": false
+        "done": true
       },
       {
         "name": "Modules",
