@@ -611,6 +611,55 @@
 
 .htb-pace-legend span { display: flex; align-items: center; gap: 6px; }
 
+/* Modules / sections switch: fixed size, so flipping it never moves the legend */
+#htb-pace-mode {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+#htb-pace-mode > span:not(.htb-switch) { transition: color 0.3s ease; }
+
+#htb-pace-mode[aria-checked="false"] .htb-mode-modules,
+#htb-pace-mode[aria-checked="true"] .htb-mode-sections { color: var(--htb); }
+
+#htb-pace-mode .htb-switch {
+  display: block;
+  position: relative;
+  width: 24px;
+  height: 12px;
+  border: 1px solid var(--htb-line);
+  border-radius: 6px;
+  background: var(--htb-dim);
+}
+
+.htb-switch i {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--htb);
+  box-shadow: 0 0 4px rgba(180, 244, 105, 0.5);
+  transition: transform 0.3s ease;
+}
+
+#htb-pace-mode[aria-checked="true"] .htb-switch i { transform: translateX(12px); }
+
+@media (prefers-reduced-motion: reduce) {
+  #htb-pace-mode > span:not(.htb-switch),
+  .htb-switch i { transition: none; }
+}
+
 .htb-key {
   display: inline-block;
   width: 16px;
