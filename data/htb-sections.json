@@ -296,295 +296,366 @@
     "Information Gathering - Web Edition": [
       {
         "name": "Introduction",
-        "done": true
+        "done": true,
+        "date": "2026-09-09"
       },
       {
         "name": "WHOIS",
-        "done": true
+        "done": true,
+        "date": "2026-09-09"
       },
       {
         "name": "Utilizing WHOIS",
-        "done": true
+        "done": true,
+        "date": "2026-09-11"
       },
       {
         "name": "DNS",
-        "done": true
+        "done": true,
+        "date": "2026-09-11"
       },
       {
         "name": "Digging DNS",
-        "done": true
+        "done": true,
+        "date": "2026-09-11"
       },
       {
         "name": "Subdomains",
-        "done": true
+        "done": true,
+        "date": "2026-09-11"
       },
       {
         "name": "Subdomain Bruteforcing",
-        "done": true
+        "done": true,
+        "date": "2026-09-11"
       },
       {
         "name": "DNS Zone Transfers",
-        "done": true
+        "done": true,
+        "date": "2026-09-11"
       },
       {
         "name": "Virtual Hosts",
-        "done": true
+        "done": true,
+        "date": "2026-09-11"
       },
       {
         "name": "Certificate Transparency Logs",
-        "done": true
+        "done": true,
+        "date": "2026-09-11"
       },
       {
         "name": "Fingerprinting",
-        "done": true
+        "done": true,
+        "date": "2026-09-13"
       },
       {
         "name": "Crawling",
-        "done": true
+        "done": true,
+        "date": "2026-09-13"
       },
       {
         "name": "robots.txt",
-        "done": true
+        "done": true,
+        "date": "2026-09-13"
       },
       {
         "name": ".Well-Known URIs",
-        "done": true
+        "done": true,
+        "date": "2026-09-13"
       },
       {
         "name": "Creepy Crawlies",
-        "done": true
+        "done": true,
+        "date": "2026-09-13"
       },
       {
         "name": "Search Engine Discovery",
-        "done": true
+        "done": true,
+        "date": "2026-09-13"
       },
       {
         "name": "Web Archives",
-        "done": true
+        "done": true,
+        "date": "2026-09-13"
       },
       {
         "name": "Automating Recon",
-        "done": true
+        "done": true,
+        "date": "2026-09-13"
       },
       {
         "name": "Skills Assessment",
-        "done": true
+        "done": true,
+        "date": "2026-09-13"
       }
     ],
     "Vulnerability Assessment": [
       {
         "name": "Security Assessments",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Vulnerability Assessment",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Assessment Standards",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Common Vulnerability Scoring System (CVSS)",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Common Vulnerabilities and Exposures (CVE)",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Vulnerability Scanning Overview",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Getting Started with Nessus",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Nessus Scan",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Advanced Settings",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Working with Nessus Scan Output",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Scanning Issues",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Nessus Skills Assessment",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Getting Started with OpenVAS",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "OpenVAS Scan",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Exporting The Results",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "OpenVAS Skills Assessment",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Reporting",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       }
     ],
     "File Transfers": [
       {
         "name": "File Transfers",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Windows File Transfer Methods",
-        "done": true
+        "done": true,
+        "date": "2026-09-20"
       },
       {
         "name": "Linux File Transfer Methods",
-        "done": true
+        "done": true,
+        "date": "2026-09-22"
       },
       {
         "name": "Transferring Files with Code",
-        "done": true
+        "done": true,
+        "date": "2026-09-22"
       },
       {
         "name": "Miscellaneous File Transfer Methods",
-        "done": true
+        "done": true,
+        "date": "2026-09-22"
       },
       {
         "name": "Protected File Transfers",
-        "done": true
+        "done": true,
+        "date": "2026-09-23"
       },
       {
         "name": "Catching Files over HTTP/S",
-        "done": true
+        "done": true,
+        "date": "2026-09-23"
       },
       {
         "name": "Living off The Land",
-        "done": true
+        "done": true,
+        "date": "2026-09-23"
       },
       {
         "name": "Detection",
-        "done": true
+        "done": true,
+        "date": "2026-09-23"
       },
       {
         "name": "Evading Detection",
-        "done": true
+        "done": true,
+        "date": "2026-09-23"
       }
     ],
     "Shells & Payloads": [
       {
         "name": "Shells Jack Us In, Payloads Deliver Us Shells",
-        "done": true
+        "done": true,
+        "date": "2026-09-23"
       },
       {
         "name": "CAT5 Security's Engagement Preparation",
-        "done": true
+        "done": true,
+        "date": "2026-09-23"
       },
       {
         "name": "Anatomy of a Shell",
-        "done": true
+        "done": true,
+        "date": "2026-09-23"
       },
       {
         "name": "Bind Shells",
-        "done": true
+        "done": true,
+        "date": "2026-09-23"
       },
       {
         "name": "Reverse Shells",
-        "done": true
+        "done": true,
+        "date": "2026-09-23"
       },
       {
         "name": "Introduction to Payloads",
-        "done": true
+        "done": true,
+        "date": "2026-09-26"
       },
       {
         "name": "Automating Payloads & Delivery with Metasploit",
-        "done": true
+        "done": true,
+        "date": "2026-09-26"
       },
       {
         "name": "Crafting payloads with MSFvenom",
-        "done": true
+        "done": true,
+        "date": "2026-09-27"
       },
       {
         "name": "Infiltrating Windows",
-        "done": true
+        "done": true,
+        "date": "2026-09-27"
       },
       {
         "name": "Infiltrating Unix/Linux",
-        "done": true
+        "done": true,
+        "date": "2026-09-27"
       },
       {
         "name": "Spawning Interactive Shells",
-        "done": true
+        "done": true,
+        "date": "2026-09-29"
       },
       {
         "name": "Introduction to Web Shells",
-        "done": true
+        "done": true,
+        "date": "2026-09-29"
       },
       {
         "name": "Laudanum, One Webshell to Rule Them All",
-        "done": true
+        "done": true,
+        "date": "2026-09-29"
       },
       {
         "name": "Antak Webshell",
-        "done": true
+        "done": true,
+        "date": "2026-09-29"
       },
       {
         "name": "PHP Web Shells",
-        "done": true
+        "done": true,
+        "date": "2026-09-30"
       },
       {
         "name": "The Live Engagement",
-        "done": true
+        "done": true,
+        "date": "2026-09-30"
       },
       {
         "name": "Detection & Prevention",
-        "done": true
+        "done": true,
+        "date": "2026-09-30"
       }
     ],
     "Using the Metasploit Framework": [
       {
         "name": "Preface",
-        "done": true
+        "done": true,
+        "date": "2026-10-05"
       },
       {
         "name": "Introduction to Metasploit",
-        "done": true
+        "done": true,
+        "date": "2026-10-05"
       },
       {
         "name": "Introduction to MSFconsole",
-        "done": true
+        "done": true,
+        "date": "2026-10-05"
       },
       {
         "name": "Modules",
-        "done": true
+        "done": true,
+        "date": "2026-10-05"
       },
       {
         "name": "Targets",
-        "done": true
+        "done": true,
+        "date": "2026-10-05"
       },
       {
         "name": "Payloads",
-        "done": true
+        "done": true,
+        "date": "2026-10-05"
       },
       {
         "name": "Encoders",
-        "done": false
+        "done": true,
+        "date": "2026-10-05"
       },
       {
         "name": "Databases",
-        "done": false
+        "done": true,
+        "date": "2026-10-05"
       },
       {
         "name": "Plugins & Mixins",
