@@ -568,11 +568,11 @@
       },
       {
         "name": "Modules",
-        "done": false
+        "done": true
       },
       {
         "name": "Targets",
-        "done": false
+        "done": true
       },
       {
         "name": "Payloads",
