@@ -659,7 +659,8 @@
       },
       {
         "name": "Plugins & Mixins",
-        "done": false
+        "done": true,
+        "date": "2026-10-06"
       },
       {
         "name": "Sessions & Jobs",
