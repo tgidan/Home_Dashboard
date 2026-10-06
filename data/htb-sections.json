@@ -664,7 +664,8 @@
       },
       {
         "name": "Sessions & Jobs",
-        "done": false
+        "done": true,
+        "date": "2026-10-06"
       },
       {
         "name": "Meterpreter",
