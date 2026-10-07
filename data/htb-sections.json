@@ -696,11 +696,13 @@
     "Password Attacks": [
       {
         "name": "Introduction",
-        "done": false
+        "done": true,
+        "date": "2026-10-07"
       },
       {
         "name": "Introduction to Password Cracking",
-        "done": false
+        "done": true,
+        "date": "2026-10-07"
       },
       {
         "name": "Introduction to John The Ripper",
