@@ -674,19 +674,23 @@
       },
       {
         "name": "Writing & Importing Modules",
-        "done": false
+        "done": true,
+        "date": "2026-10-07"
       },
       {
         "name": "Introduction to MSFVenom",
-        "done": false
+        "done": true,
+        "date": "2026-10-07"
       },
       {
         "name": "Firewall and IDS/IPS evasion",
-        "done": false
+        "done": true,
+        "date": "2026-10-07"
       },
       {
         "name": "Metasploit-Framework Updates - August 2020",
-        "done": false
+        "done": true,
+        "date": "2026-10-07"
       }
     ],
     "Password Attacks": [
