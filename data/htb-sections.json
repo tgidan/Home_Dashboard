@@ -669,7 +669,8 @@
       },
       {
         "name": "Meterpreter",
-        "done": false
+        "done": true,
+        "date": "2026-10-07"
       },
       {
         "name": "Writing & Importing Modules",
