@@ -706,11 +706,13 @@
       },
       {
         "name": "Introduction to John The Ripper",
-        "done": false
+        "done": true,
+        "date": "2026-10-08"
       },
       {
         "name": "Introduction to Hashcat",
-        "done": false
+        "done": true,
+        "date": "2026-10-08"
       },
       {
         "name": "Writing Custom Wordlists and Rules",
