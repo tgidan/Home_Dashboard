@@ -721,7 +721,8 @@
       },
       {
         "name": "Cracking Protected Files",
-        "done": false
+        "done": true,
+        "date": "2026-10-08"
       },
       {
         "name": "Cracking Protected Archives",
