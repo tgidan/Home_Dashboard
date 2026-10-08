@@ -716,7 +716,8 @@
       },
       {
         "name": "Writing Custom Wordlists and Rules",
-        "done": false
+        "done": true,
+        "date": "2026-10-08"
       },
       {
         "name": "Cracking Protected Files",
