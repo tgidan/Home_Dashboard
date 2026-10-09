@@ -699,6 +699,8 @@
 .htb-pace-axis  { fill: var(--muted); font-family: var(--font-mono); font-size: 9px; }
 .htb-pace-value { fill: var(--text); font-family: var(--font-mono); font-size: 10px; font-weight: 700; }
 
+.htb-pace-module { stroke: rgba(180, 244, 105, 0.3); stroke-dasharray: 2 3; }
+
 .htb-pace-line {
   fill: none;
   stroke-width: 2;

@@ -428,10 +428,13 @@ function prepareHtbPace(data) {
   const secDone   = secAdded.map(n => secRun += n);
   const secTotal  = CPTS_MODULES.reduce((n, m) => n + size(m), 0);
   const secBefore = [...before].reduce((n, m) => n + size(m), 0);
+  // Section count at which each module is done: those done before the start first, then the target's order
+  let secEnd = 0;
+  const bounds = [...CPTS_MODULES.filter(m => before.has(m)), ...queue].map(m => ({ module: m, sec: secEnd += size(m) }));
 
   htbPace = {
     start, total, base, steps, today, target, targetEnd, forecast, forecastEnd, days,
-    perWeek, perDay, secBase, secDone, secTotal, secBefore,
+    perWeek, perDay, secBase, secDone, secTotal, secBefore, bounds,
   };
 
   // Ahead or behind is counted in sections, so work inside a long module shows before its badge does
@@ -657,6 +660,15 @@ function renderHtbPace(frame = null) {
   const clip = htbSvg('clipPath', { id: 'htb-pace-clip' });
   clip.append(htbSvg('rect', { x: m.l, y: 0, width: W - m.l - m.r, height: H }));
   const plotArea = htbSvg('g', { 'clip-path': 'url(#htb-pace-clip)' });
+
+  // Sections mode only: a horizontal line at the count where each module is done, drawn in from left to right
+  // with the switch, bottom one first
+  const bounds = p.bounds.filter(b => b.sec >= sA.lo - 1e-9 && b.sec <= sA.hi + 1e-9).map(b => {
+    const y  = Y(0, b.sec, 1);
+    const el = htbSvg('line', { class: 'htb-pace-module', x1: m.l, x2: m.l, y1: y, y2: y });
+    plotArea.append(el);
+    return el;
+  });
   const lines = htbPaceLines(p, Math.floor(v0), Math.ceil(v1)).map(([cls, pts]) => {
     const path = htbSvg('path', { class: `htb-pace-line ${cls}` });
     plotArea.append(path);
@@ -694,6 +706,11 @@ function renderHtbPace(frame = null) {
   const nowEls = inView(p.today) ? [label(onlyModules, nowAt, now[0]), label(onlySections, nowAt, Math.round(now[1]))] : [];
 
   p.draw = mix => {
+    bounds.forEach((el, k) => {
+      const delay = bounds.length > 1 ? 0.4 * k / (bounds.length - 1) : 0;
+      const grow  = Math.min(1, Math.max(0, (mix - delay) / 0.6));
+      el.setAttribute('x2', m.l + grow * (W - m.l - m.r));
+    });
     for (const [path, pts] of lines) {
       path.setAttribute('d', pts.map(([px, mL, mR, sL, sR], k) =>
         `${k ? 'L' : 'M'}${px},${Y(mL, sL, mix).toFixed(1)}L${px},${Y(mR, sR, mix).toFixed(1)}`).join(''));
