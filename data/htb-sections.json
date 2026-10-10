@@ -741,7 +741,8 @@
       },
       {
         "name": "Windows Authentication Process",
-        "done": false
+        "done": true,
+        "date": "2026-10-10"
       },
       {
         "name": "Attacking SAM, SYSTEM, and SECURITY",
