@@ -747,11 +747,12 @@
       {
         "name": "Attacking SAM, SYSTEM, and SECURITY",
         "done": true,
-        "date": "2026-10-10"
+        "date": "2026-10-11"
       },
       {
         "name": "Attacking LSASS",
-        "done": false
+        "done": true,
+        "date": "2026-10-11"
       },
       {
         "name": "Attacking Windows Credential Manager",
