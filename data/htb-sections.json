@@ -756,7 +756,8 @@
       },
       {
         "name": "Attacking Windows Credential Manager",
-        "done": false
+        "done": true,
+        "date": "2026-10-12"
       },
       {
         "name": "Attacking Active Directory and NTDS.dit",
