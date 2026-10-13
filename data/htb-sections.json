@@ -761,11 +761,13 @@
       },
       {
         "name": "Attacking Active Directory and NTDS.dit",
-        "done": false
+        "done": true,
+        "date": "2026-10-13"
       },
       {
         "name": "Credential Hunting in Windows",
-        "done": false
+        "done": true,
+        "date": "2026-10-13"
       },
       {
         "name": "Linux Authentication Process",
