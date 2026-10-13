@@ -771,11 +771,13 @@
       },
       {
         "name": "Linux Authentication Process",
-        "done": false
+        "done": true,
+        "date": "2026-10-13"
       },
       {
         "name": "Credential Hunting in Linux",
-        "done": false
+        "done": true,
+        "date": "2026-10-13"
       },
       {
         "name": "Credential Hunting in Network Traffic",
