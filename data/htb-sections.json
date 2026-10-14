@@ -786,7 +786,8 @@
       },
       {
         "name": "Credential Hunting in Network Shares",
-        "done": false
+        "done": true,
+        "date": "2026-10-14"
       },
       {
         "name": "Pass the Hash (PtH)",
