@@ -791,7 +791,8 @@
       },
       {
         "name": "Pass the Hash (PtH)",
-        "done": false
+        "done": true,
+        "date": "2026-10-16"
       },
       {
         "name": "Pass the Ticket (PtT) from Windows",
