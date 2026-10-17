@@ -796,11 +796,13 @@
       },
       {
         "name": "Pass the Ticket (PtT) from Windows",
-        "done": false
+        "done": true,
+        "date": "2026-10-17"
       },
       {
         "name": "Pass the Ticket (PtT) from Linux",
-        "done": false
+        "done": true,
+        "date": "2026-10-18"
       },
       {
         "name": "Pass the Certificate",
