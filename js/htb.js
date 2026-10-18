@@ -535,6 +535,8 @@ function htbPaceLines(p, v0, v1) {
   };
   const stepped  = (v, first, from) => i => [i === from ? first : v(i - 1), v(i)];
   const straight = v => i => [v(i), v(i)];
+  // Like straight, but rising from the value before the first day, as stepped does
+  const sloped   = (v, first, from) => i => [i === from ? first : v(i), v(i)];
 
   // Target: a step up on each day the target rate would have finished the next module; in sections a steady climb
   line('pace', 0, p.days, stepped(i => htbPaceTarget(p, i), p.base, 0), straight(i => htbPaceSecTarget(p, i)));
@@ -543,8 +545,8 @@ function htbPaceLines(p, v0, v1) {
     line('forecast', p.today, p.days,
       stepped(i => htbPaceForecast(p, i), htbPaceDone(p, p.today), p.today), straight(i => htbPaceSecForecast(p, i)));
   }
-  // Completed: a step at each badge date, or at each section's date, drawn up to today
-  line('done', 0, p.today, stepped(i => htbPaceDone(p, i), p.base, 0), stepped(i => htbPaceSecDone(p, i), p.secBase, 0));
+  // Completed: a step on each module's completion day; in sections a straight line from each day's count to the next
+  line('done', 0, p.today, stepped(i => htbPaceDone(p, i), p.base, 0), sloped(i => htbPaceSecDone(p, i), p.secBase, 0));
   return lines;
 }
 
