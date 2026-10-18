@@ -811,11 +811,13 @@
       },
       {
         "name": "Password Policies",
-        "done": false
+        "done": true,
+        "date": "2026-10-18"
       },
       {
         "name": "Password Managers",
-        "done": false
+        "done": true,
+        "date": "2026-10-18"
       },
       {
         "name": "Skills Assessment - Password Attacks",
