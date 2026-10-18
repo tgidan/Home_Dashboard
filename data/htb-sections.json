@@ -821,7 +821,8 @@
       },
       {
         "name": "Skills Assessment - Password Attacks",
-        "done": false
+        "done": true,
+        "date": "2026-10-18"
       }
     ],
     "Attacking Common Services": [
