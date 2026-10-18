@@ -806,7 +806,8 @@
       },
       {
         "name": "Pass the Certificate",
-        "done": false
+        "done": true,
+        "date": "2026-10-18"
       },
       {
         "name": "Password Policies",
