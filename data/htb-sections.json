@@ -828,7 +828,8 @@
     "Attacking Common Services": [
       {
         "name": "Interacting with Common Services",
-        "done": false
+        "done": true,
+        "date": "2026-10-18"
       },
       {
         "name": "The Concept of Attacks",
