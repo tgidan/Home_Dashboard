@@ -838,7 +838,8 @@
       },
       {
         "name": "Service Misconfigurations",
-        "done": false
+        "done": true,
+        "date": "2026-10-18"
       },
       {
         "name": "Finding Sensitive Information",
