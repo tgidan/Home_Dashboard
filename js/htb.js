@@ -34,8 +34,10 @@ let htbPaceShown    = null;
 let htbPaceZoomAnim = 0;
 /* Profile data from the last render, so section data can rebuild the pace chart */
 let htbData = null;
-/* Confirmed modules from the last profile render, so section data can re-render the route */
-let htbCompleted = new Set();
+/* Completed CPTS modules → completion day (YYYY-MM-DD, or null when unknown); see htbCompletions() */
+let htbCompleted = new Map();
+/* Modules with a public completion badge in the last profile data */
+let htbBadged = new Set();
 /* Section progress per module name from data/htb-sections.json; {} until loaded */
 let htbSections = {};
 /* Module clicked in the learning path; null follows htbCurrentModule() */
@@ -107,7 +109,24 @@ function htbSectionProgress(module) {
   return { done: list.filter(s => s.done).length, total: list.length, next: next ? next.name : null };
 }
 
-/** The module being worked on: the first with sections done but no badge yet, else the next in the route */
+/** Completed CPTS modules → completion day (YYYY-MM-DD), or null when unknown (counts as before the pace start).
+    Section progress leads: a module with section data is done once all its sections are, on its last section's
+    date (else its badge's day, else the data's day). A module without section data counts by its badge */
+function htbCompletions(data) {
+  const badges = new Map(data.badges.filter(b => MODULE_SUFFIX.test(b.description))
+    .map(b => [b.description.replace(MODULE_SUFFIX, ''), isNaN(Date.parse(b.awardedAt)) ? null : htbDay(b.awardedAt)]));
+  const done = new Map();
+  for (const m of CPTS_MODULES) {
+    const list = Object.hasOwn(htbSections, m) ? htbSections[m] : [];
+    if (!list.length) { if (badges.has(m)) done.set(m, badges.get(m)); continue; }
+    if (!list.every(s => s.done)) continue;
+    const dates = list.map(s => s.date);
+    done.set(m, dates.every(Boolean) ? dates.sort().at(-1) : badges.has(m) ? badges.get(m) : htbDay(data.updatedAt));
+  }
+  return done;
+}
+
+/** The module being worked on: the first open one with sections done, else the next in the route */
 function htbCurrentModule() {
   const open = CPTS_MODULES.filter(m => !htbCompleted.has(m));
   return open.find(m => htbSectionProgress(m)?.done) || open[0];
@@ -177,8 +196,8 @@ function renderHtbWeekXp(data) {
 }
 
 /* Render: 01 learning path */
-function renderHtbRoute(completed) {
-  htbCompleted = completed;
+function renderHtbRoute() {
+  const completed = htbCompleted;
   const confirmed = CPTS_MODULES.filter(m => completed.has(m)).length;
   $('htb-confirmed-count').textContent = confirmed;
   $('htb-module-total').textContent    = CPTS_MODULES.length;
@@ -192,7 +211,7 @@ function renderHtbRoute(completed) {
     seg.style.setProperty('--p', `${prog.done / prog.total * 100}%`);
     return seg;
   }));
-  segments.setAttribute('aria-label', `${confirmed} of ${CPTS_MODULES.length} module completions publicly confirmed`);
+  segments.setAttribute('aria-label', `${confirmed} of ${CPTS_MODULES.length} modules completed`);
 
   // Remember which group the user expanded so a data refresh doesn't collapse it
   const container = $('htb-route-groups');
@@ -212,7 +231,7 @@ function renderHtbRoute(completed) {
     details.open = prevOpen ? prevOpen.has(title) : currentIndex >= start && currentIndex < end;
 
     const summary = htbEl('summary', '', title);
-    summary.appendChild(htbEl('span', '', `${mods.filter(m => completed.has(m)).length} / ${mods.length} confirmed`));
+    summary.appendChild(htbEl('span', '', `${mods.filter(m => completed.has(m)).length} / ${mods.length} done`));
     details.appendChild(summary);
 
     mods.forEach((name, j) => {
@@ -232,7 +251,7 @@ function renderHtbRoute(completed) {
       row.append(
         htbEl('span', 'htb-symbol', done ? '✓' : String(start + j + 1).padStart(2, '0')),
         cell,
-        htbEl('small', '', done ? 'Badge confirmed' : prog ? `${prog.done} / ${prog.total} sections` : 'Not confirmed'),
+        htbEl('small', '', done ? (htbBadged.has(name) ? 'Badge confirmed' : 'Completed') : prog ? `${prog.done} / ${prog.total} sections` : 'No section data'),
       );
       details.appendChild(row);
     });
@@ -257,7 +276,7 @@ function renderHtbModuleSections() {
   const list = Object.hasOwn(htbSections, module) ? htbSections[module] : [];
   const prog = htbSectionProgress(module);
   const tags = [];
-  if (htbCompleted.has(module))  tags.push('Badge confirmed');
+  if (htbCompleted.has(module))  tags.push(htbBadged.has(module) ? 'Badge confirmed' : 'Badge pending');
   if (module === nextModule)     tags.push('Next in the route');
   $('htb-sections-module').textContent = module;
   $('htb-sections-sub').textContent    = [prog ? `${prog.done} / ${prog.total} sections done` : 'No section data yet', ...tags].join(' · ');
@@ -365,18 +384,14 @@ const htbPaceSecForecast = (p, i) => !p.forecast || i < p.today ? null
 function prepareHtbPace(data) {
   const start    = CONFIG.htb.paceStart;
   const perWeek  = CONFIG.htb.paceSectionsPerWeek;
-  const dayIndex = t => Math.round((Date.parse(htbDay(t) + 'T12:00:00Z') - Date.parse(start + 'T12:00:00Z')) / HTB_DAY_MS);
-  const done = data.badges
-    .filter(b => MODULE_SUFFIX.test(b.description) && CPTS_MODULES.includes(b.description.replace(MODULE_SUFFIX, '')))
-    .map(b => {
-      const t = Date.parse(b.awardedAt);
-      return { module: b.description.replace(MODULE_SUFFIX, ''), i: isNaN(t) ? -Infinity : dayIndex(t) };   // no date: count as done before the start
-    })
+  const dayOf    = day => Math.round((Date.parse(day + 'T12:00:00Z') - Date.parse(start + 'T12:00:00Z')) / HTB_DAY_MS);
+  const done = [...htbCompleted]
+    .map(([module, day]) => ({ module, i: day ? dayOf(day) : -Infinity }))   // no date: count as done before the start
     .sort((a, b) => a.i - b.i);
 
   const total = CPTS_MODULES.length;
   const base  = done.filter(s => s.i < 0).length;
-  const today = Math.max(0, dayIndex(data.updatedAt));
+  const today = Math.max(0, dayOf(htbDay(data.updatedAt)));
   const steps = done.filter(s => s.i >= 0 && s.i <= today);
 
   // Sections per module; a module without section data counts as the mean of the known ones.
@@ -408,20 +423,21 @@ function prepareHtbPace(data) {
   // A slow start would stretch the forecast far out, so it gets at most twice the target's span
   const days = Math.max(targetEnd, Math.min(forecastEnd ?? 0, targetEnd * 2), today, 7);
 
-  // Sections done per day: each on its own date, else its module's badge day, else today (done, but undated).
-  // A confirmed module counts all its sections; one without section data counts as its estimated size
-  const badgeDay = new Map(done.map(s => [s.module, s.i]));
+  // Sections done per day: each on its own date, else its module's completion day, else today (done, but undated).
+  // A module without section data counts as its estimated size on its badge day
+  const doneDay  = new Map(done.map(s => [s.module, s.i]));
   const secAdded = new Array(today + 1).fill(0);
   let secBase = 0;
   const add = (i, n) => { i = Math.min(i, today); if (i < 0) secBase += n; else secAdded[i] += n; };
   for (const m of CPTS_MODULES) {
     const list  = Object.hasOwn(htbSections, m) ? htbSections[m] : [];
-    const badge = badgeDay.get(m);
-    if (!list.length) { if (badge !== undefined) add(badge, size(m)); continue; }
+    const day   = doneDay.get(m);
+    if (!list.length) { if (day !== undefined) add(day, size(m)); continue; }
     for (const s of list) {
-      if (s.done && s.date) add(Math.round((Date.parse(s.date + 'T12:00:00Z') - Date.parse(start + 'T12:00:00Z')) / HTB_DAY_MS), 1);
-      else if (badge !== undefined) add(badge, 1);
-      else if (s.done)              add(today, 1);
+      if (!s.done) continue;
+      if (s.date)                   add(dayOf(s.date), 1);
+      else if (day !== undefined)   add(day, 1);
+      else                          add(today, 1);
     }
   }
   let secRun = secBase;
@@ -808,15 +824,14 @@ function renderHtbPace(frame = null) {
 
 /** Renders every data-driven part of the view */
 function renderHtb(data, source) {
-  const completed = new Set(
-    data.badges.filter(b => MODULE_SUFFIX.test(b.description)).map(b => b.description.replace(MODULE_SUFFIX, ''))
-  );
-  htbData = data;
+  htbData      = data;
+  htbBadged    = new Set(data.badges.filter(b => MODULE_SUFFIX.test(b.description)).map(b => b.description.replace(MODULE_SUFFIX, '')));
+  htbCompleted = htbCompletions(data);
   renderHtbHeader(data, source);
   renderHtbLevel(data);
   renderHtbStreak(data);
   renderHtbWeekXp(data);
-  renderHtbRoute(completed);
+  renderHtbRoute();
   renderHtbBadges(data);
   prepareHtbWeeks(data);
   renderHtbChart();
@@ -850,8 +865,9 @@ async function fetchHtbSections() {
 
   cache('htb_sections', data);
   htbSections = data.modules;
-  renderHtbRoute(htbCompleted);
-  if (htbData) {   // module sizes changed, so the expected lines move
+  if (htbData) htbCompleted = htbCompletions(htbData);   // sections decide which modules are done
+  renderHtbRoute();
+  if (htbData) {   // completions and module sizes changed, so all lines move
     prepareHtbPace(htbData);
     renderHtbPace();
   }
