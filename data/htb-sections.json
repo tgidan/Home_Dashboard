@@ -843,11 +843,13 @@
       },
       {
         "name": "Finding Sensitive Information",
-        "done": false
+        "done": true,
+        "date": "2026-10-19"
       },
       {
         "name": "Attacking FTP",
-        "done": false
+        "done": true,
+        "date": "2026-10-19"
       },
       {
         "name": "Latest FTP Vulnerabilities",
