@@ -853,7 +853,8 @@
       },
       {
         "name": "Latest FTP Vulnerabilities",
-        "done": false
+        "done": true,
+        "date": "2026-10-19"
       },
       {
         "name": "Attacking SMB",
