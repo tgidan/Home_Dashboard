@@ -858,7 +858,8 @@
       },
       {
         "name": "Attacking SMB",
-        "done": false
+        "done": true,
+        "date": "2026-10-20"
       },
       {
         "name": "Latest SMB Vulnerabilities",
