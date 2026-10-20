@@ -863,7 +863,8 @@
       },
       {
         "name": "Latest SMB Vulnerabilities",
-        "done": false
+        "done": true,
+        "date": "2026-10-20"
       },
       {
         "name": "Attacking SQL Databases",
