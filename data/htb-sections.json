@@ -868,11 +868,13 @@
       },
       {
         "name": "Attacking SQL Databases",
-        "done": false
+        "done": true,
+        "date": "2026-10-20"
       },
       {
         "name": "Latest SQL Vulnerabilities",
-        "done": false
+        "done": true,
+        "date": "2026-10-20"
       },
       {
         "name": "Attacking RDP",
