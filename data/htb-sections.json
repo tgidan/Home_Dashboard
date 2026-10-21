@@ -888,11 +888,13 @@
       },
       {
         "name": "Attacking DNS",
-        "done": false
+        "done": true,
+        "date": "2026-10-21"
       },
       {
         "name": "Latest DNS Vulnerabilities",
-        "done": false
+        "done": true,
+        "date": "2026-10-21"
       },
       {
         "name": "Attacking Email Services",
