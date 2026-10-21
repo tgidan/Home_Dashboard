@@ -878,11 +878,13 @@
       },
       {
         "name": "Attacking RDP",
-        "done": false
+        "done": true,
+        "date": "2026-10-21"
       },
       {
         "name": "Latest RDP Vulnerabilities",
-        "done": false
+        "done": true,
+        "date": "2026-10-21"
       },
       {
         "name": "Attacking DNS",
