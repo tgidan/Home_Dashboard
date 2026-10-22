@@ -898,11 +898,13 @@
       },
       {
         "name": "Attacking Email Services",
-        "done": false
+        "done": true,
+        "date": "2026-10-22"
       },
       {
         "name": "Latest Email Service Vulnerabilities",
-        "done": false
+        "done": true,
+        "date": "2026-10-22"
       },
       {
         "name": "Attacking Common Services - Easy",
