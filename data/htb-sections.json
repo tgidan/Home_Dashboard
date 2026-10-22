@@ -908,7 +908,8 @@
       },
       {
         "name": "Attacking Common Services - Easy",
-        "done": false
+        "done": true,
+        "date": "2026-10-22"
       },
       {
         "name": "Attacking Common Services - Medium",
