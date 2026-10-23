@@ -913,7 +913,8 @@
       },
       {
         "name": "Attacking Common Services - Medium",
-        "done": false
+        "done": true,
+        "date": "2026-10-23"
       },
       {
         "name": "Attacking Common Services - Hard",
