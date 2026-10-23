@@ -918,7 +918,8 @@
       },
       {
         "name": "Attacking Common Services - Hard",
-        "done": false
+        "done": true,
+        "date": "2026-10-23"
       }
     ],
     "Pivoting, Tunneling, and Port Forwarding": [
