@@ -925,7 +925,8 @@
     "Pivoting, Tunneling, and Port Forwarding": [
       {
         "name": "Introduction to Pivoting, Tunneling, and Port Forwarding",
-        "done": false
+        "done": true,
+        "date": "2026-10-25"
       },
       {
         "name": "The Networking Behind Pivoting",
