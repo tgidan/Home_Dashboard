@@ -930,7 +930,8 @@
       },
       {
         "name": "The Networking Behind Pivoting",
-        "done": false
+        "done": true,
+        "date": "2026-10-25"
       },
       {
         "name": "Dynamic Port Forwarding with SSH and SOCKS Tunneling",
