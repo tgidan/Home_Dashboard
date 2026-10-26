@@ -935,7 +935,8 @@
       },
       {
         "name": "Dynamic Port Forwarding with SSH and SOCKS Tunneling",
-        "done": false
+        "done": true,
+        "date": "2026-10-26"
       },
       {
         "name": "Remote/Reverse Port Forwarding with SSH",
