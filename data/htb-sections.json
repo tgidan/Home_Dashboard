@@ -940,7 +940,8 @@
       },
       {
         "name": "Remote/Reverse Port Forwarding with SSH",
-        "done": false
+        "done": true,
+        "date": "2026-10-26"
       },
       {
         "name": "Meterpreter Tunneling & Port Forwarding",
