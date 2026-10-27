@@ -960,7 +960,8 @@
       },
       {
         "name": "SSH for Windows: plink.exe",
-        "done": false
+        "done": true,
+        "date": "2026-10-27"
       },
       {
         "name": "SSH Pivoting with sshuttle",
