@@ -945,7 +945,8 @@
       },
       {
         "name": "Meterpreter Tunneling & Port Forwarding",
-        "done": false
+        "done": true,
+        "date": "2026-10-27"
       },
       {
         "name": "Socat Redirection with a Reverse Shell",
