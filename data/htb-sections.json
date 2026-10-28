@@ -965,15 +965,18 @@
       },
       {
         "name": "SSH Pivoting with sshuttle",
-        "done": false
+        "done": true,
+        "date": "2026-10-28"
       },
       {
         "name": "Web Server Pivoting with Rpivot",
-        "done": false
+        "done": true,
+        "date": "2026-10-28"
       },
       {
         "name": "Port Forwarding with Windows: Netsh",
-        "done": false
+        "done": true,
+        "date": "2026-10-28"
       },
       {
         "name": "DNS Tunneling with Dnscat2",
