@@ -980,7 +980,8 @@
       },
       {
         "name": "DNS Tunneling with Dnscat2",
-        "done": false
+        "done": true,
+        "date": "2026-10-29"
       },
       {
         "name": "SOCKS5 Tunneling with Chisel",
