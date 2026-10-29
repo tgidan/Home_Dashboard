@@ -985,11 +985,13 @@
       },
       {
         "name": "SOCKS5 Tunneling with Chisel",
-        "done": false
+        "done": true,
+        "date": "2026-10-29"
       },
       {
         "name": "ICMP Tunneling with SOCKS",
-        "done": false
+        "done": true,
+        "date": "2026-10-29"
       },
       {
         "name": "RDP and SOCKS Tunneling with SocksOverRDP",
