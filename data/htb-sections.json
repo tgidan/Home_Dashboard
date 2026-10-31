@@ -995,11 +995,13 @@
       },
       {
         "name": "RDP and SOCKS Tunneling with SocksOverRDP",
-        "done": false
+        "done": true,
+        "date": "2026-10-31"
       },
       {
         "name": "Skills Assessment",
-        "done": false
+        "done": true,
+        "date": "2026-10-31"
       },
       {
         "name": "Detection & Prevention",
