@@ -1005,11 +1005,13 @@
       },
       {
         "name": "Detection & Prevention",
-        "done": false
+        "done": true,
+        "date": "2026-10-31"
       },
       {
         "name": "Beyond this Module",
-        "done": false
+        "done": true,
+        "date": "2026-10-31"
       }
     ],
     "Active Directory Enumeration & Attacks": [
