@@ -1017,15 +1017,18 @@
     "Active Directory Enumeration & Attacks": [
       {
         "name": "Introduction to Active Directory Enumeration & Attacks",
-        "done": false
+        "done": true,
+        "date": "2026-11-01"
       },
       {
         "name": "Tools Of The Trade",
-        "done": false
+        "done": true,
+        "date": "2026-11-01"
       },
       {
         "name": "Scenario",
-        "done": false
+        "done": true,
+        "date": "2026-11-01"
       },
       {
         "name": "External Recon and Enumeration Principles",
