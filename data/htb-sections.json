@@ -1032,11 +1032,13 @@
       },
       {
         "name": "External Recon and Enumeration Principles",
-        "done": false
+        "done": true,
+        "date": "2026-11-02"
       },
       {
         "name": "Initial Enumeration of the Domain",
-        "done": false
+        "done": true,
+        "date": "2026-11-02"
       },
       {
         "name": "LLMNR/NBT-NS Poisoning - from Linux",
