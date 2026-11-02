@@ -1042,7 +1042,8 @@
       },
       {
         "name": "LLMNR/NBT-NS Poisoning - from Linux",
-        "done": false
+        "done": true,
+        "date": "2026-11-02"
       },
       {
         "name": "LLMNR/NBT-NS Poisoning - from Windows",
