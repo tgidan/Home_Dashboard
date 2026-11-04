@@ -1047,11 +1047,13 @@
       },
       {
         "name": "LLMNR/NBT-NS Poisoning - from Windows",
-        "done": false
+        "done": true,
+        "date": "2026-11-04"
       },
       {
         "name": "Password Spraying Overview",
-        "done": false
+        "done": true,
+        "date": "2026-11-04"
       },
       {
         "name": "Enumerating & Retrieving Password Policies",
