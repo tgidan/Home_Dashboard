@@ -1072,7 +1072,8 @@
       },
       {
         "name": "Internal Password Spraying - from Windows",
-        "done": false
+        "done": true,
+        "date": "2026-11-05"
       },
       {
         "name": "Enumerating Security Controls",
