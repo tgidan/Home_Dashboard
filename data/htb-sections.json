@@ -1067,7 +1067,8 @@
       },
       {
         "name": "Internal Password Spraying - from Linux",
-        "done": false
+        "done": true,
+        "date": "2026-11-05"
       },
       {
         "name": "Internal Password Spraying - from Windows",
