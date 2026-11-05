@@ -1057,11 +1057,13 @@
       },
       {
         "name": "Enumerating & Retrieving Password Policies",
-        "done": false
+        "done": true,
+        "date": "2026-11-05"
       },
       {
         "name": "Password Spraying - Making a Target User List",
-        "done": false
+        "done": true,
+        "date": "2026-11-05"
       },
       {
         "name": "Internal Password Spraying - from Linux",
