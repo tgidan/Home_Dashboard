@@ -1077,11 +1077,13 @@
       },
       {
         "name": "Enumerating Security Controls",
-        "done": false
+        "done": true,
+        "date": "2026-11-06"
       },
       {
         "name": "Credentialed Enumeration - from Linux",
-        "done": false
+        "done": true,
+        "date": "2026-11-06"
       },
       {
         "name": "Credentialed Enumeration - from Windows",
