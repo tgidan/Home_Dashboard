@@ -1087,11 +1087,13 @@
       },
       {
         "name": "Credentialed Enumeration - from Windows",
-        "done": false
+        "done": true,
+        "date": "2026-11-07"
       },
       {
         "name": "Living Off the Land",
-        "done": false
+        "done": true,
+        "date": "2026-11-07"
       },
       {
         "name": "Kerberoasting - from Linux",
