@@ -1097,7 +1097,8 @@
       },
       {
         "name": "Kerberoasting - from Linux",
-        "done": false
+        "done": true,
+        "date": "2026-11-07"
       },
       {
         "name": "Kerberoasting - from Windows",
