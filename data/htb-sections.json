@@ -1102,11 +1102,13 @@
       },
       {
         "name": "Kerberoasting - from Windows",
-        "done": false
+        "done": true,
+        "date": "2026-11-08"
       },
       {
         "name": "Access Control List (ACL) Abuse Primer",
-        "done": false
+        "done": true,
+        "date": "2026-11-08"
       },
       {
         "name": "ACL Enumeration",
