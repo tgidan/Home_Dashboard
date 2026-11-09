@@ -1117,15 +1117,18 @@
       },
       {
         "name": "ACL Abuse Tactics",
-        "done": false
+        "done": true,
+        "date": "2026-11-09"
       },
       {
         "name": "DCSync",
-        "done": false
+        "done": true,
+        "date": "2026-11-09"
       },
       {
         "name": "Privileged Access",
-        "done": false
+        "done": true,
+        "date": "2026-11-09"
       },
       {
         "name": "Kerberos \"Double Hop\" Problem",
