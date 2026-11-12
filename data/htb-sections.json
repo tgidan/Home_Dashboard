@@ -1132,23 +1132,28 @@
       },
       {
         "name": "Kerberos \"Double Hop\" Problem",
-        "done": false
+        "done": true,
+        "date": "2026-11-10"
       },
       {
         "name": "Bleeding Edge Vulnerabilities",
-        "done": false
+        "done": true,
+        "date": "2026-11-10"
       },
       {
         "name": "Miscellaneous Misconfigurations",
-        "done": false
+        "done": true,
+        "date": "2026-11-11"
       },
       {
         "name": "Domain Trusts Primer",
-        "done": false
+        "done": true,
+        "date": "2026-11-11"
       },
       {
         "name": "Attacking Domain Trusts - Child -> Parent Trusts - from Windows",
-        "done": false
+        "done": true,
+        "date": "2026-11-11"
       },
       {
         "name": "Attacking Domain Trusts - Child -> Parent Trusts - from Linux",
