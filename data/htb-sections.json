@@ -1138,46 +1138,52 @@
       {
         "name": "Bleeding Edge Vulnerabilities",
         "done": true,
-        "date": "2026-11-10"
+        "date": "2026-11-11"
       },
       {
         "name": "Miscellaneous Misconfigurations",
         "done": true,
-        "date": "2026-11-11"
+        "date": "2026-11-12"
       },
       {
         "name": "Domain Trusts Primer",
         "done": true,
-        "date": "2026-11-11"
+        "date": "2026-11-12"
       },
       {
         "name": "Attacking Domain Trusts - Child -> Parent Trusts - from Windows",
         "done": true,
-        "date": "2026-11-11"
+        "date": "2026-11-12"
       },
       {
         "name": "Attacking Domain Trusts - Child -> Parent Trusts - from Linux",
-        "done": false
+        "done": true,
+        "date": "2026-11-13"
       },
       {
         "name": "Attacking Domain Trusts - Cross-Forest Trust Abuse - from Windows",
-        "done": false
+        "done": true,
+        "date": "2026-11-13"
       },
       {
         "name": "Attacking Domain Trusts - Cross-Forest Trust Abuse - from Linux",
-        "done": false
+        "done": true,
+        "date": "2026-11-13"
       },
       {
         "name": "Hardening Active Directory",
-        "done": false
+        "done": true,
+        "date": "2026-11-13"
       },
       {
         "name": "Additional AD Auditing Techniques",
-        "done": false
+        "done": true,
+        "date": "2026-11-13"
       },
       {
         "name": "AD Enumeration & Attacks - Skills Assessment Part I",
-        "done": false
+        "done": true,
+        "date": "2026-11-15"
       },
       {
         "name": "AD Enumeration & Attacks - Skills Assessment Part II",
