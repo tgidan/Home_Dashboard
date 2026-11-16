@@ -1187,11 +1187,13 @@
       },
       {
         "name": "AD Enumeration & Attacks - Skills Assessment Part II",
-        "done": false
+        "done": true,
+        "date": "2026-11-16"
       },
       {
         "name": "Beyond this Module",
-        "done": false
+        "done": true,
+        "date": "2026-11-16"
       }
     ],
     "Using Web Proxies": [
