@@ -1199,27 +1199,33 @@
     "Using Web Proxies": [
       {
         "name": "Intro to Web Proxies",
-        "done": false
+        "done": true,
+        "date": "2026-11-16"
       },
       {
         "name": "Setting Up",
-        "done": false
+        "done": true,
+        "date": "2026-11-16"
       },
       {
         "name": "Proxy Setup",
-        "done": false
+        "done": true,
+        "date": "2026-11-16"
       },
       {
         "name": "Intercepting Web Requests",
-        "done": false
+        "done": true,
+        "date": "2026-11-16"
       },
       {
         "name": "Intercepting Responses",
-        "done": false
+        "done": true,
+        "date": "2026-11-16"
       },
       {
         "name": "Automatic Modification",
-        "done": false
+        "done": true,
+        "date": "2026-11-16"
       },
       {
         "name": "Repeating Requests",
