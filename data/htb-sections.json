@@ -1229,15 +1229,18 @@
       },
       {
         "name": "Repeating Requests",
-        "done": false
+        "done": true,
+        "date": "2026-11-17"
       },
       {
         "name": "Encoding/Decoding",
-        "done": false
+        "done": true,
+        "date": "2026-11-17"
       },
       {
         "name": "Proxying Tools",
-        "done": false
+        "done": true,
+        "date": "2026-11-17"
       },
       {
         "name": "Burp Intruder",
