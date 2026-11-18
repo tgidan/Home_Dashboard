@@ -1244,7 +1244,8 @@
       },
       {
         "name": "Burp Intruder",
-        "done": false
+        "done": true,
+        "date": "2026-11-18"
       },
       {
         "name": "ZAP Fuzzer",
