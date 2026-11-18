@@ -1249,7 +1249,8 @@
       },
       {
         "name": "ZAP Fuzzer",
-        "done": false
+        "done": true,
+        "date": "2026-11-18"
       },
       {
         "name": "Burp Scanner",
