@@ -1276,11 +1276,13 @@
     "Attacking Web Applications with Ffuf": [
       {
         "name": "Introduction",
-        "done": false
+        "done": true,
+        "date": "2026-11-19"
       },
       {
         "name": "Web Fuzzing",
-        "done": false
+        "done": true,
+        "date": "2026-11-19"
       },
       {
         "name": "Directory Fuzzing",
