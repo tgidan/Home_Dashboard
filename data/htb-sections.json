@@ -1259,11 +1259,13 @@
       },
       {
         "name": "ZAP Scanner",
-        "done": false
+        "done": true,
+        "date": "2026-11-19"
       },
       {
         "name": "Extensions",
-        "done": false
+        "done": true,
+        "date": "2026-11-19"
       },
       {
         "name": "Skills Assessment - Using Web Proxies",
