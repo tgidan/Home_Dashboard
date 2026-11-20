@@ -1306,15 +1306,18 @@
       },
       {
         "name": "Sub-domain Fuzzing",
-        "done": false
+        "done": true,
+        "date": "2026-11-20"
       },
       {
         "name": "Vhost Fuzzing",
-        "done": false
+        "done": true,
+        "date": "2026-11-20"
       },
       {
         "name": "Filtering Results",
-        "done": false
+        "done": true,
+        "date": "2026-11-20"
       },
       {
         "name": "Parameter Fuzzing - GET",
