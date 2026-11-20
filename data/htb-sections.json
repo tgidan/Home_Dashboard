@@ -1286,19 +1286,23 @@
       },
       {
         "name": "Directory Fuzzing",
-        "done": false
+        "done": true,
+        "date": "2026-11-19"
       },
       {
         "name": "Page Fuzzing",
-        "done": false
+        "done": true,
+        "date": "2026-11-19"
       },
       {
         "name": "Recursive Fuzzing",
-        "done": false
+        "done": true,
+        "date": "2026-11-19"
       },
       {
         "name": "DNS Records",
-        "done": false
+        "done": true,
+        "date": "2026-11-19"
       },
       {
         "name": "Sub-domain Fuzzing",
