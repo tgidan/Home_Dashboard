@@ -1343,23 +1343,28 @@
     "Login Brute Forcing": [
       {
         "name": "Introduction",
-        "done": false
+        "done": true,
+        "date": "2026-11-23"
       },
       {
         "name": "Password Security Fundamentals",
-        "done": false
+        "done": true,
+        "date": "2026-11-23"
       },
       {
         "name": "Brute Force Attacks",
-        "done": false
+        "done": true,
+        "date": "2026-11-23"
       },
       {
         "name": "Dictionary Attacks",
-        "done": false
+        "done": true,
+        "date": "2026-11-23"
       },
       {
         "name": "Hybrid Attacks",
-        "done": false
+        "done": true,
+        "date": "2026-11-23"
       },
       {
         "name": "Hydra",
