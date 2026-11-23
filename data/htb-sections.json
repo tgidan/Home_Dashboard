@@ -1321,19 +1321,23 @@
       },
       {
         "name": "Parameter Fuzzing - GET",
-        "done": false
+        "done": true,
+        "date": "2026-11-20"
       },
       {
         "name": "Parameter Fuzzing - POST",
-        "done": false
+        "done": true,
+        "date": "2026-11-20"
       },
       {
         "name": "Value Fuzzing",
-        "done": false
+        "done": true,
+        "date": "2026-11-20"
       },
       {
         "name": "Skills Assessment - Web Fuzzing",
-        "done": false
+        "done": true,
+        "date": "2026-11-20"
       }
     ],
     "Login Brute Forcing": [
