@@ -1368,23 +1368,28 @@
       },
       {
         "name": "Hydra",
-        "done": false
+        "done": true,
+        "date": "2026-11-24"
       },
       {
         "name": "Basic HTTP Authentication",
-        "done": false
+        "done": true,
+        "date": "2026-11-24"
       },
       {
         "name": "Login Forms",
-        "done": false
+        "done": true,
+        "date": "2026-11-24"
       },
       {
         "name": "Medusa",
-        "done": false
+        "done": true,
+        "date": "2026-11-24"
       },
       {
         "name": "Web Services",
-        "done": false
+        "done": true,
+        "date": "2026-11-24"
       },
       {
         "name": "Custom Wordlists",
