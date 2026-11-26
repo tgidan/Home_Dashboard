@@ -1393,15 +1393,18 @@
       },
       {
         "name": "Custom Wordlists",
-        "done": false
+        "done": true,
+        "date": "2026-11-25"
       },
       {
         "name": "Skills Assessment Part 1",
-        "done": false
+        "done": true,
+        "date": "2026-11-26"
       },
       {
         "name": "Skills Assessment Part 2",
-        "done": false
+        "done": true,
+        "date": "2026-11-26"
       }
     ],
     "SQL Injection Fundamentals": [
